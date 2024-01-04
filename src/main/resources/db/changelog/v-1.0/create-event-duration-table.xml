@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-event-duration-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.event_duration
+            (
+                duration_id bigserial NOT NULL,
+                hours integer,
+                minutes integer,
+                CONSTRAINT duration_pkey PRIMARY KEY (duration_id)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

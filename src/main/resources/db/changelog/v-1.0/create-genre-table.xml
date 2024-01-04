@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-genre-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.genre
+            (
+                genre_id bigserial NOT NULL,
+                genre_name character varying(255) COLLATE pg_catalog."default",
+                CONSTRAINT genre_pkey PRIMARY KEY (genre_id)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

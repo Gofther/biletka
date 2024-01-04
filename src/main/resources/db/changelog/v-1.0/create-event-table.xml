@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-event-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.event
+            (
+                event_id bigserial PRIMARY KEY,
+                basic_info_id bigserial,
+                duration_id bigserial,
+                additional_information_id bigserial,
+                web_widget_id bigserial,
+                FOREIGN KEY (basic_info_id) REFERENCES event_basic_information (basic_information_id),
+                FOREIGN KEY (duration_id) REFERENCES event_duration (duration_id),
+                FOREIGN KEY (additional_information_id) REFERENCES event_additional_information (additional_id),
+                FOREIGN KEY (web_widget_id) REFERENCES event_web_widget (widget_id)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

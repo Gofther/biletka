@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+    <include file="create-actor-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-additional-information-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-additional-information-actors-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-age-rating-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-city-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-duration-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-basic-information-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-web-widget-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-genre-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-organization-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-tag-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-type-of-event-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-type-of-movie-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-additional-tag-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-place-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-organization-place-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-hall-scheme-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-genre-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-session-table.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

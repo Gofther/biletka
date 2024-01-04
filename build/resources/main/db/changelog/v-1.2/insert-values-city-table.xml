@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="insert-values-city-table" author="Dmitrii">
+        <sql>
+            INSERT INTO city (city_name, city_name_eng)
+            VALUES
+                ('Москва', 'Moscow'),
+                ('Санкт-Петербург', 'Saint Petersburg'),
+                ('Новосибирск', 'Novosibirsk'),
+                ('Екатеринбург', 'Yekaterinburg'),
+                ('Нижний Новгород', 'Nizhny Novgorod'),
+                ('Казань', 'Kazan'),
+                ('Челябинск', 'Chelyabinsk'),
+                ('Омск', 'Omsk'),
+                ('Самара', 'Samara'),
+                ('Ростов-на-Дону', 'Rostov-on-Don'),
+                ('Уфа', 'Ufa'),
+                ('Волгоград', 'Volgograd'),
+                ('Пермь', 'Perm'),
+                ('Красноярск', 'Krasnoyarsk'),
+                ('Воронеж', 'Voronezh'),
+                ('Саратов', 'Saratov'),
+                ('Тюмень', 'Tyumen'),
+                ('Тольятти', 'Tolyatti'),
+                ('Ижевск', 'Izhevsk'),
+                ('Барнаул', 'Barnaul'),
+                ('Ульяновск', 'Ulyanovsk'),
+                ('Иркутск', 'Irkutsk'),
+                ('Хабаровск', 'Khabarovsk'),
+                ('Ярославль', 'Yaroslavl'),
+                ('Владивосток', 'Vladivostok');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

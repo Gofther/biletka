@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-hall-scheme-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.hall_scheme
+            (
+                floor integer,
+                hall_id bigserial NOT NULL,
+                hall_number integer,
+                number_seats integer,
+                place_id bigint,
+                scheme character varying(255) COLLATE pg_catalog."default",
+                CONSTRAINT hall_scheme_pkey PRIMARY KEY (hall_id),
+                CONSTRAINT fkc5kronjswmrtk373lca0vkvto FOREIGN KEY (place_id)
+                REFERENCES public.place (place_id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

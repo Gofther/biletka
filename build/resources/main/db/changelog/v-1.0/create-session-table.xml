@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-session-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.session
+            (
+                event_id bigint,
+                hall_id bigint,
+                movie_type_id bigint,
+                place_id bigint,
+                sales integer,
+                session_id bigserial NOT NULL,
+                start_time timestamp(6) without time zone,
+                CONSTRAINT session_pkey PRIMARY KEY (session_id),
+                CONSTRAINT fk49v9wn8b604mwhmeshda06qlw FOREIGN KEY (hall_id)
+                REFERENCES public.hall_scheme (hall_id) MATCH SIMPLE
+                                        ON UPDATE NO ACTION
+                                        ON DELETE NO ACTION,
+                CONSTRAINT fk61qxrirnh7y81twvdrpqiu6v7 FOREIGN KEY (movie_type_id)
+                REFERENCES public.type_of_movie (movie_type_id) MATCH SIMPLE
+                                        ON UPDATE NO ACTION
+                                        ON DELETE NO ACTION,
+                CONSTRAINT fk6mxe5rb58a7upupkk6hkru0a1 FOREIGN KEY (event_id)
+                REFERENCES public.event (event_id) MATCH SIMPLE
+                                        ON UPDATE NO ACTION
+                                        ON DELETE NO ACTION,
+                CONSTRAINT fkfwc7jdtbpfd501p8kqnqbn0ww FOREIGN KEY (place_id)
+                REFERENCES public.place (place_id) MATCH SIMPLE
+                                        ON UPDATE NO ACTION
+                                        ON DELETE NO ACTION
+                )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

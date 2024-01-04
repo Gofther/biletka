@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-ticket-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE ticket
+            (
+                ticket_id       bigserial,
+                tickets_info_id  bigserial,
+                row_number      integer,
+                seat_number     integer,
+                activation_code varchar(255),
+                is_extinguished boolean,
+                is_reserved     boolean,
+                CONSTRAINT ticket_pkey PRIMARY KEY (ticket_id),
+                CONSTRAINT fk49v9wn8b604mwsdgfdfhdaqlw FOREIGN KEY (tickets_info_id)
+                    REFERENCES public.tickets_info (tickets_info_id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

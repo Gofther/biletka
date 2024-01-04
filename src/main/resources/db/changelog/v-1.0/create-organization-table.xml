@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-organization-table" author="Dmitrii">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.organization
+            (
+                organization_id bigserial NOT NULL,
+                inn integer,
+                kbk integer,
+                kpp integer,
+                ogrn integer,
+                oktmo integer,
+                contact_phone character varying(255) COLLATE pg_catalog."default",
+                document_contract character varying(255) COLLATE pg_catalog."default",
+                email character varying(255) COLLATE pg_catalog."default",
+                full_name_organization character varying(255) COLLATE pg_catalog."default",
+                full_name_signatory character varying(255) COLLATE pg_catalog."default",
+                legal_address character varying(255) COLLATE pg_catalog."default",
+                name_payer character varying(255) COLLATE pg_catalog."default",
+                password character varying(255) COLLATE pg_catalog."default",
+                position_signatory character varying(255) COLLATE pg_catalog."default",
+                postal_address integer,
+                CONSTRAINT organization_pkey PRIMARY KEY (organization_id)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>
