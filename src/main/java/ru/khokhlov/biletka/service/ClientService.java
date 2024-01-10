@@ -3,7 +3,9 @@ package ru.khokhlov.biletka.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.ClientRegistration;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.ClientResponse;
+import ru.khokhlov.biletka.dto.universal.PublicClient;
 
 @Service
 public interface ClientService {
@@ -32,4 +34,6 @@ public interface ClientService {
      * @return true - подтверждена почта
      */
     boolean isEmailActivate(String code);
+
+    PublicClient infoClient(Integer id);
 }

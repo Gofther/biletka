@@ -1,9 +1,12 @@
 package ru.khokhlov.biletka.service.impl;
 
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.entity.Client;
 import ru.khokhlov.biletka.entity.Organization;
@@ -19,7 +22,18 @@ public class MailSenderImpl implements MailSender {
     private String auth;
     private final JavaMailSender mailSender;
     private final MessageCreator messageCreator;
+    @Value(value = "${spring.mail.host}")
+    private String host;
+    @Value(value = "${spring.mail.username}")
+    private String username;
+    @Value(value = "${spring.mail.password}")
+    private String password;
+    @Value(value = "${spring.mail.port}")
+    private int port;
+    @Value(value = "${spring.mail.protocol}")
+    private String protocol;
 
+    @SneakyThrows
     @Override
     public void activateEmailClient(Client client) {
         String subject = "Подтверждение E-mail";
@@ -28,9 +42,18 @@ public class MailSenderImpl implements MailSender {
                 auth,
                 client.getActivationCode());
 
-        send(client.getEmail(), subject,text);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo(client.getEmail());
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(text);
+
+        mailSender.send(mimeMessage);
     }
 
+    @SneakyThrows
     @Override
     public void activateEmailOrganization(Organization organization) {
         String subject = "Подтверждение E-mail";
@@ -39,17 +62,27 @@ public class MailSenderImpl implements MailSender {
                 auth,
                 organization.getActivationCode());
 
-        send(organization.getEmail(), subject,text);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo(organization.getEmail());
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(text);
+
+        mailSender.send(mimeMessage);
     }
 
+    @SneakyThrows
     private void send(String destination, String subject, String message) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
 
-        mailMessage.setFrom(organization);
-        mailMessage.setTo(destination);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(message);
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo(organization);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(message);
 
-        mailSender.send(mailMessage);
+        mailSender.send(mimeMessage);
     }
 }

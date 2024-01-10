@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.ClientRegistration;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.ClientResponse;
+import ru.khokhlov.biletka.dto.universal.PublicClient;
 import ru.khokhlov.biletka.entity.Client;
 import ru.khokhlov.biletka.entity.Organization;
 import ru.khokhlov.biletka.enums.RoleEnum;
@@ -111,6 +113,19 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
         clientRepository.saveAndFlush(client);
 
         return true;
+    }
+
+    @Override
+    public PublicClient infoClient(Integer userId) throws EntityNotFoundException{
+        Client client = clientRepository.getReferenceById(Long.valueOf(userId));
+        System.out.println(client);
+        return new PublicClient(
+                client.getId(),
+                client.getFullName(),
+                "+"+client.getPhone(),
+                client.getEmail(),
+                String.valueOf(client.getBirthday()).substring(0,10)
+        );
     }
 
     private String generateActivationCode() {

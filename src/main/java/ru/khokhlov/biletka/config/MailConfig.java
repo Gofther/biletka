@@ -1,5 +1,6 @@
 package ru.khokhlov.biletka.config;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,7 @@ public class MailConfig {
     @Value(value = "${mail.smtp.starttls.enable}")
     private String startTLS;
 
+    @SneakyThrows
     @Bean
     public JavaMailSender getMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
@@ -39,6 +41,7 @@ public class MailConfig {
         properties.setProperty("mail.debug", debug);
         properties.setProperty("mail.transport.protocol", protocol);
         properties.setProperty("mail.smtp.starttls.enable", startTLS);
+        properties.setProperty("mail.smtp.auth", "true");
 
         return javaMailSender;
     }

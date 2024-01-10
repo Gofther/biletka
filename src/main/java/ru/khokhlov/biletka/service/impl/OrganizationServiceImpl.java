@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.OrganizationAddEvent;
 import ru.khokhlov.biletka.dto.request.OrganizationAddPlace;
 import ru.khokhlov.biletka.dto.request.OrganizationRegistration;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.DeleteEventOrganization;
 import ru.khokhlov.biletka.dto.response.DeleteSession;
 import ru.khokhlov.biletka.dto.response.OrganizationResponse;
 import ru.khokhlov.biletka.dto.response.SessionInfo;
-import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
-import ru.khokhlov.biletka.dto.universal.MassivePublicSessions;
-import ru.khokhlov.biletka.dto.universal.PublicEvent;
-import ru.khokhlov.biletka.dto.universal.PublicSession;
+import ru.khokhlov.biletka.dto.universal.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.enums.RoleEnum;
 import ru.khokhlov.biletka.repository.OrganizationRepository;
@@ -240,6 +238,26 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationRepository.saveAndFlush(organization);
 
         return createOrganizationResponse(organization);
+    }
+
+    @Override
+    public PublicOrganization infoOrganization(Integer userId) {
+        Organization organization = organizationRepository.getReferenceById(Long.valueOf(userId));
+        return new PublicOrganization(
+                organization.getId(),
+                organization.getFullNameOrganization(),
+                organization.getLegalAddress(),
+                String.valueOf(organization.getPostalAddress()),
+                organization.getContactPhone(),
+                organization.getEmail(),
+                organization.getFullNameSignatory(),
+                organization.getPositionSignatory(),
+                String.valueOf(organization.getINN()),
+                String.valueOf(organization.getKPP()),
+                String.valueOf(organization.getOGRN()),
+                String.valueOf(organization.getOKTMO()),
+                String.valueOf(organization.getKBK())
+        );
     }
 
     @Override

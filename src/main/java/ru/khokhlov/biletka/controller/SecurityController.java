@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.khokhlov.biletka.dto.request.AuthFormDTO;
 import ru.khokhlov.biletka.dto.request.ClientRegistration;
 import ru.khokhlov.biletka.dto.request.OrganizationRegistration;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.ClientResponse;
 import ru.khokhlov.biletka.dto.response.ExitResponse;
 import ru.khokhlov.biletka.dto.response.OrganizationResponse;
 import ru.khokhlov.biletka.dto.response.Token;
+import ru.khokhlov.biletka.dto.universal.PublicClient;
+import ru.khokhlov.biletka.dto.universal.PublicOrganization;
 import ru.khokhlov.biletka.service.ClientService;
 import ru.khokhlov.biletka.service.OrganizationService;
 import ru.khokhlov.biletka.utils.JwtTokenUtils;
+
 
 import java.security.Principal;
 
@@ -70,7 +74,7 @@ public class SecurityController {
         UserDetails userDetails = clientService.loadUserByUsername(authFormDTO.email());
         String token = jwtTokenUtils.generateToken(userDetails);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new Token(clientId != -1L ? clientId : organizationId, "Bearer", token));
+        return ResponseEntity.status(HttpStatus.OK).body(new Token(clientId != -1L ? clientId : organizationId, clientId != -1L ? "USER": "ORGAANIZATION", "Bearer", token));
     }
 
     /**
@@ -106,5 +110,17 @@ public class SecurityController {
         }
 
         return message;
+    }
+
+    @GetMapping("/client/{id}")
+    public ResponseEntity<PublicClient> infoClient(@PathVariable Integer id) {
+        log.trace("SecurityController.infoClient /client - id {}", id);
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.infoClient(id));
+    }
+
+    @GetMapping("/organization/{id}")
+    public ResponseEntity<PublicOrganization> infoOrganization(@PathVariable Integer id) {
+        log.trace("SecurityController.infoOrganization /organization - id {}", id);
+        return ResponseEntity.status(HttpStatus.OK).body(organizationService.infoOrganization(id));
     }
 }
