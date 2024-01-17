@@ -18,6 +18,7 @@ import ru.khokhlov.biletka.dto.response.OrganizationResponse;
 import ru.khokhlov.biletka.dto.response.SessionInfo;
 import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
 import ru.khokhlov.biletka.dto.universal.MassivePublicSessions;
+import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.service.OrganizationService;
 
 @CrossOrigin
@@ -109,5 +110,15 @@ public class OrganizationController {
                                                        @Parameter(description = "Информация о ивента") @PathVariable Long sessionId) {
         log.trace("OrganizationController.deleteSession /organization/{organisationId}/session/{sessionId} - organisationId {}, sessionId {}", organisationId, sessionId);
         return ResponseEntity.status(HttpStatus.OK).body(organizationService.deleteSession(organisationId, sessionId));
+    }
+
+    @GetMapping("/{organizationId}/unevents")
+    @Operation(
+            summary = "Вывод всех мероприятий",
+            description = "Вывод всех меропрятий, которых нет у организации"
+    )
+    public ResponseEntity<Event[]> getUnevents(@Parameter(description = "id организации") @PathVariable Long organizationId) {
+        log.trace("OrganizationController.getUnevents /organization/{organisationId}/unevents - organisationId {}", organizationId);
+        return ResponseEntity.status(HttpStatus.OK).body(organizationService.getUnevents(organizationId));
     }
 }
