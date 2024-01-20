@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.khokhlov.biletka.dto.response.ImageHallSchemeResponse;
 import ru.khokhlov.biletka.service.FileService;
 
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class FileController {
     @PostMapping("/organization")
     public void postFileOrganization(@RequestParam("file") MultipartFile file,
                                      @RequestParam("id") Long id) throws IOException {
-        log.trace("FileController.postFileOrganization /file/organization - file {}", file);
+        log.trace("FileController.postFileOrganization /file/organization - file {}, id {}", file, id);
         fileService.postDocumentOrganization(file, id);
 
     }
@@ -83,7 +84,12 @@ public class FileController {
             description = "Принимает файл jpg, png и тд и сохраняет в бд"
     )
     @PostMapping("/hall")
-    public void postImageHall(@RequestParam("file") MultipartFile file) {
-        log.trace("FileController.postImageHall /file/hall - file {}", file);
+    public ResponseEntity<ImageHallSchemeResponse> postImageHall(@RequestParam("file") MultipartFile file,
+                                                                 @RequestParam("organization_id") Long organizationId,
+                                                                 @RequestParam("id") Long id) throws IOException {
+        log.trace("FileController.postImageHall /file/hall - file {}, id {}, organization_id {}", file, id, organizationId);
+        ImageHallSchemeResponse imageHallSchemeResponse = fileService.postSchemeHall(file, id, organizationId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageHallSchemeResponse);
     }
 }

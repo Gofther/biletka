@@ -4,10 +4,10 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.entity.Client;
 import ru.khokhlov.biletka.entity.Organization;
 import ru.khokhlov.biletka.service.MailSender;
@@ -16,12 +16,12 @@ import ru.khokhlov.biletka.utils.MessageCreator;
 @Service
 @RequiredArgsConstructor
 public class MailSenderImpl implements MailSender {
+    private final JavaMailSender mailSender;
+    private final MessageCreator messageCreator;
     @Value(value = "${application.email.address}")
     private String organization;
     @Value(value = "${application.authorization.path}")
     private String auth;
-    private final JavaMailSender mailSender;
-    private final MessageCreator messageCreator;
     @Value(value = "${spring.mail.host}")
     private String host;
     @Value(value = "${spring.mail.username}")
@@ -68,6 +68,28 @@ public class MailSenderImpl implements MailSender {
         mimeMessageHelper.setFrom(username);
         mimeMessageHelper.setTo(organization.getEmail());
         mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(text);
+
+        mailSender.send(mimeMessage);
+    }
+
+    @SneakyThrows
+    @Override
+    public void confirmationHallScheme(MultipartFile file, Long id, String email, Long placeId, String name) {
+        String subject = "Подтверждение схемы зала";
+        String text = messageCreator.createHallMessage(
+                id,
+                email,
+                placeId,
+                name);
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo("biletkavrn@gmail.com");
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.addAttachment(file.getOriginalFilename(), file);
         mimeMessageHelper.setText(text);
 
         mailSender.send(mimeMessage);

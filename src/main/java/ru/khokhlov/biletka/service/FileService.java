@@ -2,6 +2,7 @@ package ru.khokhlov.biletka.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.khokhlov.biletka.dto.response.ImageHallSchemeResponse;
 
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ public interface FileService {
 
     void postDocumentOrganization(MultipartFile file, Long id) throws IOException;
 
-    void postSchemeHall(MultipartFile file);
+    ImageHallSchemeResponse postSchemeHall(MultipartFile file, Long id, Long organizationId) throws IOException;
 
     void getImageEvent(Long id);
 
