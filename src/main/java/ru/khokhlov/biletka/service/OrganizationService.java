@@ -110,4 +110,6 @@ public interface OrganizationService {
     PublicOrganization infoOrganization(Integer userId);
 
     Event[] getUnevents(Long organizationId);
+
+    void addFileInOrganization(Long id, Long fileId);
 }

@@ -3,11 +3,13 @@ package ru.khokhlov.biletka.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Service
 public interface FileService {
     void postImageEvent(MultipartFile file);
 
-    void postDocumentOrganization(MultipartFile file);
+    void postDocumentOrganization(MultipartFile file, Long id) throws IOException;
 
     void postSchemeHall(MultipartFile file);
 

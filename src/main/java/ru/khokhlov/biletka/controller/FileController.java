@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.khokhlov.biletka.service.FileService;
+
+import java.io.IOException;
 
 @Validated
 @RestController
@@ -18,9 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/file")
 @Tag(name = "Контроллер файлов", description = "")
 @Slf4j
-
-
 public class FileController {
+    private final FileService fileService;
 //   TODO Response пишеться в dto/response
 
 //    @Getter
@@ -69,8 +71,11 @@ public class FileController {
             description = "Принимает файл подписания услуг с орагнизацией и сохраняет в бд"
     )
     @PostMapping("/organization")
-    public void postFileOrganization(@RequestParam("file") MultipartFile file) {
+    public void postFileOrganization(@RequestParam("file") MultipartFile file,
+                                     @RequestParam("id") Long id) throws IOException {
         log.trace("FileController.postFileOrganization /file/organization - file {}", file);
+        fileService.postDocumentOrganization(file, id);
+
     }
 
     @Operation(

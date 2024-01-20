@@ -12,6 +12,7 @@ import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.enums.RoleEnum;
+import ru.khokhlov.biletka.repository.FileOrganizationRepository;
 import ru.khokhlov.biletka.repository.OrganizationRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.service.*;
@@ -30,6 +31,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final EventService eventService;
     private final TicketService ticketService;
     private final TicketRepository ticketRepository;
+    private final FileOrganizationRepository fileOrganizationRepository;
 
     @Override
     public Long getOrganizationIdByEmailAndPassword(String email, String password) {
@@ -266,6 +268,16 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         return newEvents.toArray(Event[]::new);
+    }
+
+    @Override
+    public void addFileInOrganization(Long id, Long fileId) {
+        FileOrganization fileOrganization = fileOrganizationRepository.getReferenceById(fileId);
+        Organization organization = organizationRepository.getReferenceById(id);
+
+        organization.setFileOrganization(fileOrganization);
+
+        organizationRepository.saveAndFlush(organization);
     }
 
     @Override
