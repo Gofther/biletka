@@ -25,6 +25,8 @@ public class MailConfig {
     private String debug;
     @Value(value = "${mail.smtp.starttls.enable}")
     private String startTLS;
+    @Value(value = "${mail.smtp.ssl.enable}")
+    private String ssl;
 
     @SneakyThrows
     @Bean
@@ -42,6 +44,7 @@ public class MailConfig {
         properties.setProperty("mail.transport.protocol", protocol);
         properties.setProperty("mail.smtp.starttls.enable", startTLS);
         properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.ssl.enable", ssl);
 
         return javaMailSender;
     }

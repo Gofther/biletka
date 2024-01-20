@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.entity.EventType;
 
+import java.util.List;
+
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     /**

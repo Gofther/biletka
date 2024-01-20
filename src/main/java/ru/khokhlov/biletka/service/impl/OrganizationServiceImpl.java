@@ -8,11 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.OrganizationAddEvent;
 import ru.khokhlov.biletka.dto.request.OrganizationAddPlace;
 import ru.khokhlov.biletka.dto.request.OrganizationRegistration;
-import ru.khokhlov.biletka.dto.request.UserId;
-import ru.khokhlov.biletka.dto.response.DeleteEventOrganization;
-import ru.khokhlov.biletka.dto.response.DeleteSession;
-import ru.khokhlov.biletka.dto.response.OrganizationResponse;
-import ru.khokhlov.biletka.dto.response.SessionInfo;
+import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.enums.RoleEnum;
@@ -21,10 +17,7 @@ import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.service.*;
 import ru.khokhlov.biletka.utils.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -258,6 +251,21 @@ public class OrganizationServiceImpl implements OrganizationService {
                 String.valueOf(organization.getOKTMO()),
                 String.valueOf(organization.getKBK())
         );
+    }
+
+    @Override
+    public Event[] getUnevents(Long organizationId) {
+        Organization organization = organizationRepository.getReferenceById(organizationId);
+        List<Event> events = eventService.getAllFullInfo();
+        List<Event> newEvents = new ArrayList<>();
+
+        for (Event event: events) {
+            if (!organization.getEventSet().contains(event)) {
+                newEvents.add(event);
+            }
+        }
+
+        return newEvents.toArray(Event[]::new);
     }
 
     @Override

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.OrganizationAddEvent;
 import ru.khokhlov.biletka.dto.request.OrganizationAddPlace;
 import ru.khokhlov.biletka.dto.request.OrganizationRegistration;
-import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.DeleteEventOrganization;
 import ru.khokhlov.biletka.dto.response.DeleteSession;
 import ru.khokhlov.biletka.dto.response.OrganizationResponse;
@@ -12,6 +11,7 @@ import ru.khokhlov.biletka.dto.response.SessionInfo;
 import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
 import ru.khokhlov.biletka.dto.universal.MassivePublicSessions;
 import ru.khokhlov.biletka.dto.universal.PublicOrganization;
+import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.entity.Organization;
 
 @Service
@@ -108,4 +108,6 @@ public interface OrganizationService {
     OrganizationResponse addEventInOrganization(OrganizationAddEvent organizationAddEvent);
 
     PublicOrganization infoOrganization(Integer userId);
+
+    Event[] getUnevents(Long organizationId);
 }

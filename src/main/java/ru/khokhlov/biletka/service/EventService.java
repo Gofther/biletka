@@ -7,6 +7,7 @@ import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
 import ru.khokhlov.biletka.entity.Event;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public interface EventService {
@@ -93,4 +94,6 @@ public interface EventService {
      * @return информация о событии
      */
     EventResponse removeEventById(Long id);
+
+    List<Event> getAllFullInfo();
 }
