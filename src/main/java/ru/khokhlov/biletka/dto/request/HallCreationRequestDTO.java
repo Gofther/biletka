@@ -20,8 +20,6 @@ public record HallCreationRequestDTO(
         Integer seatsCount,
         @NotBlank
         @JsonProperty("about")
-        String info,
-        @NotBlank
-        String file
+        String info
 ) {
 }

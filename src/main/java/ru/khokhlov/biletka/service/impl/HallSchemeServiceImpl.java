@@ -43,7 +43,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                 hallCreationRequestDTO.floor(),
                 hallCreationRequestDTO.hallNumber(),
                 hallCreationRequestDTO.seatsCount(),
-                hallCreationRequestDTO.file(),
+                null,
                 place);
 
         try {
