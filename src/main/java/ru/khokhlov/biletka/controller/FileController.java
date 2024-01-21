@@ -1,6 +1,7 @@
 package ru.khokhlov.biletka.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.khokhlov.biletka.dto.response.EventImageResponse;
+import ru.khokhlov.biletka.service.FileService;
+import ru.khokhlov.biletka.entity.EventImage;
 
 @Validated
 @RestController
@@ -21,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public class FileController {
+    private final FileService fileService;
 //   TODO Response пишеться в dto/response
 
 //    @Getter
@@ -60,10 +65,14 @@ public class FileController {
             description = "Принимает файл jpg,png и тд и сохраняет в бд"
     )
     @PostMapping("/event")
-    public void postImageEvent(@RequestParam("file") MultipartFile file) {
-        log.trace("FileController.postImageEvent /file/event - file {}", file);
+    public ResponseEntity<EventImageResponse> postImageEvent(@RequestParam("eventId") Long eventId, @RequestParam("file") MultipartFile file) {
+        try {
+            EventImageResponse response = fileService.postImageEvent(eventId,file);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
     @Operation(
             summary = "Загрузка файла организации",
             description = "Принимает файл подписания услуг с орагнизацией и сохраняет в бд"

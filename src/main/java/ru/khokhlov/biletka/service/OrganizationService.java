@@ -59,6 +59,9 @@ public interface OrganizationService {
      * @return массив мероприятий
      */
     MassivePublicEvents getAllEvent(Long organisationId);
+
+    void addFileInOrganization(Long id, Long fileId);
+
     /**
      * Функция удаления сессий ивента у организации
      * @param organisationId id организации
