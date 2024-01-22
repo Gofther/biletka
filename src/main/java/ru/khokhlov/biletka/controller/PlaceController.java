@@ -14,6 +14,7 @@ import ru.khokhlov.biletka.dto.request.HallCreationRequestDTO;
 import ru.khokhlov.biletka.dto.request.PlaceInfo;
 import ru.khokhlov.biletka.dto.response.HallCreationResponseDTO;
 import ru.khokhlov.biletka.dto.response.PlaceResponse;
+import ru.khokhlov.biletka.dto.response.SchemeResponse;
 import ru.khokhlov.biletka.entity.HallScheme;
 import ru.khokhlov.biletka.entity.Place;
 import ru.khokhlov.biletka.service.HallSchemeService;
@@ -56,6 +57,14 @@ public class PlaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+    @PutMapping(path = "/hall")
+    public ResponseEntity<String> putHall(@Parameter(description = "Схема зала") String scheme,
+                                          @Parameter(description = "Схема зала") Long id) {
+        log.trace("PlaceController.putHall /{city}/place/hall - hallScheme {}, id {}", scheme, id);
+        String hall = hallSchemeService.putHall(scheme, id);
+        return ResponseEntity.status(HttpStatus.OK).body(hall);
+    }
+
     @GetMapping(path = "/hall/{organizationId}")
     public ResponseEntity<List<HallScheme>> getAllHallByOrganization(@Parameter(description = "Город в котором будет зал") @PathVariable String city,
                                                                      @Parameter(description = "Информация об зале") @PathVariable Long organizationId) {
@@ -76,6 +85,12 @@ public class PlaceController {
 
         log.trace("PlaceController.createHall /{city}/place/hall - HallResponseDTO {}", responseDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
+    @GetMapping(path = "/scheme/{hallId}")
+    public ResponseEntity<?> getScheme(@Parameter(description = "id зала") @PathVariable Long hallId) {
+        SchemeResponse schemeResponse = hallSchemeService.getScheme(hallId);
+        return ResponseEntity.status(HttpStatus.OK).body(schemeResponse);
     }
 }
 

@@ -3,6 +3,7 @@ package ru.khokhlov.biletka.service;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.HallCreationRequestDTO;
 import ru.khokhlov.biletka.dto.response.HallCreationResponseDTO;
+import ru.khokhlov.biletka.dto.response.SchemeResponse;
 import ru.khokhlov.biletka.entity.HallScheme;
 
 import java.util.List;
@@ -34,4 +35,8 @@ public interface HallSchemeService {
      * @return список схем залов организации
      */
     List<HallScheme> getAllHallByOrganization(String city, Long organizationId);
+
+    String putHall(String scheme, Long id);
+
+    SchemeResponse getScheme(Long hallId);
 }
