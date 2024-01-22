@@ -2,11 +2,12 @@ package ru.khokhlov.biletka.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "event_image")
-@AllArgsConstructor
+@NoArgsConstructor
 public class EventImage {
 
     @Id
@@ -24,4 +25,9 @@ public class EventImage {
     @Column(name = "image_type")
     private String ImageType;
 
+    public EventImage(byte[] imageData, String imageName, String imageType) {
+        ImageData = imageData;
+        ImageName = imageName;
+        ImageType = imageType;
+    }
 }

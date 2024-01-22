@@ -26,7 +26,6 @@ public class FileServiceImpl implements FileService {
     private final EventRepository eventRepository;
     @Override
     public EventImageResponse postImageEvent(Long eventId, MultipartFile file) throws IOException {
-
         try {
             if (file.isEmpty()) {
                 log.trace("Файл пуст");
@@ -38,16 +37,17 @@ public class FileServiceImpl implements FileService {
 
             byte[] imageData = file.getBytes();
 
-            EventImage eventImage = new EventImage(eventId,imageData, fileName, file.getContentType());
-            EventImage savedEventImage = eventImageRepository.saveAndFlush(eventImage);
+            EventImage eventImage = new EventImage(imageData, fileName, file.getContentType());
+            System.out.println(eventImage);
+            eventImageRepository.saveAndFlush(eventImage);
 
             log.trace("File {} uploaded successfully", fileName);
 
             organizationService.addFileInOrganization(eventId, eventImage.getId());
             return new EventImageResponse(
-                    savedEventImage.getId(),
-                    savedEventImage.getImageName(),
-                    savedEventImage.getImageType()
+                    eventImage.getId(),
+                    eventImage.getImageName(),
+                    eventImage.getImageType()
             );
 
         } catch (IOException e) {
