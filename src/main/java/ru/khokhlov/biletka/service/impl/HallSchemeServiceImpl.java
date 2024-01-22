@@ -121,7 +121,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
         Integer numberFloor = 0;
         List<SchemeFloor> schemeFloors = new ArrayList<>();
 
-        //TODO Добавление информации о зале
+        // Добавление информации о зале
         for (int floor=0; floor<rootChilds.getLength(); floor++) {
             if (rootChilds.item(floor).getNodeType() != Node.ELEMENT_NODE) {
                 continue;
@@ -130,7 +130,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
             NodeList floorChilds = rootChilds.item(floor).getChildNodes();
             List<SchemeRow> schemeRows = new ArrayList<>();
 
-            //TODO Добавление информации о ряде
+            // Добавление информации о ряде
             for (int row=0; row<floorChilds.getLength(); row++) {
                 if (floorChilds.item(row).getNodeType() != Node.ELEMENT_NODE) {
                     continue;
@@ -139,7 +139,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                 String rowNumber = null;
                 NodeList rowChilds = floorChilds.item(row).getChildNodes();
 
-                //TODO Добавление информации о элементах ряда
+                // Добавление информации о элементах ряда
                 for (int itemRow=0; itemRow<rowChilds.getLength(); itemRow++) {
                     if (rowChilds.item(itemRow).getNodeType() != Node.ELEMENT_NODE) {
                         continue;
@@ -153,7 +153,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                     NodeList seatChilds = rowChilds.item(itemRow).getChildNodes();
                     List<SchemeSeat> schemeSeats = new ArrayList<>();
 
-                    //TODO Добавление информации о месте
+                    // Добавление информации о месте
                     for (int seat=0; seat<seatChilds.getLength(); seat++) {
                         if (seatChilds.item(seat).getNodeType() != Node.ELEMENT_NODE) {
                             continue;
@@ -168,7 +168,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                         );
                         schemeSeats.add(schemeSeat);
                     }
-                    //TODO Добавление информации о месте
+                    // Добавление информации о месте
 
                     SchemeRow schemeRow = new SchemeRow(
                             rowNumber,
@@ -176,16 +176,16 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                     );
                     schemeRows.add(schemeRow);
                 }
-                //TODO Добавление информации о элементах ряда
+                // Добавление информации о элементах ряда
             }
-            //TODO Добавление информации о ряде
+            // Добавление информации о ряде
 
             schemeFloors.add(new SchemeFloor(
                     ++numberFloor,
                     schemeRows.toArray(SchemeRow[]::new)
             ));
         }
-        //TODO Добавление информации о зале
+        // Добавление информации о зале
 
         return new SchemeResponse(schemeFloors.toArray(SchemeFloor[]::new));
     }
