@@ -3,6 +3,7 @@ package ru.khokhlov.biletka.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.dto.response.EventImageResponse;
+import ru.khokhlov.biletka.dto.universal.PublicEventImage;
 
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ public interface FileService {
 
     void postSchemeHall(MultipartFile file);
 
-    void getImageEvent(Long id);
+    PublicEventImage getImageEvent(Long id);
 
     void getImagesEvents(String ids);
 

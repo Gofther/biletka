@@ -3,6 +3,8 @@ package ru.khokhlov.biletka.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -13,8 +15,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.dto.response.EventImageResponse;
+import ru.khokhlov.biletka.dto.universal.PublicEventImage;
 import ru.khokhlov.biletka.service.FileService;
 import ru.khokhlov.biletka.entity.EventImage;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 @Validated
 @RestController
@@ -90,4 +97,16 @@ public class FileController {
     public void postImageHall(@RequestParam("file") MultipartFile file) {
         log.trace("FileController.postImageHall /file/hall - file {}", file);
     }
+
+    @Operation(
+            summary = "Вывод изображения мероприятия",
+            description = "Вывод изображения мероприятия"
+    )
+    @GetMapping("/{id}")
+    public void getImageEvent(@PathVariable Long id, HttpServletResponse response, HttpServletRequest request) throws IOException {
+        PublicEventImage publicEventImage = fileService.getImageEvent(id);
+        response.setContentType(publicEventImage.type());
+        response.getOutputStream().write(publicEventImage.imageData());
+        response.getOutputStream().close();
+    };
 }

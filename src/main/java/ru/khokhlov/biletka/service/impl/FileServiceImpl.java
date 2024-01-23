@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.dto.response.EventImageResponse;
+import ru.khokhlov.biletka.dto.universal.PublicEventImage;
 import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.service.EventService;
 import ru.khokhlov.biletka.service.FileService;
@@ -14,9 +15,6 @@ import ru.khokhlov.biletka.repository.EventRepository;
 import ru.khokhlov.biletka.service.OrganizationService;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,6 @@ public class FileServiceImpl implements FileService {
             byte[] imageData = file.getBytes();
 
             EventImage eventImage = new EventImage(imageData, fileName, file.getContentType());
-            System.out.println(eventImage);
             eventImageRepository.saveAndFlush(eventImage);
 
             log.trace("File {} uploaded successfully", fileName);
@@ -69,8 +66,14 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void getImageEvent(Long id) {
-
+    public PublicEventImage getImageEvent(Long id) {
+        Event event = eventRepository.getReferenceById(id);
+        System.out.println();
+        return new PublicEventImage(
+                event.getEventBasicInformation().getEventImage().getImageData(),
+                event.getEventBasicInformation().getEventImage().getImageName(),
+                event.getEventBasicInformation().getEventImage().getImageType()
+        );
     }
 
     @Override
