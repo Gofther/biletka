@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.dto.response.EventImageResponse;
 import ru.khokhlov.biletka.entity.Event;
+import ru.khokhlov.biletka.service.EventService;
 import ru.khokhlov.biletka.service.FileService;
 import ru.khokhlov.biletka.entity.EventImage;
 import ru.khokhlov.biletka.repository.EventImageRepository;
@@ -23,6 +24,7 @@ import java.nio.file.StandardCopyOption;
 public class FileServiceImpl implements FileService {
     private final OrganizationService organizationService;
     private final EventImageRepository eventImageRepository;
+    private final EventService eventService;
     private final EventRepository eventRepository;
     @Override
     public EventImageResponse postImageEvent(Long eventId, MultipartFile file) throws IOException {
@@ -43,7 +45,7 @@ public class FileServiceImpl implements FileService {
 
             log.trace("File {} uploaded successfully", fileName);
 
-            organizationService.addFileInOrganization(eventId, eventImage.getId());
+            eventService.addImageEvent(eventId, eventImage);
             return new EventImageResponse(
                     eventImage.getId(),
                     eventImage.getImageName(),

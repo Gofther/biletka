@@ -3,6 +3,7 @@ package ru.khokhlov.biletka.service;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.event_full_ei.BasicInformationRequest;
 import ru.khokhlov.biletka.entity.EventBasicInformation;
+import ru.khokhlov.biletka.entity.EventImage;
 
 @Service
 public interface BasicInformationService {
@@ -20,4 +21,6 @@ public interface BasicInformationService {
      * @param eventBasicInformation основная информация
      */
     void deleteBasicInformation(EventBasicInformation eventBasicInformation);
+
+    void addImage(EventBasicInformation eventBasicInformation, EventImage eventImage);
 }

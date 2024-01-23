@@ -5,6 +5,7 @@ import ru.khokhlov.biletka.dto.request.EventInfo;
 import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
 import ru.khokhlov.biletka.entity.Event;
+import ru.khokhlov.biletka.entity.EventImage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -96,4 +97,6 @@ public interface EventService {
     EventResponse removeEventById(Long id);
 
     List<Event> getAllFullInfo();
+
+    void addImageEvent(Long eventId, EventImage eventImage);
 }

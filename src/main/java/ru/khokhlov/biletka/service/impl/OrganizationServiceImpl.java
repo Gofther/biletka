@@ -198,6 +198,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public void addFileInOrganization(Long id, Long fileId) {
+
+    }
+
+    @Override
     public boolean isOrganizationActivate(String code) {
         Organization organization = organizationRepository.findByActivationCode(code);
 
@@ -267,16 +272,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         return newEvents.toArray(Event[]::new);
-    }
-
-    @Override
-    public void addFileInOrganization(Long id, Long fileId) {
-        EventImage eventImage = eventImageRepository.getReferenceById(fileId);
-        Organization organization = organizationRepository.getReferenceById(id);
-
-        organization.setEventImage(eventImage);
-
-        organizationRepository.saveAndFlush(organization);
     }
 
     @Override

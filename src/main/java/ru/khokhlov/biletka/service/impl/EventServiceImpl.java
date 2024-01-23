@@ -273,4 +273,11 @@ public class EventServiceImpl implements EventService {
     public List<Event> getAllFullInfo() {
         return eventRepository.findAll();
     }
+
+    @Override
+    public void addImageEvent(Long eventId, EventImage eventImage) {
+        Event event = eventRepository.getReferenceById(eventId);
+
+        basicInformationService.addImage(event.getEventBasicInformation(), eventImage);
+    }
 }
