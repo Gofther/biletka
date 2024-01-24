@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.khokhlov.biletka.dto.request.EventInfo;
 import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
+import ru.khokhlov.biletka.entity.Event;
+import ru.khokhlov.biletka.repository.EventRepository;
 import ru.khokhlov.biletka.service.EventService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Validated
 @RestController
@@ -25,6 +28,7 @@ import java.time.LocalDate;
 @Slf4j
 public class EventController {
     private final EventService eventService;
+    private final EventRepository eventRepository;
 
     @Operation(
             summary = "Создание мероприятия",
@@ -54,8 +58,30 @@ public class EventController {
     )
     @GetMapping(path="/eight")
     public ResponseEntity<MassiveOfEvents> getEventsWithLimitAndOffset(@PathVariable String city, @RequestParam int offset) {
-        log.trace("EventController.createEvent /{city}/event - first event id {}", offset);
+        log.trace("EventController.createEvent /{city}/event - page number {}", offset);
         MassiveOfEvents events = eventService.getEventsWithLimitAndOffset(offset);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @Operation(
+            summary = "Вывод списка мероприятий по наличию пушкинской карты",
+            description = "Вывод списка мероприятий по наличию пушкинской карты"
+    )
+    @GetMapping(path="/pushkin")
+    public ResponseEntity<MassiveOfEvents> getEventsByPushkin(@PathVariable String city, @RequestParam Boolean pushkin, @RequestParam int page) {
+        log.trace("EventController.createEvent /{city}/event/pushkin - pushkin : {}", pushkin);
+        MassiveOfEvents events = eventService.getEventsByPushkin(pushkin,page);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @Operation(
+            summary = "Вывод списка мероприятий по возрастному ограничению",
+            description = "Вывод списка мероприятий по возрастному ограничению"
+    )
+    @GetMapping(path="/age")
+    public ResponseEntity<MassiveOfEvents> getEventsByAge(@PathVariable String city, @RequestParam Integer age , @RequestParam int page) {
+        log.trace("EventController.createEvent /{city}/event/age - age : {} , page : {}", age,page);
+        MassiveOfEvents events = eventService.getEventsByAgeRating(age,page);
         return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 
