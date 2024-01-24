@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.EventSymbolicName;
 import ru.khokhlov.biletka.dto.request.event_full_ei.BasicInformationRequest;
 import ru.khokhlov.biletka.entity.EventBasicInformation;
+import ru.khokhlov.biletka.entity.EventImage;
 import ru.khokhlov.biletka.exception.ErrorMessage;
 import ru.khokhlov.biletka.exception.InvalidDataException;
 import ru.khokhlov.biletka.repository.BasicInformationRepository;
@@ -76,6 +77,12 @@ public class BasicInformationServiceImpl implements BasicInformationService {
     @Override
     public void deleteBasicInformation(EventBasicInformation eventBasicInformation) {
         basicInformationRepository.delete(eventBasicInformation);
+    }
+
+    @Override
+    public void addImage(EventBasicInformation eventBasicInformation, EventImage eventImage) {
+        eventBasicInformation.setEventImage(eventImage);
+        basicInformationRepository.saveAndFlush(eventBasicInformation);
     }
 
 

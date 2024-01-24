@@ -1,7 +1,10 @@
 package ru.khokhlov.biletka.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -15,6 +18,14 @@ import ru.khokhlov.biletka.dto.response.ImageHallSchemeResponse;
 import ru.khokhlov.biletka.service.FileService;
 
 import java.io.IOException;
+import ru.khokhlov.biletka.dto.response.EventImageResponse;
+import ru.khokhlov.biletka.dto.universal.PublicEventImage;
+import ru.khokhlov.biletka.service.FileService;
+import ru.khokhlov.biletka.entity.EventImage;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 @Validated
 @RestController
@@ -63,8 +74,13 @@ public class FileController {
             description = "Принимает файл jpg,png и тд и сохраняет в бд"
     )
     @PostMapping("/event")
-    public void postImageEvent(@RequestParam("file") MultipartFile file) {
-        log.trace("FileController.postImageEvent /file/event - file {}", file);
+    public ResponseEntity<EventImageResponse> postImageEvent(@RequestParam("eventId") Long eventId, @RequestParam("file") MultipartFile file) {
+        try {
+            EventImageResponse response = fileService.postImageEvent(eventId,file);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(
@@ -92,4 +108,16 @@ public class FileController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(imageHallSchemeResponse);
     }
+
+    @Operation(
+            summary = "Вывод изображения мероприятия",
+            description = "Вывод изображения мероприятия"
+    )
+    @GetMapping("/{id}")
+    public void getImageEvent(@PathVariable Long id, HttpServletResponse response, HttpServletRequest request) throws IOException {
+        PublicEventImage publicEventImage = fileService.getImageEvent(id);
+        response.setContentType(publicEventImage.type());
+        response.getOutputStream().write(publicEventImage.imageData());
+        response.getOutputStream().close();
+    };
 }

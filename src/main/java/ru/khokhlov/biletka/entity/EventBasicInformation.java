@@ -39,6 +39,11 @@ public class EventBasicInformation {
     @Column(name = "show_in_poster")
     private Boolean showInPoster;
 
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private EventImage eventImage;
+
+
     @ManyToOne
     @JoinColumn(name = "event_type_id")
     private EventType eventType;

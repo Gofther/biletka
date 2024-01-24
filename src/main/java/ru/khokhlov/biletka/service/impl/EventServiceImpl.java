@@ -280,4 +280,11 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.findAllByTypeAndStart(eventType, offset*8);
         return events.toArray(Event[]::new);
     }
+
+    @Override
+    public void addImageEvent(Long eventId, EventImage eventImage) {
+        Event event = eventRepository.getReferenceById(eventId);
+
+        basicInformationService.addImage(event.getEventBasicInformation(), eventImage);
+    }
 }
