@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.EventInfo;
 import ru.khokhlov.biletka.dto.response.*;
@@ -17,6 +18,9 @@ import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.repository.EventRepository;
 import ru.khokhlov.biletka.service.*;
 import ru.khokhlov.biletka.utils.NameRebuilder;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -272,6 +276,39 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getAllFullInfo() {
         return eventRepository.findAll();
+    }
+
+
+    @Override
+    public MassiveOfEvents getEventsWithLimitAndOffset(int offset){
+        int limit = 8;
+
+        Pageable pageable = PageRequest.of(offset, limit);
+
+        Page<Event> eventsPage = eventRepository.findEventsWithLimitAndOffset(pageable);
+
+        List<Event> events = eventsPage.getContent();
+
+        List<PublicEvent> publicEvents = new ArrayList<>();
+
+
+        for (Event e : events) {
+            publicEvents.add(
+                    new PublicEvent(
+                            e.getId(),
+                            e.getEventBasicInformation().getName(),
+                            e.getEventBasicInformation().getSymbolicName(),
+                            e.getEventBasicInformation().getNameRus(),
+                            e.getEventBasicInformation().getEventType().getType(),
+                            String.format("%s%s", e.getEventDuration().getHours(), e.getEventDuration().getMinutes()),
+                            e.getEventBasicInformation().getPushkin(),
+                            e.getEventBasicInformation().getShowInPoster(),
+                            e.getEventBasicInformation().getImg()
+                    )
+            );
+        }
+
+        return new MassiveOfEvents(publicEvents.toArray(PublicEvent[]::new));
     }
 
     @Override

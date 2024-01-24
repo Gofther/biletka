@@ -49,6 +49,17 @@ public class EventController {
     }
 
     @Operation(
+            summary = "Вывод восьми мероприятий",
+            description = "Вывод восьми мероприятий"
+    )
+    @GetMapping(path="/eight")
+    public ResponseEntity<MassiveOfEvents> getEventsWithLimitAndOffset(@PathVariable String city, @RequestParam int offset) {
+        log.trace("EventController.createEvent /{city}/event - first event id {}", offset);
+        MassiveOfEvents events = eventService.getEventsWithLimitAndOffset(offset);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @Operation(
             summary = "Получение дат данного события в городе",
             description = "Позволяет получить массив дат мероприятия в определенном городе")
     @GetMapping(path = "/{eventSymbolicName}/{id}")

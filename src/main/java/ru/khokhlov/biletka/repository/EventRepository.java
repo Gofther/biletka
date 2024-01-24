@@ -7,10 +7,14 @@ import org.springframework.stereotype.Repository;
 import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.entity.EventType;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
+
     /**
      * Поиск в бд ивента по типу ивента и символичному названию ивента
      * @param eventType тип ивента
@@ -21,4 +25,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE e.eventBasicInformation.eventType = :eventType " +
             "AND e.eventBasicInformation.symbolicName = :symbolicName")
     Event findFirstByEventTypeAndSymbolicName(EventType eventType, String symbolicName) throws EntityNotFoundException;
+
+
+    @Query("SELECT e FROM Event e ORDER BY e.id")
+    Page<Event> findEventsWithLimitAndOffset(Pageable pageable);
 }
+
+
