@@ -14,7 +14,10 @@ import ru.khokhlov.biletka.dto.request.EventInfo;
 import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
 import ru.khokhlov.biletka.entity.Event;
+
 import ru.khokhlov.biletka.repository.EventRepository;
+
+
 import ru.khokhlov.biletka.service.EventService;
 
 import java.time.LocalDate;
@@ -149,6 +152,14 @@ public class EventController {
                                                     @Parameter(description = "id события") @RequestParam Long id) {
         log.trace("EventController.createEvent /remove - id {}", id);
         return ResponseEntity.ok().body(eventService.removeEventById(id));
+    }
+
+    @GetMapping(path = "/type/{name}")
+    public ResponseEntity<Event[]> getByType(@Parameter(description = "тип события") @PathVariable String name,
+                                                         @Parameter(description = "начало поиска мероприятий") @RequestParam Integer offset) {
+        log.trace("EventController.getByType /type/{name} - name {}, length {}", name, offset);
+        Event[] events = eventService.getEventByType(name, offset);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 }
 

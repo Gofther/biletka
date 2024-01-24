@@ -27,7 +27,8 @@ public class HallScheme {
     @Column(name = "number_seats")
     private int numberSeats;
 
-    @Column(name = "scheme")
+    @Lob
+    @Column(name = "scheme", nullable = false, columnDefinition="TEXT")
     private String scheme;
 
     @ManyToOne

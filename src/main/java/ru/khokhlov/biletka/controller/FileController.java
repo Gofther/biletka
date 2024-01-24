@@ -22,6 +22,10 @@ import ru.khokhlov.biletka.entity.EventImage;
 import java.awt.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import ru.khokhlov.biletka.dto.response.ImageHallSchemeResponse;
+import ru.khokhlov.biletka.service.FileService;
+
+import java.io.IOException;
 
 @Validated
 @RestController
@@ -29,8 +33,6 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping("/file")
 @Tag(name = "Контроллер файлов", description = "")
 @Slf4j
-
-
 public class FileController {
     private final FileService fileService;
 //   TODO Response пишеться в dto/response
@@ -85,8 +87,11 @@ public class FileController {
             description = "Принимает файл подписания услуг с орагнизацией и сохраняет в бд"
     )
     @PostMapping("/organization")
-    public void postFileOrganization(@RequestParam("file") MultipartFile file) {
-        log.trace("FileController.postFileOrganization /file/organization - file {}", file);
+    public void postFileOrganization(@RequestParam("file") MultipartFile file,
+                                     @RequestParam("id") Long id) throws IOException {
+        log.trace("FileController.postFileOrganization /file/organization - file {}, id {}", file, id);
+        fileService.postDocumentOrganization(file, id);
+
     }
 
     @Operation(
@@ -94,8 +99,13 @@ public class FileController {
             description = "Принимает файл jpg, png и тд и сохраняет в бд"
     )
     @PostMapping("/hall")
-    public void postImageHall(@RequestParam("file") MultipartFile file) {
-        log.trace("FileController.postImageHall /file/hall - file {}", file);
+    public ResponseEntity<ImageHallSchemeResponse> postImageHall(@RequestParam("file") MultipartFile file,
+                                                                 @RequestParam("organization_id") Long organizationId,
+                                                                 @RequestParam("id") Long id) throws IOException {
+        log.trace("FileController.postImageHall /file/hall - file {}, id {}, organization_id {}", file, id, organizationId);
+        ImageHallSchemeResponse imageHallSchemeResponse = fileService.postSchemeHall(file, id, organizationId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageHallSchemeResponse);
     }
 
     @Operation(

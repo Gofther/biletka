@@ -27,6 +27,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND e.eventBasicInformation.symbolicName = :symbolicName")
     Event findFirstByEventTypeAndSymbolicName(EventType eventType, String symbolicName) throws EntityNotFoundException;
 
+
     /**
      * Поиск в бд ивента по наличию пушкинской карты
      * @param pushkin наличие пушкинской карты
@@ -40,6 +41,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e ORDER BY e.id")
     Page<Event> findEventsWithLimitAndOffset(Pageable pageable);
+
+    @Query(value = "SELECT e FROM Event e " +
+            "WHERE e.eventBasicInformation.eventType = :eventType " +
+            "ORDER BY e.eventBasicInformation.eventType DESC " +
+            "LIMIT 8 OFFSET :length")
+    List<Event> findAllByTypeAndStart(EventType eventType, Integer length);
+
 }
 
 

@@ -108,7 +108,11 @@ public interface EventService {
 
     List<Event> getAllFullInfo();
 
+
     MassiveOfEvents getEventsWithLimitAndOffset(int offset);
 
     void addImageEvent(Long eventId, EventImage eventImage);
+
+    Event[] getEventByType(String name, Integer offset);
+
 }

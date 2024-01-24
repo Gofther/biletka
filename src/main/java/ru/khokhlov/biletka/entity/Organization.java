@@ -68,6 +68,10 @@ public class Organization {
     @Column(name = "role")
     private RoleEnum roleEnum;
 
+    @OneToOne
+    @JoinColumn(name = "file_id")
+    private FileOrganization fileOrganization;
+
     @ManyToMany
     @JoinTable(
             name = "organization_place",

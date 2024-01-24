@@ -339,6 +339,7 @@ public class EventServiceImpl implements EventService {
     }
 
 
+
     @Override
     public MassiveOfEvents getEventsWithLimitAndOffset(int offset){
         int limit = 8;
@@ -376,5 +377,13 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.getReferenceById(eventId);
 
         basicInformationService.addImage(event.getEventBasicInformation(), eventImage);
+        }
+
+    @Override
+    public Event[] getEventByType(String name, Integer offset) {
+        EventType eventType = eventTypeService.getEventType(name);
+        List<Event> events = eventRepository.findAllByTypeAndStart(eventType, offset*8);
+        return events.toArray(Event[]::new);
+
     }
 }
