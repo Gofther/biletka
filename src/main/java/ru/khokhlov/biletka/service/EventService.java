@@ -96,4 +96,6 @@ public interface EventService {
     EventResponse removeEventById(Long id);
 
     List<Event> getAllFullInfo();
+
+    Event[] getEventByType(String name, Integer offset);
 }

@@ -273,4 +273,11 @@ public class EventServiceImpl implements EventService {
     public List<Event> getAllFullInfo() {
         return eventRepository.findAll();
     }
+
+    @Override
+    public Event[] getEventByType(String name, Integer offset) {
+        EventType eventType = eventTypeService.getEventType(name);
+        List<Event> events = eventRepository.findAllByTypeAndStart(eventType, offset*8);
+        return events.toArray(Event[]::new);
+    }
 }

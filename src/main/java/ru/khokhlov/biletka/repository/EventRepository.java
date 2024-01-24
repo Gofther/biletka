@@ -21,4 +21,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE e.eventBasicInformation.eventType = :eventType " +
             "AND e.eventBasicInformation.symbolicName = :symbolicName")
     Event findFirstByEventTypeAndSymbolicName(EventType eventType, String symbolicName) throws EntityNotFoundException;
+
+    @Query(value = "SELECT e FROM Event e " +
+            "WHERE e.eventBasicInformation.eventType = :eventType " +
+            "ORDER BY e.eventBasicInformation.eventType DESC " +
+            "LIMIT 8 OFFSET :length")
+    List<Event> findAllByTypeAndStart(EventType eventType, Integer length);
 }
