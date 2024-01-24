@@ -12,11 +12,11 @@ import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.enums.RoleEnum;
-<<<<<<< HEAD
+
 import ru.khokhlov.biletka.repository.EventImageRepository;
-=======
+
 import ru.khokhlov.biletka.repository.FileOrganizationRepository;
->>>>>>> origin/main
+
 import ru.khokhlov.biletka.repository.OrganizationRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.service.*;
@@ -35,12 +35,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final EventService eventService;
     private final TicketService ticketService;
     private final TicketRepository ticketRepository;
-<<<<<<< HEAD
+
     private final EventImageRepository eventImageRepository;
-=======
+
     private final FileOrganizationRepository fileOrganizationRepository;
 
->>>>>>> origin/main
+
     @Override
     public Long getOrganizationIdByEmailAndPassword(String email, String password) {
         Long id = -1L;
@@ -283,15 +283,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return newEvents.toArray(Event[]::new);
     }
 
-    @Override
-    public void addFileInOrganization(Long id, Long fileId) {
-        FileOrganization fileOrganization = fileOrganizationRepository.getReferenceById(fileId);
-        Organization organization = organizationRepository.getReferenceById(id);
 
-        organization.setFileOrganization(fileOrganization);
-
-        organizationRepository.saveAndFlush(organization);
-    }
 
     @Override
     public DeleteEventOrganization deleteEventOrganizationRelation(Long organisationId, Long eventId) throws EntityNotFoundException {

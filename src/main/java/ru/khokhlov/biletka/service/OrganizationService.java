@@ -114,5 +114,5 @@ public interface OrganizationService {
 
     Event[] getUnevents(Long organizationId);
 
-    void addFileInOrganization(Long id, Long fileId);
+
 }
