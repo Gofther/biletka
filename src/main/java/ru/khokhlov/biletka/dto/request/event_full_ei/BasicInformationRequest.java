@@ -37,8 +37,8 @@ public record BasicInformationRequest(
         @JsonProperty("event_id_culture")
         Long eventIDCulture,
 
-        @NotBlank(message = "Image URL must not be null")
-        String img_url,
+        @NotNull(message = "Image id must not be null")
+        Long img_id,
 
         @NotNull(message = "Show in poster must be not null")
         @JsonProperty("show_in_poster")

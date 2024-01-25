@@ -66,6 +66,10 @@ public record OrganizationRegistration(
 
         @NotBlank(message = "Password must not be blank")
         @Pattern(regexp = "^(?=.*[a-zа-я])(?=.*[A-ZА-Я])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Invalid password format")
-        String password
+        String password,
+
+        @NotNull(message = "File not be null")
+        @JsonProperty("file_id")
+        Long file
 ) {
 }

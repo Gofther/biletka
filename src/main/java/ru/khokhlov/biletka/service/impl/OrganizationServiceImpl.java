@@ -4,6 +4,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.OrganizationAddEvent;
 import ru.khokhlov.biletka.dto.request.OrganizationAddPlace;
@@ -22,7 +23,7 @@ import ru.khokhlov.biletka.utils.PasswordEncoder;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@org.springframework.context.annotation.Lazy))
 @Slf4j
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
@@ -31,6 +32,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final MailSender mailSender;
     private final EventService eventService;
     private final TicketService ticketService;
+    @Lazy
+    private final FileService fileService;
     private final TicketRepository ticketRepository;
     private final FileOrganizationRepository fileOrganizationRepository;
 
@@ -57,6 +60,8 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new EntityExistsException("Entity with email: " + email + " or full name: " + fullNameOrganization + " already exists");
         }
 
+        FileOrganization fileOrganization = fileService.getAllFileOrganization(organizationRegistration.file());
+
         //TODO Mapper
         Organization organization = new Organization(
                 organizationRegistration.fullNameOrganization(),
@@ -78,6 +83,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         );
 
         organization.setRoleEnum(RoleEnum.ORGANIZATION);
+        organization.setFileOrganization(fileOrganization);
         organizationRepository.saveAndFlush(organization);
         organization.setPassword(organizationRegistration.password());
 

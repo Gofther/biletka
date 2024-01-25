@@ -1,13 +1,10 @@
 package ru.khokhlov.biletka.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +12,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.dto.response.ImageHallSchemeResponse;
-import ru.khokhlov.biletka.service.FileService;
 
 import java.io.IOException;
 import ru.khokhlov.biletka.dto.response.EventImageResponse;
 import ru.khokhlov.biletka.dto.universal.PublicEventImage;
 import ru.khokhlov.biletka.service.FileService;
-import ru.khokhlov.biletka.entity.EventImage;
-
-import java.awt.*;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 @Validated
 @RestController
@@ -74,9 +65,9 @@ public class FileController {
             description = "Принимает файл jpg,png и тд и сохраняет в бд"
     )
     @PostMapping("/event")
-    public ResponseEntity<EventImageResponse> postImageEvent(@RequestParam("eventId") Long eventId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<EventImageResponse> postImageEvent(@RequestParam("file") MultipartFile file) {
         try {
-            EventImageResponse response = fileService.postImageEvent(eventId,file);
+            EventImageResponse response = fileService.postImageEvent(file);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -88,11 +79,10 @@ public class FileController {
             description = "Принимает файл подписания услуг с орагнизацией и сохраняет в бд"
     )
     @PostMapping("/organization")
-    public void postFileOrganization(@RequestParam("file") MultipartFile file,
-                                     @RequestParam("id") Long id) throws IOException {
-        log.trace("FileController.postFileOrganization /file/organization - file {}, id {}", file, id);
-        fileService.postDocumentOrganization(file, id);
-
+    public ResponseEntity<Long> postFileOrganization(@RequestParam("file") MultipartFile file) throws IOException {
+        log.trace("FileController.postFileOrganization /file/organization - file {}", file);
+        Long id = fileService.postDocumentOrganization(file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @Operation(
