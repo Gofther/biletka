@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="create-file-organization.xml" relativeToChangelogFile="true"/>
+    <include file="create-image-event.xml" relativeToChangelogFile="true"/>
+    <include file="alter-columns-hall-scheme-column.xml" relativeToChangelogFile="true"/>
+    <include file="alter-event-basic-information-on-event-image.xml" relativeToChangelogFile="true"/>
+    <include file="alter-organization-on-file-organization.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

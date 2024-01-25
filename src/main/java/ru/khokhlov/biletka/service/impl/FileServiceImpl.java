@@ -39,6 +39,10 @@ public class FileServiceImpl implements FileService {
     private final EventImageRepository eventImageRepository;
     private final EventService eventService;
     private final EventRepository eventRepository;
+    private final FileOrganizationRepository fileOrganizationRepository;
+    private final PlaceService placeService;
+    private final MailSender mailSender;
+
     @Override
     public EventImageResponse postImageEvent(Long eventId, MultipartFile file) throws IOException {
         try {
