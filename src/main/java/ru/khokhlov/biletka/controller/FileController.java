@@ -22,6 +22,7 @@ import ru.khokhlov.biletka.service.FileService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/file")
+@CrossOrigin
 @Tag(name = "Контроллер файлов", description = "")
 @Slf4j
 public class FileController {
@@ -99,6 +100,7 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageHallSchemeResponse);
     }
 
+    @CrossOrigin
     @Operation(
             summary = "Вывод изображения мероприятия",
             description = "Вывод изображения мероприятия"
