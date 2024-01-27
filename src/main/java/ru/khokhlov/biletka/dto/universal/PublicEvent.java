@@ -9,6 +9,7 @@ public record PublicEvent(
         String duration,
         Boolean pushkin,
         Boolean showInPoster,
-        String imgFile
+        String imgFile,
+        String link
 ) {
 }

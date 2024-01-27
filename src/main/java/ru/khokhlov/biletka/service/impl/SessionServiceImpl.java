@@ -109,7 +109,8 @@ public class SessionServiceImpl implements SessionService {
                             String.format("%s:%s", event.getEventDuration().getHours(), event.getEventDuration().getMinutes()),
                             event.getEventBasicInformation().getPushkin(),
                             event.getEventBasicInformation().getShowInPoster(),
-                            event.getEventBasicInformation().getImg()
+                            event.getEventBasicInformation().getImg(),
+                            event.getEventWebWidget().getLink()
                     )
             );
         }

@@ -98,7 +98,19 @@ public interface EventService {
 
     List<Event> getAllFullInfo();
 
-    Event[] getEventByType(String name, Integer offset);
+    MassiveOfEvents getEventByType(String name, Integer offset);
 
     void addImageEvent(Long eventId, EventImage eventImage);
+
+    MassiveOfEvents getEventsWithLimitAndOffset(int offset);
+
+    /**
+     * Функция получения ивентов по наличию пушкинской карты
+     * @param pushkin pushkin : true/false
+     * @param page номер страницы состоящей из 8 ивентов
+     * @return массив ивентов
+     */
+    MassiveOfEvents getEventsByPushkin(Boolean pushkin,int page);
+
+    MassiveOfEvents getEventsByAgeRating(Integer age, int page);
 }

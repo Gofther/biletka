@@ -9,4 +9,5 @@
     <include file="alter-columns-hall-scheme-column.xml" relativeToChangelogFile="true"/>
     <include file="alter-event-basic-information-on-event-image.xml" relativeToChangelogFile="true"/>
     <include file="alter-organization-on-file-organization.xml" relativeToChangelogFile="true"/>
+    <include file="insert-values-type_of_event.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

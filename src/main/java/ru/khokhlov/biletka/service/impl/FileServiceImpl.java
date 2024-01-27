@@ -110,7 +110,6 @@ public class FileServiceImpl implements FileService {
     @Override
     public PublicEventImage getImageEvent(Long id) {
         Event event = eventRepository.getReferenceById(id);
-        System.out.println();
         return new PublicEventImage(
                 event.getEventBasicInformation().getEventImage().getImageData(),
                 event.getEventBasicInformation().getEventImage().getImageName(),

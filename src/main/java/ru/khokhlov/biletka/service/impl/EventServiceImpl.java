@@ -4,6 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.EventInfo;
 import ru.khokhlov.biletka.dto.response.*;
@@ -207,7 +210,8 @@ public class EventServiceImpl implements EventService {
                             String.format("%s%s", e.getEventDuration().getHours(), e.getEventDuration().getMinutes()),
                             e.getEventBasicInformation().getPushkin(),
                             e.getEventBasicInformation().getShowInPoster(),
-                            e.getEventBasicInformation().getImg()
+                            e.getEventBasicInformation().getImg(),
+                            e.getEventWebWidget().getLink()
                     )
             );
         }
@@ -275,10 +279,35 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event[] getEventByType(String name, Integer offset) {
+    public MassiveOfEvents getEventByType(String name, Integer offset) {
+        int limit = 8;
+
+        Pageable pageable = PageRequest.of(offset, limit);
         EventType eventType = eventTypeService.getEventType(name);
-        List<Event> events = eventRepository.findAllByTypeAndStart(eventType, offset*8);
-        return events.toArray(Event[]::new);
+
+        Page<Event> eventsPage = eventRepository.findAllByTypeAndStart(eventType, pageable);
+
+        List<Event> events = eventsPage.getContent();
+
+        List<PublicEvent> publicEvents = new ArrayList<>();
+
+        for (Event e : events) {
+            publicEvents.add(
+                    new PublicEvent(
+                            e.getId(),
+                            e.getEventBasicInformation().getName(),
+                            e.getEventBasicInformation().getSymbolicName(),
+                            e.getEventBasicInformation().getNameRus(),
+                            e.getEventBasicInformation().getEventType().getType(),
+                            String.format("%s%s", e.getEventDuration().getHours(), e.getEventDuration().getMinutes()),
+                            e.getEventBasicInformation().getPushkin(),
+                            e.getEventBasicInformation().getShowInPoster(),
+                            e.getEventBasicInformation().getImg(),
+                            e.getEventWebWidget().getLink()
+                    )
+            );
+        }
+        return new MassiveOfEvents(publicEvents.toArray(PublicEvent[]::new));
     }
 
     @Override
@@ -286,5 +315,99 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.getReferenceById(eventId);
 
         basicInformationService.addImage(event.getEventBasicInformation(), eventImage);
+    }
+
+    @Override
+    public MassiveOfEvents getEventsWithLimitAndOffset(int offset){
+        int limit = 8;
+
+        Pageable pageable = PageRequest.of(offset, limit);
+
+        Page<Event> eventsPage = eventRepository.findEventsWithLimitAndOffset(pageable);
+
+        List<Event> events = eventsPage.getContent();
+
+        List<PublicEvent> publicEvents = new ArrayList<>();
+
+
+        for (Event e : events) {
+            publicEvents.add(
+                    new PublicEvent(
+                            e.getId(),
+                            e.getEventBasicInformation().getName(),
+                            e.getEventBasicInformation().getSymbolicName(),
+                            e.getEventBasicInformation().getNameRus(),
+                            e.getEventBasicInformation().getEventType().getType(),
+                            String.format("%s%s", e.getEventDuration().getHours(), e.getEventDuration().getMinutes()),
+                            e.getEventBasicInformation().getPushkin(),
+                            e.getEventBasicInformation().getShowInPoster(),
+                            e.getEventBasicInformation().getImg(),
+                            e.getEventWebWidget().getLink()
+                    )
+            );
+        }
+
+        return new MassiveOfEvents(publicEvents.toArray(PublicEvent[]::new));
+    }
+
+    @Override
+    public MassiveOfEvents getEventsByPushkin(Boolean pushkin, int page) {
+        log.trace("EventServiceImpl.getEventByPushkin - pushkin : {} , page : {}", pushkin,page);
+        int size = 8;
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Event> eventsPage = eventRepository.findEventsByPushkin(pushkin, pageable);
+        List<Event> eventList = eventsPage.getContent();
+
+        List<PublicEvent> publicEvents = new ArrayList<>();
+
+        for (Event e : eventList) {
+            publicEvents.add(
+                    new PublicEvent(
+                            e.getId(),
+                            e.getEventBasicInformation().getName(),
+                            e.getEventBasicInformation().getSymbolicName(),
+                            e.getEventBasicInformation().getNameRus(),
+                            e.getEventBasicInformation().getEventType().getType(),
+                            String.format("%s%s", e.getEventDuration().getHours(), e.getEventDuration().getMinutes()),
+                            e.getEventBasicInformation().getPushkin(),
+                            e.getEventBasicInformation().getShowInPoster(),
+                            e.getEventBasicInformation().getImg(),
+                            e.getEventWebWidget().getLink()
+                    )
+            );
+        }
+
+        return new MassiveOfEvents(publicEvents.toArray(PublicEvent[]::new));
+    }
+
+    @Override
+    public MassiveOfEvents getEventsByAgeRating(Integer age, int page) {
+        log.trace("EventServiceImpl.getEventByAgeRating - age : {} , page {}", age, page);
+        int size = 8;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Event> eventsPage = eventRepository.findEventsByAgeRatingId(age,pageable);
+
+        List<Event> eventList = eventsPage.getContent();
+        List<PublicEvent> publicEvents = new ArrayList<>();
+
+        for (Event e : eventList) {
+            publicEvents.add(
+                    new PublicEvent(
+                            e.getId(),
+                            e.getEventBasicInformation().getName(),
+                            e.getEventBasicInformation().getSymbolicName(),
+                            e.getEventBasicInformation().getNameRus(),
+                            e.getEventBasicInformation().getEventType().getType(),
+                            String.format("%s%s", e.getEventDuration().getHours(), e.getEventDuration().getMinutes()),
+                            e.getEventBasicInformation().getPushkin(),
+                            e.getEventBasicInformation().getShowInPoster(),
+                            e.getEventBasicInformation().getImg(),
+                            e.getEventWebWidget().getLink()
+                    )
+            );
+        }
+
+        return new MassiveOfEvents(publicEvents.toArray(PublicEvent[]::new));
     }
 }
