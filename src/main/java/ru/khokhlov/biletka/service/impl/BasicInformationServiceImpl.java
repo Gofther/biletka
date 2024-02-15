@@ -2,6 +2,7 @@ package ru.khokhlov.biletka.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.EventSymbolicName;
 import ru.khokhlov.biletka.dto.request.event_full_ei.BasicInformationRequest;
@@ -10,22 +11,21 @@ import ru.khokhlov.biletka.entity.EventImage;
 import ru.khokhlov.biletka.exception.ErrorMessage;
 import ru.khokhlov.biletka.exception.InvalidDataException;
 import ru.khokhlov.biletka.repository.BasicInformationRepository;
-import ru.khokhlov.biletka.service.AgeRatingService;
-import ru.khokhlov.biletka.service.BasicInformationService;
-import ru.khokhlov.biletka.service.EventTypeService;
-import ru.khokhlov.biletka.service.GenreService;
+import ru.khokhlov.biletka.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@org.springframework.context.annotation.Lazy))
 @Slf4j
 public class BasicInformationServiceImpl implements BasicInformationService {
     private final BasicInformationRepository basicInformationRepository;
     private final AgeRatingService ageRatingService;
     private final EventTypeService eventTypeService;
     private final GenreService genreService;
+    @Lazy
+    private final FileService fileService;
 
     @Override
     public EventBasicInformation createBasicInformation(BasicInformationRequest basicInformationRequest) throws InvalidDataException {
@@ -59,7 +59,7 @@ public class BasicInformationServiceImpl implements BasicInformationService {
                 basicInformationRequest.nameRus(),
                 symbolicName.symbolicName(),
                 basicInformationRequest.organizer(),
-                basicInformationRequest.img_url(),
+                basicInformationRequest.img_id().toString(),
                 basicInformationRequest.pushkin(),
                 basicInformationRequest.eventIDCulture(),
                 basicInformationRequest.showInPoster()
@@ -68,6 +68,7 @@ public class BasicInformationServiceImpl implements BasicInformationService {
         eventBasicInformation.setGenres(genreService.getAllGenreByStringMassive(basicInformationRequest.genre()));
         eventBasicInformation.setEventType(eventTypeService.getEventType(basicInformationRequest.eventType()));
         eventBasicInformation.setAgeRatingId(ageRatingService.getAgeRating(basicInformationRequest.ageRating()));
+        eventBasicInformation.setEventImage(fileService.getAllImageEvent(basicInformationRequest.img_id()));
 
         basicInformationRepository.saveAndFlush(eventBasicInformation);
 

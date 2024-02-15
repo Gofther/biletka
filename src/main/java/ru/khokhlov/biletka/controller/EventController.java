@@ -14,10 +14,6 @@ import ru.khokhlov.biletka.dto.request.EventInfo;
 import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.MassivePublicEvents;
 import ru.khokhlov.biletka.entity.Event;
-
-import ru.khokhlov.biletka.repository.EventRepository;
-
-
 import ru.khokhlov.biletka.service.EventService;
 
 import java.time.LocalDate;
@@ -31,7 +27,6 @@ import java.util.List;
 @Slf4j
 public class EventController {
     private final EventService eventService;
-    private final EventRepository eventRepository;
 
     @Operation(
             summary = "Создание мероприятия",
@@ -53,39 +48,6 @@ public class EventController {
     public ResponseEntity<MassiveOfEvents> getAllEvent(@PathVariable String city) {
         log.trace("EventController.createEvent /{city}/event");
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getAllEvent());
-    }
-
-    @Operation(
-            summary = "Вывод восьми мероприятий",
-            description = "Вывод восьми мероприятий"
-    )
-    @GetMapping(path="/eight")
-    public ResponseEntity<MassiveOfEvents> getEventsWithLimitAndOffset(@PathVariable String city, @RequestParam int offset) {
-        log.trace("EventController.createEvent /{city}/event - page number {}", offset);
-        MassiveOfEvents events = eventService.getEventsWithLimitAndOffset(offset);
-        return ResponseEntity.status(HttpStatus.OK).body(events);
-    }
-
-    @Operation(
-            summary = "Вывод списка мероприятий по наличию пушкинской карты",
-            description = "Вывод списка мероприятий по наличию пушкинской карты"
-    )
-    @GetMapping(path="/pushkin")
-    public ResponseEntity<MassiveOfEvents> getEventsByPushkin(@PathVariable String city, @RequestParam Boolean pushkin, @RequestParam int page) {
-        log.trace("EventController.createEvent /{city}/event/pushkin - pushkin : {}", pushkin);
-        MassiveOfEvents events = eventService.getEventsByPushkin(pushkin,page);
-        return ResponseEntity.status(HttpStatus.OK).body(events);
-    }
-
-    @Operation(
-            summary = "Вывод списка мероприятий по возрастному ограничению",
-            description = "Вывод списка мероприятий по возрастному ограничению"
-    )
-    @GetMapping(path="/age")
-    public ResponseEntity<MassiveOfEvents> getEventsByAge(@PathVariable String city, @RequestParam Integer age , @RequestParam int page) {
-        log.trace("EventController.createEvent /{city}/event/age - age : {} , page : {}", age,page);
-        MassiveOfEvents events = eventService.getEventsByAgeRating(age,page);
-        return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 
     @Operation(
@@ -155,12 +117,43 @@ public class EventController {
     }
 
     @GetMapping(path = "/type/{name}")
-    public ResponseEntity<Event[]> getByType(@Parameter(description = "тип события") @PathVariable String name,
-                                                         @Parameter(description = "начало поиска мероприятий") @RequestParam Integer offset) {
+    public ResponseEntity<MassiveOfEvents> getByType(@Parameter(description = "тип события") @PathVariable String name,
+                                                     @Parameter(description = "начало поиска мероприятий") @RequestParam Integer offset) {
         log.trace("EventController.getByType /type/{name} - name {}, length {}", name, offset);
-        Event[] events = eventService.getEventByType(name, offset);
+        MassiveOfEvents events = eventService.getEventByType(name, offset);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @Operation(
+            summary = "Вывод восьми мероприятий",
+            description = "Вывод восьми мероприятий"
+    )
+    @GetMapping(path="/eight")
+    public ResponseEntity<MassiveOfEvents> getEventsWithLimitAndOffset(@PathVariable String city, @RequestParam int offset) {
+        log.trace("EventController.createEvent /{city}/event - first event id {}", offset);
+        MassiveOfEvents events = eventService.getEventsWithLimitAndOffset(offset);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @Operation(
+            summary = "Вывод списка мероприятий по наличию пушкинской карты",
+            description = "Вывод списка мероприятий по наличию пушкинской карты"
+    )
+    @GetMapping(path="/pushkin")
+    public ResponseEntity<MassiveOfEvents> getEventsByPushkin(@PathVariable String city, @RequestParam Boolean pushkin, @RequestParam int page) {
+        log.trace("EventController.createEvent /{city}/event/pushkin - pushkin : {}", pushkin);
+        MassiveOfEvents events = eventService.getEventsByPushkin(pushkin,page);
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @Operation(
+            summary = "Вывод списка мероприятий по возрастному ограничению",
+            description = "Вывод списка мероприятий по возрастному ограничению"
+    )
+    @GetMapping(path="/age")
+    public ResponseEntity<MassiveOfEvents> getEventsByAge(@PathVariable String city, @RequestParam Integer age , @RequestParam int page) {
+        log.trace("EventController.createEvent /{city}/event/age - age : {} , page : {}", age,page);
+        MassiveOfEvents events = eventService.getEventsByAgeRating(age,page);
         return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 }
-
-

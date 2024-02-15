@@ -17,9 +17,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.khokhlov.biletka.enums.RoleEnum;
 import ru.khokhlov.biletka.service.impl.ClientServiceImpl;
 import ru.khokhlov.biletka.utils.PasswordEncoder;
+
+import java.time.Duration;
 
 @Configuration
 @EnableMethodSecurity
@@ -48,43 +52,38 @@ public class SecurityConfig {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.setMaxAge(10000L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-//
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-//        return source;
-//    }
 
-//    @Bean
-//    public WebMvcConfigurer corsMappingConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedOrigins("*")
-//                        .allowedMethods("*")
-//                        .maxAge(3600)
-//                        .allowedHeaders("*")
-//                        .exposedHeaders("*");
-//            }
-//        };
-//    }
+    @Bean
+    public WebMvcConfigurer corsMappingConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .exposedHeaders("*");
+            }
+        };
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
+                .cors(c->c.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/{city}/event/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/{city}/place/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/ticket/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/file/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/file/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/{city}/event/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers(HttpMethod.POST, "/{city}/place/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers("/ticket/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())

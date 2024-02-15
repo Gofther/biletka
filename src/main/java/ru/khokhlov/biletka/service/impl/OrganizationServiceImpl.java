@@ -4,6 +4,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.OrganizationAddEvent;
 import ru.khokhlov.biletka.dto.request.OrganizationAddPlace;
@@ -12,11 +13,8 @@ import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.enums.RoleEnum;
-
-import ru.khokhlov.biletka.repository.EventImageRepository;
-
 import ru.khokhlov.biletka.repository.FileOrganizationRepository;
-
+import ru.khokhlov.biletka.repository.EventImageRepository;
 import ru.khokhlov.biletka.repository.OrganizationRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.service.*;
@@ -25,7 +23,7 @@ import ru.khokhlov.biletka.utils.PasswordEncoder;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@org.springframework.context.annotation.Lazy))
 @Slf4j
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
@@ -34,13 +32,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final MailSender mailSender;
     private final EventService eventService;
     private final TicketService ticketService;
+    @Lazy
+    private final FileService fileService;
     private final TicketRepository ticketRepository;
-
-    private final EventImageRepository eventImageRepository;
-
     private final FileOrganizationRepository fileOrganizationRepository;
 
-
+    private final EventImageRepository eventImageRepository;
     @Override
     public Long getOrganizationIdByEmailAndPassword(String email, String password) {
         Long id = -1L;
@@ -63,6 +60,8 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new EntityExistsException("Entity with email: " + email + " or full name: " + fullNameOrganization + " already exists");
         }
 
+        FileOrganization fileOrganization = fileService.getAllFileOrganization(organizationRegistration.file());
+
         //TODO Mapper
         Organization organization = new Organization(
                 organizationRegistration.fullNameOrganization(),
@@ -84,6 +83,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         );
 
         organization.setRoleEnum(RoleEnum.ORGANIZATION);
+        organization.setFileOrganization(fileOrganization);
         organizationRepository.saveAndFlush(organization);
         organization.setPassword(organizationRegistration.password());
 
@@ -198,7 +198,8 @@ public class OrganizationServiceImpl implements OrganizationService {
                             String.format("%s%s", event.getEventDuration().getHours(), event.getEventDuration().getMinutes()),
                             event.getEventBasicInformation().getPushkin(),
                             event.getEventBasicInformation().getShowInPoster(),
-                            event.getEventBasicInformation().getImg()
+                            event.getEventBasicInformation().getImg(),
+                            event.getEventWebWidget().getLink()
                     )
             );
         }
@@ -206,10 +207,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         return new MassivePublicEvents(publicEventList.toArray(PublicEvent[]::new));
     }
 
-    @Override
-    public void addFileInOrganization(Long id, Long fileId) {
-
-    }
 
     @Override
     public boolean isOrganizationActivate(String code) {
@@ -283,7 +280,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         return newEvents.toArray(Event[]::new);
     }
 
+    @Override
+    public void addFileInOrganization(Long id, Long fileId) {
+        FileOrganization fileOrganization = fileOrganizationRepository.getReferenceById(fileId);
+        Organization organization = organizationRepository.getReferenceById(id);
 
+        organization.setFileOrganization(fileOrganization);
+
+        organizationRepository.saveAndFlush(organization);
+    }
 
     @Override
     public DeleteEventOrganization deleteEventOrganizationRelation(Long organisationId, Long eventId) throws EntityNotFoundException {
