@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
+import ru.khokhlov.biletka.dto.response.TicketUserRequest;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
 import ru.khokhlov.biletka.service.TicketService;
@@ -70,5 +72,16 @@ public class TicketController {
         log.trace("TicketController.getAllTickets /ticket");
         generator.generateQRCodeImage("http://ticket-zone.ru", "./src/main/resources/static/img/QRCode.png");
         return ResponseEntity.status(HttpStatus.OK).body(generator.getQRCodeImage("https://ya.ru"));
+    }
+
+    @Operation(
+            summary = "Покупка билета",
+            description = "Позволяет купить билет на сеанс"
+    )
+    @PostMapping(value = "/buy")
+    public ResponseEntity<TicketUserRequest> buyTicket(@Parameter(description = "Информация для покупки") @Valid @RequestBody BuyRequest buyRequest) {
+        log.trace("TicketController.getAllTickets /ticket/buy - buyRequest {} ", buyRequest);
+        TicketUserRequest ticket = ticketService.postBuyTicket(buyRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(ticket);
     }
 }

@@ -27,7 +27,33 @@ public class Ticket {
     @Column(name="activation_code")
     private String activationCode;
 
+    @Column(name="price")
+    private Integer price;
+
+    @Column(name="phone")
+    private String phone;
+
+    @Column(name="email")
+    private String email;
+
+    @Column(name="fullname")
+    private String fullName;
+
     @ManyToOne
     @JoinColumn(name = "tickets_info_id")
     private TicketsInfo info;
+
+    public Ticket() {}
+
+    public Ticket(Integer rowNumber, Integer seatNumber, Boolean isReserved, Boolean isExtinguished, String activationCode, Integer price, String phone, String email, String fullName) {
+        this.rowNumber = rowNumber;
+        this.seatNumber = seatNumber;
+        this.isReserved = isReserved;
+        this.isExtinguished = isExtinguished;
+        this.activationCode = activationCode;
+        this.price = price;
+        this.phone = phone;
+        this.email = email;
+        this.fullName = fullName;
+    }
 }

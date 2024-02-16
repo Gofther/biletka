@@ -5,7 +5,9 @@
     <changeSet id="alter-event-basic-information-on-event-image.xml" author="VadimMor">
         <sql>
             ALTER TABLE event_basic_information
-            ADD COLUMN image_id bigserial,
+            ADD COLUMN image_id bigserial;
+
+            ALTER TABLE event_basic_information
             ADD FOREIGN KEY (image_id) REFERENCES event_image(image_id);
         </sql>
     </changeSet>

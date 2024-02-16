@@ -2,13 +2,10 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-    <changeSet id="alter-organization-on-file-organization.xml" author="VadimMor">
+    <changeSet id="alter-columns-basket.xml" author="Dmitrii">
         <sql>
-            ALTER TABLE organization
-            ADD COLUMN file_id bigserial;
-
-            ALTER TABLE organization
-            ADD FOREIGN KEY (file_id) REFERENCES file_organization(file_id);
+            ALTER TABLE basket
+            ADD COLUMN basket_id bigserial NOT NULL;
         </sql>
     </changeSet>
 </databaseChangeLog>
