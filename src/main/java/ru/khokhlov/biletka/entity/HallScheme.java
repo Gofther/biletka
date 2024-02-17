@@ -43,7 +43,7 @@ public class HallScheme {
     public HallScheme() {
     }
 
-    public HallScheme(String name, String info, int floor, int hallNumber, int numberSeats, String scheme, Place place) {
+    public HallScheme(String name, String info, int floor, int hallNumber, int numberSeats, String scheme, List<String> seatGroupInfo, Place place) {
         this.name = name;
         this.info = info;
         this.floor = floor;
@@ -51,5 +51,7 @@ public class HallScheme {
         this.numberSeats = numberSeats;
         this.scheme = scheme;
         this.place = place;
+        this.seatGroupInfo = seatGroupInfo;
+
     }
 }
