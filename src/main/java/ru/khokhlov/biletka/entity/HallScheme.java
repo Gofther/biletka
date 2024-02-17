@@ -3,6 +3,8 @@ package ru.khokhlov.biletka.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "hall_scheme")
@@ -31,6 +33,9 @@ public class HallScheme {
     @Column(name = "scheme", nullable = false, columnDefinition="TEXT")
     private String scheme;
 
+    @Column(name = "seat_group_info")
+    private String[] seatGroupInfo;
+
     @ManyToOne
     @JoinColumn(name = "place_id")
     private Place place;
@@ -38,7 +43,7 @@ public class HallScheme {
     public HallScheme() {
     }
 
-    public HallScheme(String name, String info, int floor, int hallNumber, int numberSeats, String scheme, Place place) {
+    public HallScheme(String name, String info, int floor, int hallNumber, int numberSeats, String scheme, String[] seatGroupInfo, Place place) {
         this.name = name;
         this.info = info;
         this.floor = floor;
@@ -46,5 +51,7 @@ public class HallScheme {
         this.numberSeats = numberSeats;
         this.scheme = scheme;
         this.place = place;
+        this.seatGroupInfo = seatGroupInfo;
+
     }
 }

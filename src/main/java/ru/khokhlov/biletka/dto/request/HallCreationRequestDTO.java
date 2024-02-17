@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public record HallCreationRequestDTO(
         @NotNull
         @JsonProperty("place_id")
@@ -20,6 +22,10 @@ public record HallCreationRequestDTO(
         Integer seatsCount,
         @NotBlank
         @JsonProperty("about")
-        String info
+        String info,
+
+        @NotNull
+        @JsonProperty("seat_group_info")
+        String[] seatsGroupInfo
 ) {
 }

@@ -118,7 +118,7 @@ public class EventController {
 
     @GetMapping(path = "/type/{name}")
     public ResponseEntity<MassiveOfEvents> getByType(@Parameter(description = "тип события") @PathVariable String name,
-                                                         @Parameter(description = "начало поиска мероприятий") @RequestParam Integer offset) {
+                                                     @Parameter(description = "начало поиска мероприятий") @RequestParam Integer offset) {
         log.trace("EventController.getByType /type/{name} - name {}, length {}", name, offset);
         MassiveOfEvents events = eventService.getEventByType(name, offset);
         return ResponseEntity.status(HttpStatus.OK).body(events);
@@ -157,5 +157,3 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(events);
     }
 }
-
-
