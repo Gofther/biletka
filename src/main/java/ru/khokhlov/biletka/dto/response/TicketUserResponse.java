@@ -1,6 +1,6 @@
 package ru.khokhlov.biletka.dto.response;
 
-public record TicketUserRequest(
+public record TicketUserResponse(
         Long id,
         String name,
         String placeName,

@@ -39,4 +39,6 @@ public interface HallSchemeService {
     String putHall(String scheme, Long id);
 
     SchemeResponse getScheme(Long hallId);
+
+    boolean getSeatScheme(Long id, Integer rawNumber, Integer seatNumber);
 }

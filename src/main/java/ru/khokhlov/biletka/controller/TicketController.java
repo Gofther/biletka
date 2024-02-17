@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
-import ru.khokhlov.biletka.dto.response.TicketUserRequest;
+import ru.khokhlov.biletka.dto.response.TicketUserResponse;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
 import ru.khokhlov.biletka.service.TicketService;
@@ -79,9 +79,9 @@ public class TicketController {
             description = "Позволяет купить билет на сеанс"
     )
     @PostMapping(value = "/buy")
-    public ResponseEntity<TicketUserRequest> buyTicket(@Parameter(description = "Информация для покупки") @Valid @RequestBody BuyRequest buyRequest) {
+    public ResponseEntity<TicketUserResponse> buyTicket(@Parameter(description = "Информация для покупки") @Valid @RequestBody BuyRequest buyRequest) {
         log.trace("TicketController.getAllTickets /ticket/buy - buyRequest {} ", buyRequest);
-        TicketUserRequest ticket = ticketService.postBuyTicket(buyRequest);
+        TicketUserResponse ticket = ticketService.postBuyTicket(buyRequest);
         return ResponseEntity.status(HttpStatus.OK).body(ticket);
     }
 }

@@ -152,7 +152,7 @@ public class SessionServiceImpl implements SessionService {
         TicketsResponse ticketsResponse = ticketService.createTicket(
                 ticketInfo
         );
-        System.out.println(ticketsResponse);
+
         return new SessionResponse(
                 session.getId(),
                 session.getEvent().getEventBasicInformation().getName(),

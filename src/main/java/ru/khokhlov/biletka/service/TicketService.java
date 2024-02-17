@@ -5,7 +5,7 @@ import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
 import ru.khokhlov.biletka.dto.response.SessionInfo;
-import ru.khokhlov.biletka.dto.response.TicketUserRequest;
+import ru.khokhlov.biletka.dto.response.TicketUserResponse;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
 import ru.khokhlov.biletka.entity.Event;
@@ -77,5 +77,5 @@ public interface TicketService {
      * @param buyRequest информация для покупки
      * @return информация о билете
      */
-    TicketUserRequest postBuyTicket(BuyRequest buyRequest);
+    TicketUserResponse postBuyTicket(BuyRequest buyRequest);
 }

@@ -146,7 +146,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                         continue;
                     }
 
-                    if (rowChilds.item(itemRow).getNodeName() == "row-number") {
+                    if (rowChilds.item(itemRow).getNodeName().equals("row-number")) {
                         rowNumber = rowChilds.item(itemRow).getTextContent();
                         continue;
                     }
@@ -189,5 +189,66 @@ public class HallSchemeServiceImpl implements HallSchemeService {
         // Добавление информации о зале
 
         return new SchemeResponse(schemeFloors.toArray(SchemeFloor[]::new));
+    }
+
+    @Override
+    public boolean getSeatScheme(Long id, Integer rowNumber, Integer seatNumber) {
+        HallScheme hallScheme = hallSchemeRepository.getReferenceById(id);
+
+        if (hallScheme.getScheme() == null) {
+            throw new EntityExistsException("Scheme in hall: " + hallScheme.getId() + " already exists");
+        }
+
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        Document doc;
+
+        try {
+            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(hallScheme.getScheme())));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Node rootNode = doc.getFirstChild();
+        NodeList rootChilds = rootNode.getChildNodes();
+        Integer numberFloor = 0;
+        List<SchemeFloor> schemeFloors = new ArrayList<>();
+
+        for (int floor=0; floor<rootChilds.getLength(); floor++) {
+            if (rootChilds.item(floor).getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            NodeList floorChilds = rootChilds.item(floor).getChildNodes();
+
+            for (int floorChild=0; floorChild<floorChilds.getLength(); floorChild++) {
+                if (floorChilds.item(floorChild).getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
+
+                NodeList rowChilds = floorChilds.item(floorChild).getChildNodes();
+
+                if (rowNumber == Integer.valueOf(rowChilds.item(2).getTextContent())) {
+                    for (int rowChild=0; rowChild<rowChilds.getLength(); rowChild++) {
+                        if (rowChilds.item(rowChild).getNodeType()!= Node.ELEMENT_NODE || rowChilds.item(rowChild).getNodeName() == "row-number") {
+                            continue;
+                        }
+
+                        NodeList seats = rowChilds.item(rowChild).getChildNodes();
+
+                        for (int seat=0; seat<seats.getLength(); seat++) {
+                            if (seats.item(seat).getNodeType()!= Node.ELEMENT_NODE) {
+                                continue;
+                            }
+
+                            if (seatNumber == Integer.valueOf(seats.item(seat).getChildNodes().item(5).getTextContent())) {
+                                return false;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

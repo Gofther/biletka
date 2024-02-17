@@ -20,6 +20,7 @@ import ru.khokhlov.biletka.repository.BasketRepository;
 import ru.khokhlov.biletka.repository.ClientRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.repository.TicketUserRepository;
+import ru.khokhlov.biletka.service.HallSchemeService;
 import ru.khokhlov.biletka.service.MailSender;
 import ru.khokhlov.biletka.service.SessionService;
 import ru.khokhlov.biletka.service.TicketService;
@@ -38,6 +39,7 @@ public class TicketServiceImpl implements TicketService {
     private final TicketUserRepository ticketUserRepository;
     private final BasketRepository basketRepository;
     private final MailSender mailSender;
+    private final HallSchemeService hallSchemeService;
 
     @Override
     public TicketsResponse createTicket(TicketInfo ticketInfo) throws EntityNotFoundException {
@@ -222,7 +224,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Transactional
     @Override
-    public TicketUserRequest postBuyTicket(BuyRequest buyRequest) {
+    public TicketUserResponse postBuyTicket(BuyRequest buyRequest) {
         TicketsInfo ticketsInfo = ticketRepository.findFirstBySessionId(buyRequest.idSession());
 
         if(ticketsInfo == null) {
@@ -232,6 +234,18 @@ public class TicketServiceImpl implements TicketService {
         if(ticketsInfo.getOnSales() == 0) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("There are no tickets", "Tickets for the session are sold out!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        if(ticketUserRepository.findFirstByRowNumberAndSeatNumber(buyRequest.rawNumber(), buyRequest.seatNumber()) != null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("The place is already occupied", "The place is already occupied for the event!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        if(hallSchemeService.getSeatScheme(ticketsInfo.getSession().getPlace().getId(), buyRequest.rawNumber(), buyRequest.seatNumber())) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("There is no place", "This place or row does not exist!"));
             throw new InvalidDataException(errorMessages);
         }
 
@@ -271,7 +285,7 @@ public class TicketServiceImpl implements TicketService {
             throw new RuntimeException(e);
         }
 
-        return new TicketUserRequest(
+        return new TicketUserResponse(
                 ticket.getId(),
                 ticket.getInfo().getSession().getEvent().getEventBasicInformation().getNameRus(),
                 ticket.getInfo().getSession().getPlace().getName(),
