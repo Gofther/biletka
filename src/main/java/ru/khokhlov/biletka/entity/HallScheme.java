@@ -34,7 +34,7 @@ public class HallScheme {
     private String scheme;
 
     @Column(name = "seat_group_info")
-    private List<String> seatGroupInfo;
+    private String[] seatGroupInfo;
 
     @ManyToOne
     @JoinColumn(name = "place_id")
@@ -43,7 +43,7 @@ public class HallScheme {
     public HallScheme() {
     }
 
-    public HallScheme(String name, String info, int floor, int hallNumber, int numberSeats, String scheme, List<String> seatGroupInfo, Place place) {
+    public HallScheme(String name, String info, int floor, int hallNumber, int numberSeats, String scheme, String[] seatGroupInfo, Place place) {
         this.name = name;
         this.info = info;
         this.floor = floor;

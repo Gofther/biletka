@@ -26,6 +26,6 @@ public record HallCreationRequestDTO(
 
         @NotNull
         @JsonProperty("seat_group_info")
-        List<String> seatsGroupInfo
+        String[] seatsGroupInfo
 ) {
 }
