@@ -1,23 +1,39 @@
 package ru.khokhlov.biletka.service.impl;
 
+import com.google.zxing.WriterException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.khokhlov.biletka.entity.Client;
 import ru.khokhlov.biletka.entity.Organization;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import ru.khokhlov.biletka.entity.Ticket;
 import ru.khokhlov.biletka.service.MailSender;
 import ru.khokhlov.biletka.utils.MessageCreator;
+import ru.khokhlov.biletka.utils.QRGenerator;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MailSenderImpl implements MailSender {
     private final JavaMailSender mailSender;
     private final MessageCreator messageCreator;
+    private final TemplateEngine templateEngine;
+    private final QRGenerator qrGenerator;
     @Value(value = "${application.email.address}")
     private String organization;
     @Value(value = "${application.authorization.path}")
@@ -106,5 +122,31 @@ public class MailSenderImpl implements MailSender {
         mimeMessageHelper.setText(message);
 
         mailSender.send(mimeMessage);
+    }
+
+    @Async
+    public void sendTicket(Ticket ticketUser) throws MessagingException, IOException, WriterException {
+        Context context = new Context();
+        context.setVariable("name", ticketUser.getInfo().getSession().getEvent().getEventBasicInformation().getNameRus());
+        context.setVariable("dateTime", ticketUser.getInfo().getSession().getStart().toString());
+        context.setVariable("place", ticketUser.getInfo().getSession().getPlace().getCity().getNameRus()+", "+ticketUser.getInfo().getSession().getPlace().getAddress()+", "+ticketUser.getInfo().getSession().getPlace().getName());
+        context.setVariable("hall", ticketUser.getInfo().getSession().getRoomLayout().getHallNumber());
+        context.setVariable("row_number", ticketUser.getRowNumber());
+        context.setVariable("seat_number", ticketUser.getSeatNumber());
+        byte[] qrCodeImage = qrGenerator.getQRCodeImage("/successful/"+ticketUser.getId());
+        context.setVariable("qrCodeImage", Base64.getEncoder().encodeToString(qrCodeImage));
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+
+        helper.setTo(ticketUser.getEmail());
+        helper.setFrom(username);
+        helper.setSubject("Билет \""+ticketUser.getInfo().getSession().getEvent().getEventBasicInformation().getNameRus()+"\"");
+
+        String html = templateEngine.process("messageTicket", context);
+
+        helper.setText(html, true);
+        mailSender.send(message);
+        log.info(html);
     }
 }

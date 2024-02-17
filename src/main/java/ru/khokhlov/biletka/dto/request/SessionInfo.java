@@ -26,6 +26,10 @@ public record SessionInfo(
 
         @NotNull(message = "Hall scheme must not be null")
         @JsonProperty("hall_id")
-        Long hallSchemeId
+        Long hallSchemeId,
+
+        @NotNull(message = "Basic price must not be null")
+        @JsonProperty("basic_price")
+        Integer basicPrice
 ) {
 }

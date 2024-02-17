@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.SessionInfo;
+import ru.khokhlov.biletka.dto.request.TicketInfo;
 import ru.khokhlov.biletka.dto.response.DeleteSession;
 import ru.khokhlov.biletka.dto.response.SessionResponse;
 import ru.khokhlov.biletka.dto.response.SessionWidgetResponse;
+import ru.khokhlov.biletka.dto.response.TicketsResponse;
 import ru.khokhlov.biletka.dto.universal.PublicEvent;
 import ru.khokhlov.biletka.dto.universal.PublicSession;
 import ru.khokhlov.biletka.entity.*;
@@ -120,10 +122,6 @@ public class SessionServiceImpl implements SessionService {
     public SessionResponse createSession(String city, SessionInfo sessionInfo) throws EntityNotFoundException {
         log.trace("SessionServiceImpl.createSession - city {}, sessionInfo {}", city, sessionInfo);
 
-        Session session = new Session(
-                Timestamp.valueOf(sessionInfo.datetime())
-        );
-
         MovieViewType movieViewType = movieViewTypeService.getFirstByType(sessionInfo.typeOfMovie());
         Event event = eventService.getEventBySymbolicNameAndType(sessionInfo.eventSymbolicName(), sessionInfo.eventType());
         HallScheme hallScheme = hallSchemeService.getHallScheme(sessionInfo.hallSchemeId());
@@ -134,6 +132,10 @@ public class SessionServiceImpl implements SessionService {
             movieViewType = movieViewTypeService.createMovieViewType(sessionInfo.typeOfMovie());
         }
 
+        Session session = new Session(
+                Timestamp.valueOf(sessionInfo.datetime())
+        );
+
         session.setTypeOfMovie(movieViewType);
         session.setEvent(event);
         session.setPlace(place);
@@ -141,6 +143,16 @@ public class SessionServiceImpl implements SessionService {
 
         sessionRepository.saveAndFlush(session);
 
+        TicketInfo ticketInfo = new TicketInfo(
+                session.getId(),
+                sessionInfo.basicPrice(),
+                hallScheme.getNumberSeats()
+        );
+
+        TicketsResponse ticketsResponse = ticketService.createTicket(
+                ticketInfo
+        );
+        System.out.println(ticketsResponse);
         return new SessionResponse(
                 session.getId(),
                 session.getEvent().getEventBasicInformation().getName(),

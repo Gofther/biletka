@@ -1,9 +1,11 @@
 package ru.khokhlov.biletka.service;
 
 import org.springframework.stereotype.Service;
+import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
 import ru.khokhlov.biletka.dto.response.SessionInfo;
+import ru.khokhlov.biletka.dto.response.TicketUserRequest;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
 import ru.khokhlov.biletka.entity.Event;
@@ -68,4 +70,12 @@ public interface TicketService {
      * @return массив билетов
      */
     List<TicketsInfo> getAllTicketByPlace(Place place);
+
+    /**
+     * Функция покупки билета на сеанс
+     *
+     * @param buyRequest информация для покупки
+     * @return информация о билете
+     */
+    TicketUserRequest postBuyTicket(BuyRequest buyRequest);
 }

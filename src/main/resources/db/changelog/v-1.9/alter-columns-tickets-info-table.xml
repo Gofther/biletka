@@ -2,13 +2,19 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-    <changeSet id="alter-organization-on-file-organization.xml" author="VadimMor">
+    <changeSet id="alter-columns-tickets-info-table.xml" author="VadimMor">
         <sql>
-            ALTER TABLE organization
-            ADD COLUMN file_id bigserial;
+            ALTER TABLE ticket
+            ADD COLUMN price integer;
 
-            ALTER TABLE organization
-            ADD FOREIGN KEY (file_id) REFERENCES file_organization(file_id);
+            ALTER TABLE ticket
+            ADD COLUMN email varchar(255);
+
+            ALTER TABLE ticket
+            ADD COLUMN fullName varchar(255);
+
+            ALTER TABLE ticket
+            ADD COLUMN phone varchar(255);
         </sql>
     </changeSet>
 </databaseChangeLog>

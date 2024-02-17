@@ -38,7 +38,7 @@ public class QRGenerator {
         BitMatrix bitMatrix = qrCodeWriter.encode(serverUrl + uniqTicketCode, BarcodeFormat.QR_CODE, WIDTH, HEIGHT);
 
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-        MatrixToImageConfig con = new MatrixToImageConfig(0xFF000002, 0xFFFFC041);
+        MatrixToImageConfig con = new MatrixToImageConfig(0xFF000002, 0xFFFFFFFF);
 
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream, con);
         return pngOutputStream.toByteArray();

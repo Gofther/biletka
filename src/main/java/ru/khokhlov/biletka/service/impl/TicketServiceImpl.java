@@ -1,5 +1,7 @@
 package ru.khokhlov.biletka.service.impl;
 
+import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -7,20 +9,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
-import ru.khokhlov.biletka.dto.response.SessionInfo;
-import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
-import ru.khokhlov.biletka.dto.response.TicketsResponse;
-import ru.khokhlov.biletka.dto.response.TicketsSessionResponse;
-import ru.khokhlov.biletka.entity.Event;
-import ru.khokhlov.biletka.entity.Place;
-import ru.khokhlov.biletka.entity.Session;
-import ru.khokhlov.biletka.entity.TicketsInfo;
+import ru.khokhlov.biletka.dto.response.*;
+import ru.khokhlov.biletka.entity.*;
+import ru.khokhlov.biletka.exception.ErrorMessage;
+import ru.khokhlov.biletka.exception.InvalidDataException;
+import ru.khokhlov.biletka.repository.BasketRepository;
+import ru.khokhlov.biletka.repository.ClientRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
+import ru.khokhlov.biletka.repository.TicketUserRepository;
+import ru.khokhlov.biletka.service.MailSender;
 import ru.khokhlov.biletka.service.SessionService;
 import ru.khokhlov.biletka.service.TicketService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,10 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
     private final SessionService sessionService;
     private final TicketRepository ticketRepository;
+    private final ClientRepository clientRepository;
+    private final TicketUserRepository ticketUserRepository;
+    private final BasketRepository basketRepository;
+    private final MailSender mailSender;
 
     @Override
     public TicketsResponse createTicket(TicketInfo ticketInfo) throws EntityNotFoundException {
@@ -210,6 +218,73 @@ public class TicketServiceImpl implements TicketService {
     public List<TicketsInfo> getAllTicketByPlace(Place place) {
         log.trace("TicketServiceImpl.getAllTicketByPlace - place {}", place);
         return ticketRepository.getAllTicketByOrganization(place);
+    }
+
+    @Transactional
+    @Override
+    public TicketUserRequest postBuyTicket(BuyRequest buyRequest) {
+        TicketsInfo ticketsInfo = ticketRepository.findFirstBySessionId(buyRequest.idSession());
+
+        if(ticketsInfo == null) {
+            throw new EntityNotFoundException("Tickets with session_id " + buyRequest.idSession() + " not exist!");
+        }
+
+        if(ticketsInfo.getOnSales() == 0) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("There are no tickets", "Tickets for the session are sold out!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        ticketRepository.buyOneTicket(ticketsInfo.getId());
+
+        Ticket ticket = new Ticket(
+            buyRequest.rawNumber(),
+            buyRequest.seatNumber(),
+            true,
+            false,
+            String.format("%03d", (Math.round((Math.random() * (999 - 1)) + 1))),
+            ticketsInfo.getPrice(),
+            buyRequest.tel(),
+            buyRequest.email(),
+            buyRequest.fullName()
+        );
+
+        ticket.setInfo(ticketsInfo);
+
+        ticketUserRepository.saveAndFlush(ticket);
+
+        if (buyRequest.idUser() != null) {
+            Client client = clientRepository.getReferenceById(buyRequest.idUser());
+
+            Basket basket = new Basket();
+
+            basket.setClient(client);
+            basket.setTicket(ticket);
+
+            basketRepository.saveAndFlush(basket);
+        }
+
+        try {
+            mailSender.sendTicket(ticket);
+        } catch (MessagingException | IOException | WriterException e) {
+
+            throw new RuntimeException(e);
+        }
+
+        return new TicketUserRequest(
+                ticket.getId(),
+                ticket.getInfo().getSession().getEvent().getEventBasicInformation().getNameRus(),
+                ticket.getInfo().getSession().getPlace().getName(),
+                ticket.getInfo().getSession().getPlace().getAddress(),
+                String.valueOf(ticket.getInfo().getSession().getStart()),
+                ticket.getInfo().getSession().getRoomLayout().getName(),
+                ticket.getRowNumber(),
+                ticket.getSeatNumber(),
+                ticket.getPrice(),
+                ticket.getEmail(),
+                ticket.getPhone(),
+                ticket.getFullName()
+        );
     }
 
     private TicketsMassiveResponse countingTickets(List<TicketsInfo> ticketsInfoList) {

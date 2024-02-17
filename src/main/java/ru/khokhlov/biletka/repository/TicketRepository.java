@@ -1,5 +1,6 @@
 package ru.khokhlov.biletka.repository;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -95,4 +96,20 @@ public interface TicketRepository extends JpaRepository<TicketsInfo, Long> {
     @Query("SELECT t FROM TicketsInfo t " +
             "WHERE t.session = :session")
     TicketsInfo findFirstBySession(Session session);
+
+    /**
+     * Запрос на поиск билета по session в бд
+     * @param id id сессии
+     * @return возвращает билет
+     */
+    @Query("SELECT t FROM TicketsInfo t " +
+            "WHERE t.session.id = :id")
+    TicketsInfo findFirstBySessionId(Long id);
+
+    @Modifying
+    @Query("UPDATE TicketsInfo t " +
+            "SET t.onSales = t.onSales - 1, " +
+            "t.sales = t.sales + 1 " +
+            "WHERE t.id = :id")
+    void buyOneTicket(Long id);
 }
