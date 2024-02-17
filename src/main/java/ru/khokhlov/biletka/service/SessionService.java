@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.SessionInfo;
 import ru.khokhlov.biletka.dto.response.DeleteSession;
 import ru.khokhlov.biletka.dto.response.SessionResponse;
+import ru.khokhlov.biletka.dto.response.SessionResponseByTicket;
 import ru.khokhlov.biletka.dto.response.SessionWidgetResponse;
 import ru.khokhlov.biletka.dto.universal.PublicEvent;
 import ru.khokhlov.biletka.dto.universal.PublicSession;
@@ -64,6 +65,7 @@ public interface SessionService {
      */
     List<Session> getMassiveByPlace(Long placeId);
 
+    SessionResponseByTicket[] getMassiveByEvent(Long eventId, String city, LocalDate date);
     /**
      * Функция удаления всех сессий ивента
      * @param event информация ивента

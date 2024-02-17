@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.khokhlov.biletka.dto.request.SessionInfo;
 import ru.khokhlov.biletka.dto.response.SessionResponse;
+import ru.khokhlov.biletka.dto.response.SessionResponseByTicket;
 import ru.khokhlov.biletka.dto.response.SessionWidgetResponse;
 import ru.khokhlov.biletka.dto.universal.PublicSession;
 import ru.khokhlov.biletka.service.SessionService;
@@ -58,5 +59,15 @@ public class SessionController {
                                                                         @Parameter(description = "Виджет для поиска") @PathVariable Long organizationId) {
         log.trace("SessionController.getMassiveSession /{city}/eventSymbolicName/session/widget - city {}, eventsWidgetRequest {}", city, organizationId);
         return ResponseEntity.status(HttpStatus.OK).body(sessionService.getMassiveByWidget(city, organizationId));
+    }
+    @GetMapping("/getByEvent")
+    @Operation(
+            summary = "Сессии по ивенту дате и месту проведения",
+            description = "Получение массива сессий по фильтру(дате и ивенту)")
+    public ResponseEntity<SessionResponseByTicket[]> getMassiveSessionByEvent(@Parameter(description = "Город в котором происходит сессия ивента") @PathVariable String city,
+                                                                              @Parameter(description = "id ивента") @RequestParam Long eventId,
+                                                                              @Parameter(description = "Дата") @RequestParam LocalDate date) {
+        log.trace("SessionController.getMassiveSession /{city}/eventSymbolicName/session - city {}, Date {}, eventId {}", city, date, eventId);
+        return ResponseEntity.status(HttpStatus.OK).body(sessionService.getMassiveByEvent(eventId,city,date));
     }
 }

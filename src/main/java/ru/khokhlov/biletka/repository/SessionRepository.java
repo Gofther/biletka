@@ -30,6 +30,12 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "WHERE s.place.id = :placeId")
     List<Session> findAllByPlaceId(Long placeId);
 
+    @Query(value = "SELECT s FROM Session s " +
+            "WHERE s.event.id = :eventId " +
+            "AND s.place.city.cityId =:cityId AND DATE(s.start) = :date"
+            )
+    List<Session> findAllByEventIdDateAndCityId(Long eventId, Long cityId, LocalDate date);
+
     @Modifying
     @Query(value = "DELETE FROM Session s " +
             "WHERE s.event.id = :eventId " +
