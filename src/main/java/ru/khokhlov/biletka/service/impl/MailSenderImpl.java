@@ -22,6 +22,9 @@ import ru.khokhlov.biletka.utils.MessageCreator;
 import ru.khokhlov.biletka.utils.QRGenerator;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -126,11 +129,13 @@ public class MailSenderImpl implements MailSender {
         Context context = new Context();
         context.setVariable("name", ticketUser.getInfo().getSession().getEvent().getEventBasicInformation().getNameRus());
         context.setVariable("dateTime", ticketUser.getInfo().getSession().getStart().toString());
-        context.setVariable("place", ticketUser.getInfo().getSession().getPlace().getAddress()+" "+ticketUser.getInfo().getSession().getPlace().getName());
+        context.setVariable("place", ticketUser.getInfo().getSession().getPlace().getCity().getNameRus()+", "+ticketUser.getInfo().getSession().getPlace().getAddress()+", "+ticketUser.getInfo().getSession().getPlace().getName());
         context.setVariable("hall", ticketUser.getInfo().getSession().getRoomLayout().getHallNumber());
-        context.setVariable("number", ticketUser.getRowNumber());
-//        context.setVariable("seat_number", ticketUser.getSeatNumber());
-        context.setVariable("qr", qrGenerator.getQRCodeImage("https://google.com"));
+        context.setVariable("row_number", ticketUser.getRowNumber());
+        context.setVariable("seat_number", ticketUser.getSeatNumber());
+        byte[] qrCodeImage = qrGenerator.getQRCodeImage("/successful/"+ticketUser.getId());
+        context.setVariable("qrCodeImage", Base64.getEncoder().encodeToString(qrCodeImage));
+
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
 
