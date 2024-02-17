@@ -3,6 +3,8 @@ package ru.khokhlov.biletka.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "hall_scheme")
@@ -30,6 +32,9 @@ public class HallScheme {
     @Lob
     @Column(name = "scheme", nullable = false, columnDefinition="TEXT")
     private String scheme;
+
+    @Column(name = "seat_group_info")
+    private List<String> seatGroupInfo;
 
     @ManyToOne
     @JoinColumn(name = "place_id")
