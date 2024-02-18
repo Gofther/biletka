@@ -8,13 +8,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.SessionInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
-import ru.khokhlov.biletka.dto.response.DeleteSession;
-import ru.khokhlov.biletka.dto.response.SessionResponse;
-import ru.khokhlov.biletka.dto.response.SessionWidgetResponse;
-import ru.khokhlov.biletka.dto.response.TicketsResponse;
+import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.PublicEvent;
 import ru.khokhlov.biletka.dto.universal.PublicSession;
 import ru.khokhlov.biletka.entity.*;
+import ru.khokhlov.biletka.repository.CityRepository;
 import ru.khokhlov.biletka.repository.SessionRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.service.*;
@@ -38,6 +36,7 @@ public class SessionServiceImpl implements SessionService {
     private final TicketService ticketService;
     private final OrganizationService organizationService;
     private final TicketRepository ticketRepository;
+    private final CityRepository cityRepository;
 
     @Override
     public String[] getMassiveDistinctDatesByEventAndCity(Long eventId, Long cityId) {
@@ -211,6 +210,32 @@ public class SessionServiceImpl implements SessionService {
         log.trace("SessionServiceImpl.getMassiveByPlace - placeId {}", placeId);
 
         return sessionRepository.findAllByPlaceId(placeId);
+    }
+
+    @Override
+    public SessionResponseByTicket[] getMassiveByEvent(Long eventId, String city, LocalDate date){
+        log.trace("SessionServiceImpl.getMassiveByEventCityDate - eventId {} , city {}, date {}", eventId,city,date);
+        List<SessionResponseByTicket> sessionsResponseList = new ArrayList<>();
+        Long cityId = cityRepository.findFirstByNameEng(city).getCityId();
+        List<Session> sessionList = sessionRepository.findAllByEventIdDateAndCityId(eventId,cityId, date);
+
+        for (Session s : sessionList) {
+            List<TicketsInfo> ticketsInfos = ticketRepository.findAllBySession(s.getId());
+            for (TicketsInfo t : ticketsInfos ) {
+                sessionsResponseList.add(
+                        new SessionResponseByTicket(
+                        s.getId(),
+                        s.getEvent().getEventBasicInformation().getName(),
+                        s.getEvent().getEventBasicInformation().getSymbolicName(),
+                        s.getTypeOfMovie(),
+                        s.getStart().toLocalDateTime(),
+                        s.getRoomLayout().getHallNumber(),
+                        t.getPrice()
+                    )
+            );
+            }
+        }
+        return sessionsResponseList.toArray(SessionResponseByTicket[]::new);
     }
 
     /**
