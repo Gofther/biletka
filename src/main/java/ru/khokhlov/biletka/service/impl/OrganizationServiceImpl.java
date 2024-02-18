@@ -13,6 +13,8 @@ import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.universal.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.enums.RoleEnum;
+import ru.khokhlov.biletka.exception.ErrorMessage;
+import ru.khokhlov.biletka.exception.InvalidDataException;
 import ru.khokhlov.biletka.repository.FileOrganizationRepository;
 import ru.khokhlov.biletka.repository.EventImageRepository;
 import ru.khokhlov.biletka.repository.OrganizationRepository;
@@ -42,6 +44,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Long getOrganizationIdByEmailAndPassword(String email, String password) {
         Long id = -1L;
         Organization organization = organizationRepository.findByEmail(email);
+
+        if (organization == null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("AuthFormDTO", "The email or password is incorrect!"));
+            throw new InvalidDataException(errorMessages);
+        }
 
         if (organization != null && PasswordEncoder.arePasswordsEquals(password, organization.getPassword()))
             id = organization.getId();

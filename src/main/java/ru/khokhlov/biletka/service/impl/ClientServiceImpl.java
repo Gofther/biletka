@@ -18,13 +18,17 @@ import ru.khokhlov.biletka.dto.universal.PublicClient;
 import ru.khokhlov.biletka.entity.Client;
 import ru.khokhlov.biletka.entity.Organization;
 import ru.khokhlov.biletka.enums.RoleEnum;
+import ru.khokhlov.biletka.exception.ErrorMessage;
+import ru.khokhlov.biletka.exception.InvalidDataException;
 import ru.khokhlov.biletka.repository.ClientRepository;
 import ru.khokhlov.biletka.service.ClientService;
 import ru.khokhlov.biletka.service.MailSender;
 import ru.khokhlov.biletka.service.OrganizationService;
 import ru.khokhlov.biletka.utils.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -41,6 +45,12 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
     public Long getClientIdByEmailAndPassword(String email, String password) {
         Long id = -1L;
         Client client = clientRepository.findByEmail(email);
+
+        if (client == null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("AuthFormDTO", "The email or password is incorrect!"));
+            throw new InvalidDataException(errorMessages);
+        }
 
         if (client != null && PasswordEncoder.arePasswordsEquals(password, client.getPassword()))
             id = client.getId();

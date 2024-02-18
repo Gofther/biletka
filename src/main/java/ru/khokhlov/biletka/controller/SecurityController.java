@@ -69,12 +69,27 @@ public class SecurityController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authFormDTO.email(), authFormDTO.password()));
 
         Long clientId = clientService.getClientIdByEmailAndPassword(authFormDTO.email(), authFormDTO.password());
+
+        UserDetails userDetails = clientService.loadUserByUsername(authFormDTO.email());
+        String token = jwtTokenUtils.generateToken(userDetails);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new Token(clientId, "USER", "Bearer", token));
+    }
+
+    @Hidden
+    @Operation(
+            summary = "Получение токена авторизации",
+            description = "Позволяет получить токен для взаимодействия с системой")
+    @PostMapping("/organization/auth")
+    public ResponseEntity<Token> createOrganizationAuthToken(@Parameter(description = "Форма авторизации") @Valid @RequestBody AuthFormDTO authFormDTO) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authFormDTO.email(), authFormDTO.password()));
+
         Long organizationId = organizationService.getOrganizationIdByEmailAndPassword(authFormDTO.email(), authFormDTO.password());
 
         UserDetails userDetails = clientService.loadUserByUsername(authFormDTO.email());
         String token = jwtTokenUtils.generateToken(userDetails);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new Token(clientId != -1L ? clientId : organizationId, clientId != -1L ? "USER": "ORGAANIZATION", "Bearer", token));
+        return ResponseEntity.status(HttpStatus.OK).body(new Token(organizationId, "ORGAANIZATION", "Bearer", token));
     }
 
     /**
