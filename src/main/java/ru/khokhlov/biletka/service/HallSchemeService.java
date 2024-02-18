@@ -41,4 +41,6 @@ public interface HallSchemeService {
     SchemeResponse getScheme(Long hallId);
 
     boolean getSeatScheme(Long id, Integer rawNumber, Integer seatNumber);
+
+    SchemeResponse getSchemeBySession(Long hallId, Long sessionId);
 }

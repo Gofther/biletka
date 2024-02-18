@@ -78,4 +78,6 @@ public interface TicketService {
      * @return информация о билете
      */
     TicketUserResponse postBuyTicket(BuyRequest buyRequest);
+
+    boolean getStatus(Long sessionId, String rowNumber, String seatNumber);
 }

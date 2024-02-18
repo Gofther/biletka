@@ -92,6 +92,13 @@ public class PlaceController {
         SchemeResponse schemeResponse = hallSchemeService.getScheme(hallId);
         return ResponseEntity.status(HttpStatus.OK).body(schemeResponse);
     }
+
+    @GetMapping(path = "/scheme/{hallId}/{sessionId}")
+    public ResponseEntity<?> getSchemeBySession(@Parameter(description = "id зала") @PathVariable Long hallId,
+                                       @Parameter(description = "id сессии") @PathVariable Long sessionId) {
+        SchemeResponse schemeResponse = hallSchemeService.getSchemeBySession(hallId, sessionId);
+        return ResponseEntity.status(HttpStatus.OK).body(schemeResponse);
+    }
 }
 
 

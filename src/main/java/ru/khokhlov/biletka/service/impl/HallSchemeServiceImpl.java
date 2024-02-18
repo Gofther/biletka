@@ -22,6 +22,7 @@ import ru.khokhlov.biletka.repository.HallSchemeRepository;
 import ru.khokhlov.biletka.service.HallSchemeService;
 import ru.khokhlov.biletka.service.OrganizationService;
 import ru.khokhlov.biletka.service.PlaceService;
+import ru.khokhlov.biletka.service.TicketService;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
@@ -35,6 +36,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
     private final OrganizationService organizationService;
     private final PlaceService placeService;
     private final HallSchemeRepository hallSchemeRepository;
+    private final TicketService ticketService;
 
     @Override
     public HallScheme getHallScheme(Long id) throws EntityNotFoundException {
@@ -162,7 +164,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
 
                         NodeList itemSeatChilds = seatChilds.item(seat).getChildNodes();
                         SchemeSeat schemeSeat = new SchemeSeat(
-                                itemSeatChilds.item(2).getTextContent(),
+                                false,
                                 itemSeatChilds.item(5).getTextContent(),
                                 itemSeatChilds.item(8).getTextContent(),
                                 itemSeatChilds.item(11).getTextContent()
@@ -250,5 +252,96 @@ public class HallSchemeServiceImpl implements HallSchemeService {
             }
         }
         return true;
+    }
+
+    @Override
+    public SchemeResponse getSchemeBySession(Long hallId, Long sessionId) {
+        HallScheme hallScheme = hallSchemeRepository.getReferenceById(hallId);
+
+        if (hallScheme.getScheme() == null) {
+            throw new EntityExistsException("Scheme in hall: " + hallScheme.getId() + " already exists");
+        }
+
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        Document doc;
+
+        try {
+            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(hallScheme.getScheme())));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Node rootNode = doc.getFirstChild();
+        NodeList rootChilds = rootNode.getChildNodes();
+        Integer numberFloor = 0;
+        List<SchemeFloor> schemeFloors = new ArrayList<>();
+
+        // Добавление информации о зале
+        for (int floor=0; floor<rootChilds.getLength(); floor++) {
+            if (rootChilds.item(floor).getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            NodeList floorChilds = rootChilds.item(floor).getChildNodes();
+            List<SchemeRow> schemeRows = new ArrayList<>();
+
+            // Добавление информации о ряде
+            for (int row=0; row<floorChilds.getLength(); row++) {
+                if (floorChilds.item(row).getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
+
+                String rowNumber = null;
+                NodeList rowChilds = floorChilds.item(row).getChildNodes();
+
+                // Добавление информации о элементах ряда
+                for (int itemRow=0; itemRow<rowChilds.getLength(); itemRow++) {
+                    if (rowChilds.item(itemRow).getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
+
+                    if (rowChilds.item(itemRow).getNodeName().equals("row-number")) {
+                        rowNumber = rowChilds.item(itemRow).getTextContent();
+                        continue;
+                    }
+
+                    NodeList seatChilds = rowChilds.item(itemRow).getChildNodes();
+                    List<SchemeSeat> schemeSeats = new ArrayList<>();
+
+                    // Добавление информации о месте
+                    for (int seat=0; seat<seatChilds.getLength(); seat++) {
+                        if (seatChilds.item(seat).getNodeType() != Node.ELEMENT_NODE) {
+                            continue;
+                        }
+
+                        NodeList itemSeatChilds = seatChilds.item(seat).getChildNodes();
+                        SchemeSeat schemeSeat = new SchemeSeat(
+                                ticketService.getStatus(sessionId, rowNumber, itemSeatChilds.item(5).getTextContent()),
+                                itemSeatChilds.item(5).getTextContent(),
+                                itemSeatChilds.item(8).getTextContent(),
+                                itemSeatChilds.item(11).getTextContent()
+                        );
+                        schemeSeats.add(schemeSeat);
+                    }
+                    // Добавление информации о месте
+
+                    SchemeRow schemeRow = new SchemeRow(
+                            rowNumber,
+                            schemeSeats.toArray(SchemeSeat[]::new)
+                    );
+                    schemeRows.add(schemeRow);
+                }
+                // Добавление информации о элементах ряда
+            }
+            // Добавление информации о ряде
+
+            schemeFloors.add(new SchemeFloor(
+                    ++numberFloor,
+                    schemeRows.toArray(SchemeRow[]::new)
+            ));
+        }
+        // Добавление информации о зале
+
+        return new SchemeResponse(schemeFloors.toArray(SchemeFloor[]::new));
     }
 }

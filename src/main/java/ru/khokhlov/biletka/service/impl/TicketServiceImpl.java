@@ -301,6 +301,11 @@ public class TicketServiceImpl implements TicketService {
         );
     }
 
+    @Override
+    public boolean getStatus(Long sessionId, String rowNumber, String seatNumber) {
+        return ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(seatNumber)) != null ? true : false;
+    }
+
     private TicketsMassiveResponse countingTickets(List<TicketsInfo> ticketsInfoList) {
         log.debug("TicketServiceImpl.countingTickets - Ticket {}", ticketsInfoList);
 

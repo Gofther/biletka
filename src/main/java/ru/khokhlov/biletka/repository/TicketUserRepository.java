@@ -11,4 +11,10 @@ public interface TicketUserRepository extends JpaRepository<Ticket, Long> {
 //            "WHERE t.rowNumber = :row " +
 //            "AND t.seatNumber = :seat")
     Ticket findFirstByRowNumberAndSeatNumber(Integer row, Integer seat);
+
+    @Query("SELECT t FROM Ticket t " +
+            "WHERE t.info.session.id = :sessionId " +
+            "AND t.seatNumber = :seatNumber " +
+            "AND t.rowNumber = :rowNumber")
+    Ticket getFirstBySessionAndRowAndSeat(Long sessionId, Integer rowNumber, Integer seatNumber);
 }
