@@ -1,6 +1,7 @@
 package ru.khokhlov.biletka.repository;
 
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import ru.khokhlov.biletka.entity.Place;
 import ru.khokhlov.biletka.entity.Session;
 import ru.khokhlov.biletka.entity.TicketsInfo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
