@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.exception.ErrorMessage;
@@ -93,6 +94,34 @@ public class TicketServiceImpl implements TicketService {
     public TicketsMassiveResponse getAllTickets() {
         log.trace("TicketServiceImpl.getAllTickets");
         return countingTickets(ticketRepository.findAll());
+    }
+
+    @Override
+    public List<TicketUserResponse> getTicketsByUser(UserId userId) {
+        log.trace("TicketServiceImpl.getTicketsByUser , userId - {}", userId.id());
+        List<Basket> basketList = basketRepository.findByUserId(userId.id());
+        List<TicketUserResponse> ticketUserResponses = new ArrayList<>();
+        for (Basket basket : basketList) {
+            Ticket ticket = basket.getTicket();
+
+            ticketUserResponses.add(
+                    new TicketUserResponse(
+                            ticket.getId(),
+                            ticket.getInfo().getSession().getEvent().getEventBasicInformation().getName(),
+                            ticket.getInfo().getSession().getPlace().getName(),
+                            ticket.getInfo().getSession().getPlace().getAddress(),
+                            ticket.getInfo().getSession().getStart().toString(),
+                            ticket.getInfo().getSession().getRoomLayout().getName(),
+                            ticket.getRowNumber(),
+                            ticket.getSeatNumber(),
+                            ticket.getPrice(),
+                            ticket.getEmail(),
+                            ticket.getPhone(),
+                            ticket.getFullName()
+                    )
+            );
+        }
+        return ticketUserResponses;
     }
 
     @Transactional
