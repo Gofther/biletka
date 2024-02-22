@@ -17,7 +17,6 @@ import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.exception.ErrorMessage;
 import ru.khokhlov.biletka.exception.InvalidDataException;
-import ru.khokhlov.biletka.repository.BasketRepository;
 import ru.khokhlov.biletka.repository.ClientRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.repository.TicketUserRepository;
@@ -29,6 +28,7 @@ import ru.khokhlov.biletka.service.TicketService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -38,7 +38,6 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final ClientRepository clientRepository;
     private final TicketUserRepository ticketUserRepository;
-    private final BasketRepository basketRepository;
     private final MailSender mailSender;
     private final HallSchemeService hallSchemeService;
 
@@ -99,11 +98,11 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketUserResponse> getTicketsByUser(UserId userId) {
         log.trace("TicketServiceImpl.getTicketsByUser , userId - {}", userId.id());
-        List<Basket> basketList = basketRepository.findByUserId(userId.id());
-        List<TicketUserResponse> ticketUserResponses = new ArrayList<>();
-        for (Basket basket : basketList) {
-            Ticket ticket = basket.getTicket();
 
+        Set<Ticket> basketList = clientRepository.getReferenceById(userId.id()).getBasket();
+        List<TicketUserResponse> ticketUserResponses = new ArrayList<>();
+
+        for (Ticket ticket : basketList) {
             ticketUserResponses.add(
                     new TicketUserResponse(
                             ticket.getId(),
@@ -272,7 +271,7 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidDataException(errorMessages);
         }
 
-        if(hallSchemeService.getSeatScheme(ticketsInfo.getSession().getPlace().getId(), buyRequest.rawNumber(), buyRequest.seatNumber())) {
+        if(hallSchemeService.getSeatScheme(ticketsInfo.getSession().getRoomLayout().getId(), buyRequest.rawNumber(), buyRequest.seatNumber())) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("There is no place", "This place or row does not exist!"));
             throw new InvalidDataException(errorMessages);
@@ -299,12 +298,11 @@ public class TicketServiceImpl implements TicketService {
         if (buyRequest.idUser() != null) {
             Client client = clientRepository.getReferenceById(buyRequest.idUser());
 
-            Basket basket = new Basket();
+            Set<Ticket> ticketSet = client.getBasket();
+            ticketSet.add(ticket);
+            client.setBasket(ticketSet);
 
-            basket.setClient(client);
-            basket.setTicket(ticket);
-
-            basketRepository.saveAndFlush(basket);
+            clientRepository.save(client);
         }
 
         try {

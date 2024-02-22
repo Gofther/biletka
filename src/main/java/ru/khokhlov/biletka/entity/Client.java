@@ -45,10 +45,10 @@ public class Client {
     @ManyToMany
     @JoinTable(
             name = "basket",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "ticket_id")
+            joinColumns = @JoinColumn(name = "user_id", unique = false),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id", unique = false)
     )
-    private Set<Place> basket = new HashSet<>();
+    private Set<Ticket> basket = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
