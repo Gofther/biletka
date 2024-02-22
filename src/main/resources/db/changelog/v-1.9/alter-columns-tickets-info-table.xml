@@ -5,15 +5,9 @@
     <changeSet id="alter-columns-tickets-info-table.xml" author="VadimMor">
         <sql>
             ALTER TABLE ticket
-            ADD COLUMN price integer;
-
-            ALTER TABLE ticket
-            ADD COLUMN email varchar(255);
-
-            ALTER TABLE ticket
-            ADD COLUMN fullName varchar(255);
-
-            ALTER TABLE ticket
+            ADD COLUMN price integer,
+            ADD COLUMN email varchar(255),
+            ADD COLUMN fullName varchar(255),
             ADD COLUMN phone varchar(255);
         </sql>
     </changeSet>

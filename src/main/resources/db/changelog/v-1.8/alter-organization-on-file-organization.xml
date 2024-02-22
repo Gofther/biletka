@@ -5,9 +5,7 @@
     <changeSet id="alter-organization-on-file-organization.xml" author="VadimMor">
         <sql>
             ALTER TABLE organization
-            ADD COLUMN file_id bigserial;
-
-            ALTER TABLE organization
+            ADD COLUMN file_id bigserial,
             ADD FOREIGN KEY (file_id) REFERENCES file_organization(file_id);
         </sql>
     </changeSet>
