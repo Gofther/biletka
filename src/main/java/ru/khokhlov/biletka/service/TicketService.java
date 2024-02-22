@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.SessionInfo;
 import ru.khokhlov.biletka.dto.response.TicketUserResponse;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
@@ -36,6 +37,12 @@ public interface TicketService {
      * @return массив билетов
      */
     TicketsMassiveResponse getAllTickets();
+
+    /**
+     * Функция вывода билетов по userId
+     * @return массив билетов
+     */
+    List<TicketUserResponse> getTicketsByUser(UserId userId);
 
     /**
      * Функция удаления всех билетов по сессии

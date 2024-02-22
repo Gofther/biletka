@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.khokhlov.biletka.dto.request.BuyRequest;
 import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
+import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.TicketUserResponse;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
@@ -21,6 +22,7 @@ import ru.khokhlov.biletka.service.TicketService;
 import ru.khokhlov.biletka.utils.QRGenerator;
 
 import java.io.IOException;
+import java.util.List;
 
 @Validated
 @RestController
@@ -73,6 +75,17 @@ public class TicketController {
         generator.generateQRCodeImage("http://ticket-zone.ru", "./src/main/resources/static/img/QRCode.png");
         return ResponseEntity.status(HttpStatus.OK).body(generator.getQRCodeImage("https://ya.ru"));
     }
+
+    @Operation(
+            summary = "Вывод билетов пользователя",
+            description = "Позволяет получить билеты пользователя по userId"
+    )
+    @GetMapping("/getByUser")
+    public ResponseEntity<List<TicketUserResponse>> getTicketsByUser(@Parameter(description = "userId") @Valid @RequestBody UserId userId) {
+        log.trace("TicketController.getTicketsByUser /ticket/getByUser, userId - {}",userId);
+        return ResponseEntity.status(HttpStatus.OK).body(ticketService.getTicketsByUser(userId));
+    }
+
 
     @Operation(
             summary = "Покупка билета",
