@@ -87,7 +87,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/{city}/event/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers(HttpMethod.POST, "/{city}/place/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers("/ticket/buy").permitAll()
-                        .requestMatchers("/ticket/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
+                        .requestMatchers("/ticket/organization").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers("/organization/**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .anyRequest().permitAll()
                 );

@@ -14,21 +14,22 @@ import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
 import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.*;
+import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketOrganization;
+import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketsSessionOrganization;
 import ru.khokhlov.biletka.entity.*;
 import ru.khokhlov.biletka.exception.ErrorMessage;
 import ru.khokhlov.biletka.exception.InvalidDataException;
 import ru.khokhlov.biletka.repository.ClientRepository;
 import ru.khokhlov.biletka.repository.TicketRepository;
 import ru.khokhlov.biletka.repository.TicketUserRepository;
-import ru.khokhlov.biletka.service.HallSchemeService;
-import ru.khokhlov.biletka.service.MailSender;
-import ru.khokhlov.biletka.service.SessionService;
-import ru.khokhlov.biletka.service.TicketService;
+import ru.khokhlov.biletka.service.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -40,6 +41,7 @@ public class TicketServiceImpl implements TicketService {
     private final TicketUserRepository ticketUserRepository;
     private final MailSender mailSender;
     private final HallSchemeService hallSchemeService;
+    private final OrganizationService organizationService;
 
     @Override
     public TicketsResponse createTicket(TicketInfo ticketInfo) throws EntityNotFoundException {
@@ -96,17 +98,17 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<TicketUserResponse> getTicketsByUser(UserId userId) {
-        log.trace("TicketServiceImpl.getTicketsByUser , userId - {}", userId.id());
+    public List<TicketUserResponse> getTicketsByUser(Long userId) {
+        log.trace("TicketServiceImpl.getTicketsByUser , userId - {}", userId);
 
-        Set<Ticket> basketList = clientRepository.getReferenceById(userId.id()).getBasket();
+        Set<Ticket> basketList = clientRepository.getReferenceById(userId).getBasket();
         List<TicketUserResponse> ticketUserResponses = new ArrayList<>();
 
         for (Ticket ticket : basketList) {
             ticketUserResponses.add(
                     new TicketUserResponse(
                             ticket.getId(),
-                            ticket.getInfo().getSession().getEvent().getEventBasicInformation().getName(),
+                            ticket.getInfo().getSession().getEvent().getEventBasicInformation().getNameRus(),
                             ticket.getInfo().getSession().getPlace().getName(),
                             ticket.getInfo().getSession().getPlace().getAddress(),
                             ticket.getInfo().getSession().getStart().toString(),
@@ -331,6 +333,53 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public boolean getStatus(Long sessionId, String rowNumber, String seatNumber) {
         return ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(seatNumber)) != null ? true : false;
+    }
+
+    @Override
+    public TicketsOrganizationResponse[] getTicketsOrganization(Long id) {
+        Organization organization = organizationService.getOrganizationById(id);
+        List<TicketsOrganizationResponse> ticketsOrganizationResponseList = new ArrayList<>();
+        List<List<Session>> sessions = new ArrayList<>();
+
+        for (Place place: organization.getPlaceSet()) {
+            List<TicketsSessionOrganization> ticketsSessionOrganizationList = new ArrayList<>();
+
+            for (Event event: organization.getEventSet()) {
+                List<Ticket> tickets = ticketUserRepository.getAllTicketByEventAndPlace(place, event);
+                List<TicketOrganization> ticketOrganizationList = new ArrayList<>();
+
+                for (Ticket ticket: tickets) {
+                    ticketOrganizationList.add(
+                            new TicketOrganization(
+                                    ticket.getId(),
+                                    ticket.getFullName(),
+                                    String.valueOf(ticket.getInfo().getSession().getStart()),
+                                    ticket.getRowNumber(),
+                                    ticket.getSeatNumber(),
+                                    ticket.getIsExtinguished()
+                            )
+                    );
+                }
+
+                ticketsSessionOrganizationList.add(
+                        new TicketsSessionOrganization(
+                                event.getEventBasicInformation().getNameRus(),
+                                ticketOrganizationList.toArray(TicketOrganization[]::new)
+                        )
+                );
+            }
+
+            ticketsOrganizationResponseList.add(
+                    new TicketsOrganizationResponse(
+                             place.getCity().getNameRus() + ", " + place.getAddress(),
+                                     place.getName(),
+                            ticketsSessionOrganizationList.toArray(TicketsSessionOrganization[]::new)
+                    )
+            );
+        }
+
+
+        return ticketsOrganizationResponseList.toArray(TicketsOrganizationResponse[]::new);
     }
 
     private TicketsMassiveResponse countingTickets(List<TicketsInfo> ticketsInfoList) {

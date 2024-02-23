@@ -1,7 +1,5 @@
 package ru.khokhlov.biletka.repository;
 
-import jakarta.validation.constraints.NotNull;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +10,6 @@ import ru.khokhlov.biletka.entity.Place;
 import ru.khokhlov.biletka.entity.Session;
 import ru.khokhlov.biletka.entity.TicketsInfo;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -114,4 +111,9 @@ public interface TicketRepository extends JpaRepository<TicketsInfo, Long> {
             "t.sales = t.sales + 1 " +
             "WHERE t.id = :id")
     void buyOneTicket(Long id);
+
+    @Query("SELECT t FROM TicketsInfo t " +
+            "WHERE t.session.event = :event " +
+            "AND t.session.place = :place")
+    List<TicketsInfo> getAllTicketByEventAndPlace(Place place, Event event);
 }

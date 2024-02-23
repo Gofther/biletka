@@ -17,12 +17,14 @@ import ru.khokhlov.biletka.dto.request.TicketInfo;
 import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.TicketUserResponse;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
+import ru.khokhlov.biletka.dto.response.TicketsOrganizationResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
 import ru.khokhlov.biletka.service.TicketService;
 import ru.khokhlov.biletka.utils.QRGenerator;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Validated
 @RestController
@@ -81,9 +83,9 @@ public class TicketController {
             description = "Позволяет получить билеты пользователя по userId"
     )
     @GetMapping("/getByUser")
-    public ResponseEntity<List<TicketUserResponse>> getTicketsByUser(@Parameter(description = "userId") @Valid @RequestBody UserId userId) {
-        log.trace("TicketController.getTicketsByUser /ticket/getByUser, userId - {}",userId);
-        return ResponseEntity.status(HttpStatus.OK).body(ticketService.getTicketsByUser(userId));
+    public ResponseEntity<List<TicketUserResponse>> getTicketsByUser(@Parameter(description = "userId") @Valid @RequestParam Long id) {
+        log.trace("TicketController.getTicketsByUser /ticket/getByUser, userId - {}",id);
+        return ResponseEntity.status(HttpStatus.OK).body(ticketService.getTicketsByUser(id));
     }
 
 
@@ -96,5 +98,16 @@ public class TicketController {
         log.trace("TicketController.getAllTickets /ticket/buy - buyRequest {} ", buyRequest);
         TicketUserResponse ticket = ticketService.postBuyTicket(buyRequest);
         return ResponseEntity.status(HttpStatus.OK).body(ticket);
+    }
+
+    @Operation(
+            summary = "Вывод билетов для организации",
+            description = "Позволяет получить массив билетов для организации"
+    )
+    @GetMapping(value = "/organization")
+    public ResponseEntity<TicketsOrganizationResponse[]> getTicketsOrganization(@Parameter(description = "id организации") @Valid @RequestParam Long id) {
+        log.trace("TicketController.getAllTickets /ticket/buy - id {} ", id);
+        TicketsOrganizationResponse[] ticketsOrganization = ticketService.getTicketsOrganization(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ticketsOrganization);
     }
 }
