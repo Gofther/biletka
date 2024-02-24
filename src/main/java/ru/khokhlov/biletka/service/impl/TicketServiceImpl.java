@@ -382,6 +382,29 @@ public class TicketServiceImpl implements TicketService {
         return ticketsOrganizationResponseList.toArray(TicketsOrganizationResponse[]::new);
     }
 
+    @Transactional
+    @Override
+    public TicketOrganization putTicketRepayment(Long id) {
+        Ticket ticket = ticketUserRepository.getReferenceById(id);
+
+        if (ticket.getIsExtinguished()) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("The ticket redeemed", "The ticket has already been redeemed!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        ticketUserRepository.editExtinguishedByTicketById(id);
+
+        return new TicketOrganization(
+                ticket.getId(),
+                ticket.getFullName(),
+                String.valueOf(ticket.getInfo().getSession().getStart()),
+                ticket.getRowNumber(),
+                ticket.getSeatNumber(),
+                true
+        );
+    }
+
     private TicketsMassiveResponse countingTickets(List<TicketsInfo> ticketsInfoList) {
         log.debug("TicketServiceImpl.countingTickets - Ticket {}", ticketsInfoList);
 

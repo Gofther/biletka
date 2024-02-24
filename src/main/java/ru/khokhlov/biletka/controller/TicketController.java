@@ -19,6 +19,7 @@ import ru.khokhlov.biletka.dto.response.TicketUserResponse;
 import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
 import ru.khokhlov.biletka.dto.response.TicketsOrganizationResponse;
 import ru.khokhlov.biletka.dto.response.TicketsResponse;
+import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketOrganization;
 import ru.khokhlov.biletka.service.TicketService;
 import ru.khokhlov.biletka.utils.QRGenerator;
 
@@ -106,8 +107,19 @@ public class TicketController {
     )
     @GetMapping(value = "/organization")
     public ResponseEntity<TicketsOrganizationResponse[]> getTicketsOrganization(@Parameter(description = "id организации") @Valid @RequestParam Long id) {
-        log.trace("TicketController.getAllTickets /ticket/buy - id {} ", id);
+        log.trace("TicketController.getTicketsOrganization /ticket/organization - id {} ", id);
         TicketsOrganizationResponse[] ticketsOrganization = ticketService.getTicketsOrganization(id);
         return ResponseEntity.status(HttpStatus.OK).body(ticketsOrganization);
+    }
+
+    @Operation(
+            summary = "Погашение билета",
+            description = "Позволяет погасить билет"
+    )
+    @PutMapping(value = "/repayment")
+    public ResponseEntity<TicketOrganization> putTicketRepayment(@Parameter(description = "id билета") @Valid @RequestParam Long id) {
+        log.trace("TicketController.putTicketRepayment /ticket/repayment - id {} ", id);
+        TicketOrganization ticketOrganization = ticketService.putTicketRepayment(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ticketOrganization);
     }
 }

@@ -6,6 +6,7 @@ import ru.khokhlov.biletka.dto.request.TicketEditInfo;
 import ru.khokhlov.biletka.dto.request.TicketInfo;
 import ru.khokhlov.biletka.dto.request.UserId;
 import ru.khokhlov.biletka.dto.response.*;
+import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketOrganization;
 import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.entity.Place;
 import ru.khokhlov.biletka.entity.Session;
@@ -86,4 +87,6 @@ public interface TicketService {
     boolean getStatus(Long sessionId, String rowNumber, String seatNumber);
 
     TicketsOrganizationResponse[] getTicketsOrganization(Long id);
+
+    TicketOrganization putTicketRepayment(Long id);
 }

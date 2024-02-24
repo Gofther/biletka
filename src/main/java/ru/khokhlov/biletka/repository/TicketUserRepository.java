@@ -1,6 +1,7 @@
 package ru.khokhlov.biletka.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.khokhlov.biletka.entity.Event;
@@ -26,4 +27,10 @@ public interface TicketUserRepository extends JpaRepository<Ticket, Long> {
             "WHERE t.info.session.event = :event " +
             "AND t.info.session.place = :place")
     List<Ticket> getAllTicketByEventAndPlace(Place place, Event event);
+
+    @Modifying
+    @Query("UPDATE Ticket t " +
+            "SET t.isExtinguished = true " +
+            "WHERE t.id = :id")
+    void editExtinguishedByTicketById(Long id);
 }
