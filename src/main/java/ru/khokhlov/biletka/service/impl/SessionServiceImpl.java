@@ -216,25 +216,44 @@ public class SessionServiceImpl implements SessionService {
     public SessionResponseByTicket[] getMassiveByEvent(Long eventId, String city, LocalDate date){
         log.trace("SessionServiceImpl.getMassiveByEventCityDate - eventId {} , city {}, date {}", eventId,city,date);
         List<SessionResponseByTicket> sessionsResponseList = new ArrayList<>();
+        Set<Place> placeList = new HashSet<>();
         Long cityId = cityRepository.findFirstByNameEng(city).getCityId();
         List<Session> sessionList = sessionRepository.findAllByEventIdDateAndCityId(eventId,cityId, date);
 
         for (Session s : sessionList) {
-            List<TicketsInfo> ticketsInfos = ticketRepository.findAllBySession(s.getId());
-            for (TicketsInfo t : ticketsInfos ) {
-                sessionsResponseList.add(
-                        new SessionResponseByTicket(
-                        s.getId(),
-                        s.getEvent().getEventBasicInformation().getName(),
-                        s.getEvent().getEventBasicInformation().getSymbolicName(),
-                        s.getTypeOfMovie(),
-                        s.getStart().toLocalDateTime(),
-                        s.getRoomLayout().getHallNumber(),
-                        t.getPrice()
+            placeList.add(s.getPlace());
+        }
+
+        for (Place p : placeList) {
+            List<TicketsInfoResponse> ticketsInfoResponseList = new ArrayList<>();
+
+            for (Session s : sessionList) {
+                if (s.getPlace() == p) {
+                    TicketsInfo ticketsInfo = ticketRepository.findFirstBySessionId(s.getId());
+
+                    ticketsInfoResponseList.add(
+                            new TicketsInfoResponse(
+                                    s.getId(),
+                                    s.getEvent().getEventBasicInformation().getName(),
+                                    s.getEvent().getEventBasicInformation().getSymbolicName(),
+                                    s.getTypeOfMovie(),
+                                    s.getStart().toLocalDateTime(),
+                                    s.getRoomLayout().getHallNumber(),
+                                    ticketsInfo.getPrice()
+                            )
+                    );
+                }
+            }
+
+            sessionsResponseList.add(
+                    new SessionResponseByTicket(
+                            p.getName(),
+                            p.getAddress(),
+                            ticketsInfoResponseList.toArray(TicketsInfoResponse[]::new)
                     )
             );
-            }
         }
+
         return sessionsResponseList.toArray(SessionResponseByTicket[]::new);
     }
 

@@ -1,6 +1,5 @@
 package ru.khokhlov.biletka.repository;
 
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -112,4 +111,9 @@ public interface TicketRepository extends JpaRepository<TicketsInfo, Long> {
             "t.sales = t.sales + 1 " +
             "WHERE t.id = :id")
     void buyOneTicket(Long id);
+
+    @Query("SELECT t FROM TicketsInfo t " +
+            "WHERE t.session.event = :event " +
+            "AND t.session.place = :place")
+    List<TicketsInfo> getAllTicketByEventAndPlace(Place place, Event event);
 }

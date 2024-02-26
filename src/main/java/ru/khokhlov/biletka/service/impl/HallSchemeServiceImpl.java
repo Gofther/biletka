@@ -162,12 +162,35 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                             continue;
                         }
 
+                        Boolean occupied = false;
+                        String number = "";
+                        String group = "";
+                        String position = "";
                         NodeList itemSeatChilds = seatChilds.item(seat).getChildNodes();
+
+                        for (int seatItem=0; seatItem<itemSeatChilds.getLength(); seatItem++) {
+                            if (itemSeatChilds.item(seatItem).getNodeType() != Node.ELEMENT_NODE) {
+                                continue;
+                            }
+
+                            if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-occupied")) {
+                                continue;
+                            }
+
+                            if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-number")) {
+                                number = itemSeatChilds.item(seatItem).getTextContent();
+                            } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-group")) {
+                                group = itemSeatChilds.item(seatItem).getTextContent();
+                            } else {
+                                position = itemSeatChilds.item(seatItem).getTextContent();
+                            }
+                        }
+
                         SchemeSeat schemeSeat = new SchemeSeat(
                                 false,
-                                itemSeatChilds.item(5).getTextContent(),
-                                itemSeatChilds.item(8).getTextContent(),
-                                itemSeatChilds.item(11).getTextContent()
+                                number,
+                                group,
+                                position
                         );
                         schemeSeats.add(schemeSeat);
                     }

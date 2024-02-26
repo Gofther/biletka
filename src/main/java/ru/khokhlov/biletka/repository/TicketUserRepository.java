@@ -1,10 +1,15 @@
 package ru.khokhlov.biletka.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import ru.khokhlov.biletka.entity.Event;
+import ru.khokhlov.biletka.entity.Place;
 import ru.khokhlov.biletka.entity.Ticket;
 import ru.khokhlov.biletka.entity.TicketsInfo;
+
+import java.util.List;
 
 @Repository
 public interface TicketUserRepository extends JpaRepository<Ticket, Long> {
@@ -18,13 +23,14 @@ public interface TicketUserRepository extends JpaRepository<Ticket, Long> {
             "AND t.seatNumber = :seatNumber " +
             "AND t.rowNumber = :rowNumber")
     Ticket getFirstBySessionAndRowAndSeat(Long sessionId, Integer rowNumber, Integer seatNumber);
+    @Query("SELECT t FROM Ticket t " +
+            "WHERE t.info.session.event = :event " +
+            "AND t.info.session.place = :place")
+    List<Ticket> getAllTicketByEventAndPlace(Place place, Event event);
 
-//    /**
-//     * Запрос на поиск билета по id в бд
-//     * @param id id билета
-//     * @return возвращает билет
-//     */
-//    @Query("SELECT t FROM Ticket t " +
-//            "WHERE t.id = :id")
-//    TicketsInfo findTicketById(Long id);
+    @Modifying
+    @Query("UPDATE Ticket t " +
+            "SET t.isExtinguished = true " +
+            "WHERE t.id = :id")
+    void editExtinguishedByTicketById(Long id);
 }
