@@ -57,7 +57,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                 hallCreationRequestDTO.hallNumber(),
                 hallCreationRequestDTO.seatsCount(),
                 null,
-                hallCreationRequestDTO.seatsGroupInfo(),
+                hallCreationRequestDTO.seatsGroupInfo().split(","),
                 place);
 
         try {
