@@ -235,7 +235,6 @@ public class HallSchemeServiceImpl implements HallSchemeService {
 
         Node rootNode = doc.getFirstChild();
         NodeList rootChilds = rootNode.getChildNodes();
-        Integer numberFloor = 0;
         List<SchemeFloor> schemeFloors = new ArrayList<>();
 
         for (int floor=0; floor<rootChilds.getLength(); floor++) {
@@ -250,25 +249,39 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                     continue;
                 }
 
+                boolean rowTrue = false;
                 NodeList rowChilds = floorChilds.item(floorChild).getChildNodes();
 
-                if (rowNumber == Integer.valueOf(rowChilds.item(2).getTextContent())) {
-                    for (int rowChild=0; rowChild<rowChilds.getLength(); rowChild++) {
-                        if (rowChilds.item(rowChild).getNodeType()!= Node.ELEMENT_NODE || rowChilds.item(rowChild).getNodeName() == "row-number") {
-                            continue;
-                        }
+                for (int rowChild=0; rowChild<rowChilds.getLength(); rowChild++) {
+                    if (rowChilds.item(rowChild).getNodeType()!= Node.ELEMENT_NODE ) {
+                        continue;
+                    }
 
+                    if (rowChilds.item(rowChild).getNodeName() == "row-number" && Integer.valueOf(rowChilds.item(rowChild).getTextContent()) == rowNumber) {
+                        rowTrue = true;
+                        continue;
+                    }
+
+                    if (rowTrue) {
                         NodeList seats = rowChilds.item(rowChild).getChildNodes();
 
                         for (int seat=0; seat<seats.getLength(); seat++) {
-                            if (seats.item(seat).getNodeType()!= Node.ELEMENT_NODE) {
+                            if (seats.item(seat).getNodeType() != Node.ELEMENT_NODE) {
                                 continue;
                             }
 
-                            if (seatNumber == Integer.valueOf(seats.item(seat).getChildNodes().item(5).getTextContent())) {
-                                return false;
-                            }
+                            NodeList seatItem = seats.item(seat).getChildNodes();
 
+                            for (int item=0; item<seatItem.getLength(); item++) {
+                                if (seatItem.item(item).getNodeType()!= Node.ELEMENT_NODE) {
+                                    continue;
+                                }
+
+                                if (seatItem.item(item).getNodeName().equals("seat-number") &&
+                                        seatNumber == Integer.valueOf(seatItem.item(item).getTextContent())) {
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }

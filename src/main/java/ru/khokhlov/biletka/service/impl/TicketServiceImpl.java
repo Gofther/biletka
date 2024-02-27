@@ -274,7 +274,26 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidDataException(errorMessages);
         }
 
+
         ticketRepository.buyOneTicket(ticketsInfo.getId());
+
+        String seatGroup = hallSchemeService.getPriceByRowAndSeat(ticketsInfo.getSession().getRoomLayout(), buyRequest.rawNumber(), buyRequest.seatNumber());
+
+        if (seatGroup == null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("There is no place", "There is no place in the hall!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Double price = Double.valueOf(ticketsInfo.getPrice());
+
+        for (String group: ticketsInfo.getSession().getRoomLayout().getSeatGroupInfo()) {
+            String[] groupArray = group.split(" - ");
+
+            if (Arrays.asList(groupArray).contains(seatGroup)) {
+                price *= (Double.valueOf(groupArray[1]));
+            }
+        }
 
         Ticket ticket = new Ticket(
             buyRequest.rawNumber(),
@@ -282,7 +301,7 @@ public class TicketServiceImpl implements TicketService {
             true,
             false,
             String.format("%03d", (Math.round((Math.random() * (999 - 1)) + 1))),
-            ticketsInfo.getPrice(),
+            String.format("%.2f",price),
             buyRequest.tel(),
             buyRequest.email(),
             buyRequest.fullName()
@@ -327,7 +346,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public boolean getStatus(Long sessionId, String rowNumber, String seatNumber) {
-        return ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(seatNumber)) != null ? true : false;
+        return ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(seatNumber)) != null;
     }
 
     @Override
@@ -439,7 +458,7 @@ public class TicketServiceImpl implements TicketService {
             String[] groupArray = group.split(" - ");
 
             if (Arrays.asList(groupArray).contains(seatGroup)) {
-                price *= (Double.valueOf(groupArray[1])+0.22);
+                price *= (Double.valueOf(groupArray[1]));
             }
         }
 
