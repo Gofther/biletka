@@ -14,6 +14,7 @@ import ru.khokhlov.biletka.dto.request.HallCreationRequestDTO;
 import ru.khokhlov.biletka.dto.request.PlaceInfo;
 import ru.khokhlov.biletka.dto.response.HallCreationResponseDTO;
 import ru.khokhlov.biletka.dto.response.PlaceResponse;
+import ru.khokhlov.biletka.dto.response.SchemeClientResponse;
 import ru.khokhlov.biletka.dto.response.SchemeResponse;
 import ru.khokhlov.biletka.entity.HallScheme;
 import ru.khokhlov.biletka.entity.Place;
@@ -93,10 +94,9 @@ public class PlaceController {
         return ResponseEntity.status(HttpStatus.OK).body(schemeResponse);
     }
 
-    @GetMapping(path = "/scheme/{hallId}/{sessionId}")
-    public ResponseEntity<?> getSchemeBySession(@Parameter(description = "id зала") @PathVariable Long hallId,
-                                       @Parameter(description = "id сессии") @PathVariable Long sessionId) {
-        SchemeResponse schemeResponse = hallSchemeService.getSchemeBySession(hallId, sessionId);
+    @GetMapping(path = "/scheme/client/{sessionId}")
+    public ResponseEntity<?> getSchemeBySession(@Parameter(description = "id сессии") @PathVariable Long sessionId) {
+        SchemeClientResponse schemeResponse = hallSchemeService.getSchemeBySession(sessionId);
         return ResponseEntity.status(HttpStatus.OK).body(schemeResponse);
     }
 }

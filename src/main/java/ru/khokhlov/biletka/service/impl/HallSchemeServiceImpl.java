@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import ru.khokhlov.biletka.dto.request.HallCreationRequestDTO;
 import ru.khokhlov.biletka.dto.response.HallCreationResponseDTO;
+import ru.khokhlov.biletka.dto.response.SchemeClientResponse;
 import ru.khokhlov.biletka.dto.response.SchemeResponse;
 import ru.khokhlov.biletka.dto.response.scheme_full.SchemeFloor;
 import ru.khokhlov.biletka.dto.response.scheme_full.SchemeRow;
@@ -18,11 +19,11 @@ import ru.khokhlov.biletka.dto.response.scheme_full.SchemeSeat;
 import ru.khokhlov.biletka.entity.HallScheme;
 import ru.khokhlov.biletka.entity.Organization;
 import ru.khokhlov.biletka.entity.Place;
+import ru.khokhlov.biletka.entity.Session;
 import ru.khokhlov.biletka.repository.HallSchemeRepository;
-import ru.khokhlov.biletka.service.HallSchemeService;
-import ru.khokhlov.biletka.service.OrganizationService;
-import ru.khokhlov.biletka.service.PlaceService;
-import ru.khokhlov.biletka.service.TicketService;
+import ru.khokhlov.biletka.repository.TicketRepository;
+import ru.khokhlov.biletka.repository.TicketUserRepository;
+import ru.khokhlov.biletka.service.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
@@ -36,7 +37,9 @@ public class HallSchemeServiceImpl implements HallSchemeService {
     private final OrganizationService organizationService;
     private final PlaceService placeService;
     private final HallSchemeRepository hallSchemeRepository;
-    private final TicketService ticketService;
+    private final SessionService sessionService;
+    private final TicketRepository ticketRepository;
+    private final TicketUserRepository ticketUserRepository;
 
     @Override
     public HallScheme getHallScheme(Long id) throws EntityNotFoundException {
@@ -291,18 +294,18 @@ public class HallSchemeServiceImpl implements HallSchemeService {
     }
 
     @Override
-    public SchemeResponse getSchemeBySession(Long hallId, Long sessionId) {
-        HallScheme hallScheme = hallSchemeRepository.getReferenceById(hallId);
+    public SchemeClientResponse getSchemeBySession(Long sessionId) {
+        Session session = sessionService.getSessionById(sessionId);
 
-        if (hallScheme.getScheme() == null) {
-            throw new EntityExistsException("Scheme in hall: " + hallScheme.getId() + " already exists");
+        if (session.getRoomLayout().getScheme() == null) {
+            throw new EntityExistsException("Scheme in hall: " + session.getRoomLayout().getId() + " already exists");
         }
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         Document doc;
 
         try {
-            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(hallScheme.getScheme())));
+            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(session.getRoomLayout().getScheme())));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -350,7 +353,7 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                             continue;
                         }
 
-                        Boolean occupied = false;
+                        boolean occupied = false;
                         String number = "";
                         String group = "";
                         String position = "";
@@ -361,21 +364,19 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                                 continue;
                             }
 
-                            if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-occupied")) {
-                                continue;
-                            }
-
                             if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-number")) {
                                 number = itemSeatChilds.item(seatItem).getTextContent();
                             } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-group")) {
                                 group = itemSeatChilds.item(seatItem).getTextContent();
-                            } else {
+                            } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-position")) {
                                 position = itemSeatChilds.item(seatItem).getTextContent();
+                            } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-occupied")) {
+                                occupied = ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(number)) != null;
                             }
                         }
 
                         SchemeSeat schemeSeat = new SchemeSeat(
-                                false,
+                                occupied,
                                 number,
                                 group,
                                 position
@@ -402,7 +403,11 @@ public class HallSchemeServiceImpl implements HallSchemeService {
         }
         // Добавление информации о зале
 
-        return new SchemeResponse(schemeFloors.toArray(SchemeFloor[]::new));
+        return new SchemeClientResponse(
+                schemeFloors.toArray(SchemeFloor[]::new),
+                session.getRoomLayout().getSeatGroupInfo(),
+                ticketRepository.getTicketsBySession(session.getId()).getPrice()
+        );
     }
 
     @Override
