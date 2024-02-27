@@ -1,11 +1,9 @@
 package ru.khokhlov.biletka.service;
 
 import org.springframework.stereotype.Service;
-import ru.khokhlov.biletka.dto.request.BuyRequest;
-import ru.khokhlov.biletka.dto.request.TicketEditInfo;
-import ru.khokhlov.biletka.dto.request.TicketInfo;
-import ru.khokhlov.biletka.dto.request.UserId;
+import ru.khokhlov.biletka.dto.request.*;
 import ru.khokhlov.biletka.dto.response.*;
+import ru.khokhlov.biletka.dto.response.SessionInfo;
 import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketOrganization;
 import ru.khokhlov.biletka.entity.Event;
 import ru.khokhlov.biletka.entity.Place;
@@ -89,4 +87,8 @@ public interface TicketService {
     TicketsOrganizationResponse[] getTicketsOrganization(Long id);
 
     TicketOrganization putTicketRepayment(Long id);
+
+    TicketsInfoResponse getInfoTicketsInfo(Long id);
+
+    TicketsInfoBuyResponse getTicketsInfoBuy(TicketsInfoBuy ticketsInfoBuy);
 }

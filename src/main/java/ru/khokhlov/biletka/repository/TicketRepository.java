@@ -116,4 +116,9 @@ public interface TicketRepository extends JpaRepository<TicketsInfo, Long> {
             "WHERE t.session.event = :event " +
             "AND t.session.place = :place")
     List<TicketsInfo> getAllTicketByEventAndPlace(Place place, Event event);
+
+
+    @Query("SELECT t FROM TicketsInfo t " +
+            "WHERE t.session.id = :id")
+    TicketsInfo getTicketsBySession(Long id);
 }

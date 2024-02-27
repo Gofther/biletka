@@ -43,4 +43,6 @@ public interface HallSchemeService {
     boolean getSeatScheme(Long id, Integer rawNumber, Integer seatNumber);
 
     SchemeResponse getSchemeBySession(Long hallId, Long sessionId);
+
+    String getPriceByRowAndSeat(HallScheme hallScheme, Integer row, Integer seat);
 }

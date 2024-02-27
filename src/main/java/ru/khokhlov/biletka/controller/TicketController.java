@@ -11,14 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.khokhlov.biletka.dto.request.BuyRequest;
-import ru.khokhlov.biletka.dto.request.TicketEditInfo;
-import ru.khokhlov.biletka.dto.request.TicketInfo;
-import ru.khokhlov.biletka.dto.request.UserId;
-import ru.khokhlov.biletka.dto.response.TicketUserResponse;
-import ru.khokhlov.biletka.dto.response.TicketsMassiveResponse;
-import ru.khokhlov.biletka.dto.response.TicketsOrganizationResponse;
-import ru.khokhlov.biletka.dto.response.TicketsResponse;
+import ru.khokhlov.biletka.dto.request.*;
+import ru.khokhlov.biletka.dto.request.TicketsInfoBuy;
+import ru.khokhlov.biletka.dto.response.*;
 import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketOrganization;
 import ru.khokhlov.biletka.service.TicketService;
 import ru.khokhlov.biletka.utils.QRGenerator;
@@ -121,5 +116,27 @@ public class TicketController {
         log.trace("TicketController.putTicketRepayment /ticket/repayment - id {} ", id);
         TicketOrganization ticketOrganization = ticketService.putTicketRepayment(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(ticketOrganization);
+    }
+
+    @Operation(
+            summary = "Вывод информации о билетах",
+            description = "Позволяет получить инфомармацию о билетах"
+    )
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<TicketsInfoResponse> getTicketsInfo(@Parameter(description = "id билетов информации") @Valid @RequestParam Long id) {
+        log.trace("TicketController.getTicketsInfo /ticket/id - id {} ", id);
+        TicketsInfoResponse ticketsInfoResponse = ticketService.getInfoTicketsInfo(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ticketsInfoResponse);
+    }
+
+    @Operation(
+            summary = "Вывод информации о билетах для покупки",
+            description = "Позволяет получить инфомармацию о билетах для покупки"
+    )
+    @GetMapping(value = "/buy")
+    public ResponseEntity<TicketsInfoBuyResponse> getTicketsInfoBuy(@Parameter(description = "информация для вывода") @Valid @RequestBody TicketsInfoBuy ticketsInfoBuy) {
+        log.trace("TicketController.getTicketsInfoBuy /ticket/buy - TicketsInfoBuyResponse {} ", ticketsInfoBuy);
+        TicketsInfoBuyResponse ticketsInfoBuyResponse = ticketService.getTicketsInfoBuy(ticketsInfoBuy);
+        return ResponseEntity.status(HttpStatus.OK).body(ticketsInfoBuyResponse);
     }
 }
