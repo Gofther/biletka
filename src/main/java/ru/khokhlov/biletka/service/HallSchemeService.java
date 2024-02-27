@@ -3,6 +3,7 @@ package ru.khokhlov.biletka.service;
 import org.springframework.stereotype.Service;
 import ru.khokhlov.biletka.dto.request.HallCreationRequestDTO;
 import ru.khokhlov.biletka.dto.response.HallCreationResponseDTO;
+import ru.khokhlov.biletka.dto.response.SchemeClientResponse;
 import ru.khokhlov.biletka.dto.response.SchemeResponse;
 import ru.khokhlov.biletka.entity.HallScheme;
 
@@ -42,5 +43,7 @@ public interface HallSchemeService {
 
     boolean getSeatScheme(Long id, Integer rawNumber, Integer seatNumber);
 
-    SchemeResponse getSchemeBySession(Long hallId, Long sessionId);
+    SchemeClientResponse getSchemeBySession(Long sessionId);
+
+    String getPriceByRowAndSeat(HallScheme hallScheme, Integer row, Integer seat);
 }

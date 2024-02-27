@@ -9,7 +9,7 @@ public record TicketUserResponse(
         String hall,
         Integer rowNumber,
         Integer seatNumber,
-        Integer price,
+        String price,
         String email,
         String phone,
         String fullName

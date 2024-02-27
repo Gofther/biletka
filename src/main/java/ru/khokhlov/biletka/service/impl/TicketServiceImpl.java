@@ -9,11 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import ru.khokhlov.biletka.dto.request.BuyRequest;
-import ru.khokhlov.biletka.dto.request.TicketEditInfo;
-import ru.khokhlov.biletka.dto.request.TicketInfo;
-import ru.khokhlov.biletka.dto.request.UserId;
+import ru.khokhlov.biletka.dto.request.*;
 import ru.khokhlov.biletka.dto.response.*;
+import ru.khokhlov.biletka.dto.response.SessionInfo;
 import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketOrganization;
 import ru.khokhlov.biletka.dto.response.ticketsOrganization_full.TicketsSessionOrganization;
 import ru.khokhlov.biletka.entity.*;
@@ -25,10 +23,7 @@ import ru.khokhlov.biletka.repository.TicketUserRepository;
 import ru.khokhlov.biletka.service.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -279,7 +274,26 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidDataException(errorMessages);
         }
 
+
         ticketRepository.buyOneTicket(ticketsInfo.getId());
+
+        String seatGroup = hallSchemeService.getPriceByRowAndSeat(ticketsInfo.getSession().getRoomLayout(), buyRequest.rawNumber(), buyRequest.seatNumber());
+
+        if (seatGroup == null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("There is no place", "There is no place in the hall!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Double price = Double.valueOf(ticketsInfo.getPrice());
+
+        for (String group: ticketsInfo.getSession().getRoomLayout().getSeatGroupInfo()) {
+            String[] groupArray = group.split(" - ");
+
+            if (Arrays.asList(groupArray).contains(seatGroup)) {
+                price *= (Double.valueOf(groupArray[1]));
+            }
+        }
 
         Ticket ticket = new Ticket(
             buyRequest.rawNumber(),
@@ -287,7 +301,7 @@ public class TicketServiceImpl implements TicketService {
             true,
             false,
             String.format("%03d", (Math.round((Math.random() * (999 - 1)) + 1))),
-            ticketsInfo.getPrice(),
+            String.format("%.2f",price),
             buyRequest.tel(),
             buyRequest.email(),
             buyRequest.fullName()
@@ -332,7 +346,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public boolean getStatus(Long sessionId, String rowNumber, String seatNumber) {
-        return ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(seatNumber)) != null ? true : false;
+        return ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(seatNumber)) != null;
     }
 
     @Override
@@ -402,6 +416,61 @@ public class TicketServiceImpl implements TicketService {
                 ticket.getRowNumber(),
                 ticket.getSeatNumber(),
                 true
+        );
+    }
+
+    @Override
+    public TicketsInfoResponse getInfoTicketsInfo(Long id) {
+        TicketsInfo ticketsInfo = ticketRepository.findFirstBySessionId(id);
+        return new TicketsInfoResponse(
+                ticketsInfo.getId(),
+                ticketsInfo.getSession().getEvent().getEventBasicInformation().getNameRus(),
+                ticketsInfo.getSession().getEvent().getEventBasicInformation().getSymbolicName(),
+                ticketsInfo.getSession().getTypeOfMovie(),
+                ticketsInfo.getSession().getStart().toLocalDateTime(),
+                ticketsInfo.getSession().getRoomLayout().getHallNumber(),
+                ticketsInfo.getPrice()
+        );
+    }
+
+    @Override
+    public TicketsInfoBuyResponse getTicketsInfoBuy(TicketsInfoBuy ticketsInfoBuy) {
+        Ticket ticket = ticketUserRepository.getFirstBySessionAndRowAndSeat(ticketsInfoBuy.id(), ticketsInfoBuy.row(), ticketsInfoBuy.seat());
+
+        if (ticket != null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("The place is already occupied", "The place is already occupied!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        TicketsInfo ticketsInfo = ticketRepository.getTicketsBySession(ticketsInfoBuy.id());
+        String seatGroup = hallSchemeService.getPriceByRowAndSeat(ticketsInfo.getSession().getRoomLayout(), ticketsInfoBuy.row(), ticketsInfoBuy.seat());
+
+        if (seatGroup == null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("There is no place", "There is no place in the hall!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Double price = Double.valueOf(ticketsInfo.getPrice());
+
+        for (String group: ticketsInfo.getSession().getRoomLayout().getSeatGroupInfo()) {
+            String[] groupArray = group.split(" - ");
+
+            if (Arrays.asList(groupArray).contains(seatGroup)) {
+                price *= (Double.valueOf(groupArray[1]));
+            }
+        }
+
+        return new TicketsInfoBuyResponse(
+                ticketsInfo.getSession().getId(),
+                ticketsInfo.getSession().getPlace().getName(),
+                ticketsInfo.getSession().getPlace().getCity().getNameRus() + ", " + ticketsInfo.getSession().getPlace().getAddress(),
+                ticketsInfo.getSession().getRoomLayout().getHallNumber(),
+                ticketsInfoBuy.row(),
+                ticketsInfoBuy.seat(),
+                String.format("%.2f",price),
+                ticketsInfo.getSession().getStart().toLocalDateTime()
         );
     }
 

@@ -28,7 +28,7 @@ public class Ticket {
     private String activationCode;
 
     @Column(name="price")
-    private Integer price;
+    private String price;
 
     @Column(name="phone")
     private String phone;
@@ -45,7 +45,7 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Ticket(Integer rowNumber, Integer seatNumber, Boolean isReserved, Boolean isExtinguished, String activationCode, Integer price, String phone, String email, String fullName) {
+    public Ticket(Integer rowNumber, Integer seatNumber, Boolean isReserved, Boolean isExtinguished, String activationCode, String price, String phone, String email, String fullName) {
         this.rowNumber = rowNumber;
         this.seatNumber = seatNumber;
         this.isReserved = isReserved;

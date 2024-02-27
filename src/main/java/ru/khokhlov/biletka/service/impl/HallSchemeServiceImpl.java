@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import ru.khokhlov.biletka.dto.request.HallCreationRequestDTO;
 import ru.khokhlov.biletka.dto.response.HallCreationResponseDTO;
+import ru.khokhlov.biletka.dto.response.SchemeClientResponse;
 import ru.khokhlov.biletka.dto.response.SchemeResponse;
 import ru.khokhlov.biletka.dto.response.scheme_full.SchemeFloor;
 import ru.khokhlov.biletka.dto.response.scheme_full.SchemeRow;
@@ -18,11 +19,11 @@ import ru.khokhlov.biletka.dto.response.scheme_full.SchemeSeat;
 import ru.khokhlov.biletka.entity.HallScheme;
 import ru.khokhlov.biletka.entity.Organization;
 import ru.khokhlov.biletka.entity.Place;
+import ru.khokhlov.biletka.entity.Session;
 import ru.khokhlov.biletka.repository.HallSchemeRepository;
-import ru.khokhlov.biletka.service.HallSchemeService;
-import ru.khokhlov.biletka.service.OrganizationService;
-import ru.khokhlov.biletka.service.PlaceService;
-import ru.khokhlov.biletka.service.TicketService;
+import ru.khokhlov.biletka.repository.TicketRepository;
+import ru.khokhlov.biletka.repository.TicketUserRepository;
+import ru.khokhlov.biletka.service.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
@@ -36,7 +37,9 @@ public class HallSchemeServiceImpl implements HallSchemeService {
     private final OrganizationService organizationService;
     private final PlaceService placeService;
     private final HallSchemeRepository hallSchemeRepository;
-    private final TicketService ticketService;
+    private final SessionService sessionService;
+    private final TicketRepository ticketRepository;
+    private final TicketUserRepository ticketUserRepository;
 
     @Override
     public HallScheme getHallScheme(Long id) throws EntityNotFoundException {
@@ -235,7 +238,6 @@ public class HallSchemeServiceImpl implements HallSchemeService {
 
         Node rootNode = doc.getFirstChild();
         NodeList rootChilds = rootNode.getChildNodes();
-        Integer numberFloor = 0;
         List<SchemeFloor> schemeFloors = new ArrayList<>();
 
         for (int floor=0; floor<rootChilds.getLength(); floor++) {
@@ -250,25 +252,39 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                     continue;
                 }
 
+                boolean rowTrue = false;
                 NodeList rowChilds = floorChilds.item(floorChild).getChildNodes();
 
-                if (rowNumber == Integer.valueOf(rowChilds.item(2).getTextContent())) {
-                    for (int rowChild=0; rowChild<rowChilds.getLength(); rowChild++) {
-                        if (rowChilds.item(rowChild).getNodeType()!= Node.ELEMENT_NODE || rowChilds.item(rowChild).getNodeName() == "row-number") {
-                            continue;
-                        }
+                for (int rowChild=0; rowChild<rowChilds.getLength(); rowChild++) {
+                    if (rowChilds.item(rowChild).getNodeType()!= Node.ELEMENT_NODE ) {
+                        continue;
+                    }
 
+                    if (rowChilds.item(rowChild).getNodeName() == "row-number" && Integer.valueOf(rowChilds.item(rowChild).getTextContent()) == rowNumber) {
+                        rowTrue = true;
+                        continue;
+                    }
+
+                    if (rowTrue) {
                         NodeList seats = rowChilds.item(rowChild).getChildNodes();
 
                         for (int seat=0; seat<seats.getLength(); seat++) {
-                            if (seats.item(seat).getNodeType()!= Node.ELEMENT_NODE) {
+                            if (seats.item(seat).getNodeType() != Node.ELEMENT_NODE) {
                                 continue;
                             }
 
-                            if (seatNumber == Integer.valueOf(seats.item(seat).getChildNodes().item(5).getTextContent())) {
-                                return false;
-                            }
+                            NodeList seatItem = seats.item(seat).getChildNodes();
 
+                            for (int item=0; item<seatItem.getLength(); item++) {
+                                if (seatItem.item(item).getNodeType()!= Node.ELEMENT_NODE) {
+                                    continue;
+                                }
+
+                                if (seatItem.item(item).getNodeName().equals("seat-number") &&
+                                        seatNumber == Integer.valueOf(seatItem.item(item).getTextContent())) {
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }
@@ -278,18 +294,18 @@ public class HallSchemeServiceImpl implements HallSchemeService {
     }
 
     @Override
-    public SchemeResponse getSchemeBySession(Long hallId, Long sessionId) {
-        HallScheme hallScheme = hallSchemeRepository.getReferenceById(hallId);
+    public SchemeClientResponse getSchemeBySession(Long sessionId) {
+        Session session = sessionService.getSessionById(sessionId);
 
-        if (hallScheme.getScheme() == null) {
-            throw new EntityExistsException("Scheme in hall: " + hallScheme.getId() + " already exists");
+        if (session.getRoomLayout().getScheme() == null) {
+            throw new EntityExistsException("Scheme in hall: " + session.getRoomLayout().getId() + " already exists");
         }
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         Document doc;
 
         try {
-            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(hallScheme.getScheme())));
+            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(session.getRoomLayout().getScheme())));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -337,13 +353,35 @@ public class HallSchemeServiceImpl implements HallSchemeService {
                             continue;
                         }
 
+                        boolean occupied = false;
+                        String number = "";
+                        String group = "";
+                        String position = "";
                         NodeList itemSeatChilds = seatChilds.item(seat).getChildNodes();
+
+                        for (int seatItem=0; seatItem<itemSeatChilds.getLength(); seatItem++) {
+                            if (itemSeatChilds.item(seatItem).getNodeType() != Node.ELEMENT_NODE) {
+                                continue;
+                            }
+
+                            if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-number")) {
+                                number = itemSeatChilds.item(seatItem).getTextContent();
+                            } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-group")) {
+                                group = itemSeatChilds.item(seatItem).getTextContent();
+                            } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-position")) {
+                                position = itemSeatChilds.item(seatItem).getTextContent();
+                            } else if (itemSeatChilds.item(seatItem).getNodeName().equals("seat-occupied")) {
+                                occupied = ticketUserRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.valueOf(rowNumber), Integer.valueOf(number)) != null;
+                            }
+                        }
+
                         SchemeSeat schemeSeat = new SchemeSeat(
-                                ticketService.getStatus(sessionId, rowNumber, itemSeatChilds.item(5).getTextContent()),
-                                itemSeatChilds.item(5).getTextContent(),
-                                itemSeatChilds.item(8).getTextContent(),
-                                itemSeatChilds.item(11).getTextContent()
+                                occupied,
+                                number,
+                                group,
+                                position
                         );
+
                         schemeSeats.add(schemeSeat);
                     }
                     // Добавление информации о месте
@@ -365,6 +403,80 @@ public class HallSchemeServiceImpl implements HallSchemeService {
         }
         // Добавление информации о зале
 
-        return new SchemeResponse(schemeFloors.toArray(SchemeFloor[]::new));
+        return new SchemeClientResponse(
+                schemeFloors.toArray(SchemeFloor[]::new),
+                session.getRoomLayout().getSeatGroupInfo(),
+                ticketRepository.getTicketsBySession(session.getId()).getPrice()
+        );
+    }
+
+    @Override
+    public String getPriceByRowAndSeat(HallScheme hallScheme, Integer row, Integer seat) {
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        Document doc;
+
+        try {
+            doc = builderFactory.newDocumentBuilder().parse(new InputSource(new StringReader(hallScheme.getScheme())));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        Node rootNode = doc.getFirstChild();
+        NodeList rootChilds = rootNode.getChildNodes();
+
+        for (int floor=0; floor<rootChilds.getLength(); floor++) {
+            if (rootChilds.item(floor).getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            NodeList floorChilds = rootChilds.item(floor).getChildNodes();
+
+            for (int rowItem=0; rowItem<floorChilds.getLength(); rowItem++) {
+                if (floorChilds.item(rowItem).getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
+
+                boolean rowTrue = false;
+                NodeList rowChilds = floorChilds.item(rowItem).getChildNodes();
+
+                for (int itemRow=0; itemRow<rowChilds.getLength(); itemRow++) {
+                    if (rowChilds.item(itemRow).getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
+
+                    if (rowChilds.item(itemRow).getNodeName().equals("row-number") && Integer.valueOf(rowChilds.item(itemRow).getTextContent()) == row) {
+                        rowTrue = true;
+                        continue;
+                    }
+
+                    NodeList seatChilds = rowChilds.item(itemRow).getChildNodes();
+
+                    for (int seatItem=0; seatItem<seatChilds.getLength(); seatItem++) {
+                        if (seatChilds.item(seatItem).getNodeType() != Node.ELEMENT_NODE) {
+                            continue;
+                        }
+
+                        boolean seatTrue = false;
+                        NodeList itemSeatChilds = seatChilds.item(seatItem).getChildNodes();
+
+                        for (int item=0; item<itemSeatChilds.getLength(); item++) {
+                            if (itemSeatChilds.item(item).getNodeName().equals("seat-number") &&
+                                    Integer.valueOf(itemSeatChilds.item(item).getTextContent()) == seat &&
+                                    rowTrue) {
+                                seatTrue = true;
+                            }
+
+                            if (itemSeatChilds.item(item).getNodeName().equals("seat-group") &&
+                                    rowTrue &&
+                                    seatTrue) {
+                                return itemSeatChilds.item(item).getTextContent();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }
