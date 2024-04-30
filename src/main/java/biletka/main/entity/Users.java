@@ -25,4 +25,14 @@ public class Users {
 
     @Column(name = "status")
     private Boolean status;
+
+    public Users() {
+    }
+
+    public Users(String email, String password, RoleEnum role, Boolean status) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+    }
 }

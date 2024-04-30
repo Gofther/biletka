@@ -5,6 +5,7 @@ import biletka.main.Utils.PasswordEncoder;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.response.AuthResponse;
 import biletka.main.entity.Users;
+import biletka.main.enums.RoleEnum;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.UserRepository;
@@ -50,25 +51,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * @return токен авторизации
      */
     @Override
+    @Transactional
     public AuthResponse getAuthToken(AuthForm authForm) {
         Users user = userRepository.findFirstByEmail(authForm.email());
-        if (user == null) {
-//        if (user == null || !Objects.equals(authForm.role(), user.getRole().getAuthority()) || PasswordEncoder.arePasswordsEquals(authForm.password(), user.getPassword())) {
+
+        if (user == null || !user.getRole().getAuthority().equalsIgnoreCase(authForm.role()) || PasswordEncoder.arePasswordsEquals(user.getPassword(), authForm.password())) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Authentication error", "The email or password is incorrect!"));
             throw new InvalidDataException(errorMessages);
         }
-        return null;
-//        UserDetails userDetails = new User(
-//                user.getEmail(),
-//                user.getPassword(),
-//                Collections.singleton(user.getRole())
-//        );
-//
-//
-//        return new AuthResponse(
-//                jwtTokenUtils.generateToken(userDetails)
-//        );
+
+        UserDetails userDetails = new User(
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singleton(user.getRole())
+        );
+
+        return new AuthResponse(
+                jwtTokenUtils.generateToken(userDetails)
+        );
     }
 
     @Override

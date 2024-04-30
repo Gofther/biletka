@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Контроллер безопасности", description = "Всё, что связано с безопасностью")
 public class SecurityController {
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     @Operation(
             summary = "Аутентификация пользователя",
@@ -32,6 +35,7 @@ public class SecurityController {
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@Parameter(description = "Форма авторизации") @Valid @RequestBody AuthForm authForm) {
         log.trace("SecurityController.createAuthToken /auth - authForm {}", authForm);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authForm.email(), authForm.password()));
         AuthResponse authResponse = userService.getAuthToken(authForm);
 
         return ResponseEntity.ok(authResponse);
