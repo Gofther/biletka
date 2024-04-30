@@ -9,7 +9,6 @@ public class InvalidDataException extends RuntimeException{
     private final List<ErrorMessage> errorMessage;
 
     public InvalidDataException(List<ErrorMessage> errorMessage) {
-        System.out.println(errorMessage);
         super();
         this.errorMessage = errorMessage;
     }
