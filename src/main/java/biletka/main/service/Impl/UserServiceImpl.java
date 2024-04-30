@@ -1,6 +1,12 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.JwtTokenUtils;
+import biletka.main.Utils.PasswordEncoder;
+import biletka.main.dto.request.AuthForm;
+import biletka.main.dto.response.AuthResponse;
 import biletka.main.entity.Users;
+import biletka.main.exception.ErrorMessage;
+import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.UserRepository;
 import biletka.main.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,13 +19,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
+    private final JwtTokenUtils jwtTokenUtils;
 
     /**
      * Функция получения id пользователя по почте и паролю
@@ -32,6 +42,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Users user = userRepository.findFirstByEmail(email);
 
         return user.getId();
+    }
+
+    /**
+     * Метод получения токена авторизации
+     * @param authForm форма аутентификации
+     * @return токен авторизации
+     */
+    @Override
+    public AuthResponse getAuthToken(AuthForm authForm) {
+        Users user = userRepository.findFirstByEmail(authForm.email());
+        if (user == null) {
+//        if (user == null || !Objects.equals(authForm.role(), user.getRole().getAuthority()) || PasswordEncoder.arePasswordsEquals(authForm.password(), user.getPassword())) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Authentication error", "The email or password is incorrect!"));
+            throw new InvalidDataException(errorMessages);
+        }
+        return null;
+//        UserDetails userDetails = new User(
+//                user.getEmail(),
+//                user.getPassword(),
+//                Collections.singleton(user.getRole())
+//        );
+//
+//
+//        return new AuthResponse(
+//                jwtTokenUtils.generateToken(userDetails)
+//        );
     }
 
     @Override
