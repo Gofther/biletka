@@ -55,12 +55,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public AuthResponse getAuthToken(AuthForm authForm) {
         Users user = userRepository.findFirstByEmail(authForm.email());
 
-        if (user == null || !user.getRole().getAuthority().equalsIgnoreCase(authForm.role()) || PasswordEncoder.arePasswordsEquals(user.getPassword(), authForm.password())) {
+        // Проверка на правильно введнные данные и не актвиный аккаунт
+        if (user == null ||
+                user.getStatus().getStatusUser().equalsIgnoreCase("INACTIVE") ||
+                user.getStatus().getStatusUser().equalsIgnoreCase("ACTIVE") &&
+                (
+                        !user.getRole().getAuthority().equalsIgnoreCase(authForm.role()) ||
+                        PasswordEncoder.arePasswordsEquals(user.getPassword(), authForm.password())
+                )
+        ) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Authentication error", "The email or password is incorrect!"));
             throw new InvalidDataException(errorMessages);
         }
+        // Проверка на бан аккаунта
+        else if (user.getStatus().getStatusUser().equalsIgnoreCase("BANNED")) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Banned", "The account is banned!"));
+            throw new InvalidDataException(errorMessages);
+        }
 
+        // Детали пользователя для токена
         UserDetails userDetails = new User(
                 user.getEmail(),
                 user.getPassword(),
