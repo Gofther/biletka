@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    Long getClientIdByEmailAndPassword(String email, String password);
 
     /**
      * Метод получения токена авторизации

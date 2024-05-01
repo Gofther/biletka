@@ -33,19 +33,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final JwtTokenUtils jwtTokenUtils;
 
     /**
-     * Функция получения id пользователя по почте и паролю
-     * @param email почта пользователя
-     * @param password пароль пользователя
-     * @return id пользователя
-     */
-    @Override
-    public Long getClientIdByEmailAndPassword(String email, String password) {
-        Users user = userRepository.findFirstByEmail(email);
-
-        return user.getId();
-    }
-
-    /**
      * Метод получения токена авторизации
      * @param authForm форма аутентификации
      * @return токен авторизации
