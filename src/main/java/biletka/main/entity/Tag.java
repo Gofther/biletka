@@ -9,10 +9,14 @@ import lombok.Data;
 
 public class Tag {
     @Id
-    @Column(name = "tag_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
     private String name;
+
+    public Tag(String name) {
+        this.name = name;
+    }
 }

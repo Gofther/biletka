@@ -8,10 +8,14 @@ import lombok.Data;
 @Table(name = "type_event")
 public class Type_event {
     @Id
-    @Column(name = "type_event_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "type")
     private String type;
+
+    public Type_event(String type) {
+        this.type = type;
+    }
 }

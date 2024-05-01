@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "event_basic_information")
 public class Event_basic_information {
     @Id
-    @Column(name = "event_basic_information_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -55,11 +55,22 @@ public class Event_basic_information {
     )
     private Set<Genre> genres = new HashSet<>();
 
-
-
-
     public void addGenres(Genre genre) {
         if (genres == null) genres = new HashSet<>();
         if (genre != null) this.genres.add(genre);
+    }
+
+    public Event_basic_information(String name, String symbolyc_name, String name_rus, String organizaer, Age_rating ageRatingId, Type_event typeEventId, Boolean pushkin, Long event_id_culture, Boolean show_in_poster, String img, Set<Genre> genres) {
+        this.name = name;
+        this.symbolyc_name = symbolyc_name;
+        this.name_rus = name_rus;
+        this.organizaer = organizaer;
+        this.ageRatingId = ageRatingId;
+        this.typeEventId = typeEventId;
+        this.pushkin = pushkin;
+        this.event_id_culture = event_id_culture;
+        this.show_in_poster = show_in_poster;
+        this.img = img;
+        this.genres = genres;
     }
 }
