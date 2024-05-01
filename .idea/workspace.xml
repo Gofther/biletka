@@ -4,64 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97724297-196e-45eb-b48a-391cc00a3145" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/md5-checksums.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/sha1-checksums.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/dependencies-accessors/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/biletka_new.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Actor.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Actor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Age_rating.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Age_rating.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Event_basic_information.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Event_basic_information.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Genre.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Genre.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Tag.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Tag.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Type_event.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Type_event.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Actor.class.uniqueId3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ActorRepository.class.uniqueId1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Age_rating.class.uniqueId5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Age_ratingRepository.class.uniqueId11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Event_basic_information.class.uniqueId9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Genre.class.uniqueId8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GenreRepository.class.uniqueId6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Tag.class.uniqueId10" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/TagRepository.class.uniqueId7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Type_event.class.uniqueId0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Type_eventRepository.class.uniqueId2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/UserRepository.class.uniqueId4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Actor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Actor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Age_rating.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Age_rating.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Event_basic_information.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Event_basic_information.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Genre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Genre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Tag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Type_event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Type_event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/UserServiceImpl.java" afterDir="false" />
-    </list>
+    <list default="true" id="97724297-196e-45eb-b48a-391cc00a3145" name="Changes" comment="Добавил сервисы и методы получения по id и имени поля" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -180,9 +123,22 @@
       <workItem from="1714404593292" duration="1921000" />
       <workItem from="1714474019313" duration="9613000" />
     </task>
+    <task id="LOCAL-00001" summary="Добавил сервисы и методы получения по id и имени поля">
+      <option name="closed" value="true" />
+      <created>1714592105157</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1714592105157</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Добавил сервисы и методы получения по id и имени поля" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил сервисы и методы получения по id и имени поля" />
   </component>
 </project>
