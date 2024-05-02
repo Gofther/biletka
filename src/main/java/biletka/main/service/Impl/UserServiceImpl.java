@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, EntityNotFoundException {
-        log.trace("UserServiceImpl.loadUserByUsername - username {}", email);
+        //log.trace("UserServiceImpl.loadUserByUsername - username {}", email);
 
         Users user = userRepository.findFirstByEmail(email);
 
