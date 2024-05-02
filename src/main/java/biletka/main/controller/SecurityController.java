@@ -1,15 +1,19 @@
 package biletka.main.controller;
 
 import biletka.main.dto.request.AuthForm;
+import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
+import biletka.main.dto.response.ClientRegistrationResponse;
 import biletka.main.service.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.ParseException;
 
 @Slf4j
 @RestController
@@ -39,5 +45,17 @@ public class SecurityController {
         AuthResponse authResponse = userService.getAuthToken(authForm);
 
         return ResponseEntity.ok(authResponse);
+    }
+
+    @Operation(
+            summary = "Регистрация обычного пользователя",
+            description = "Позволяет сохранить нового пользователя в базе данных"
+    )
+    @PostMapping
+    public ResponseEntity<ClientRegistrationResponse> postClientRegistration(@Parameter(description = "Данные для регистрации нового пользователя") @Valid @RequestBody ClientRegistrationRequest clientRegistrationRequest) throws ParseException, MessagingException {
+        log.trace("SecurityController.postClientRegistration / - clientRegistrationRequest {}", clientRegistrationRequest);
+        ClientRegistrationResponse clientRegistrationResponse = userService.postNewUser(clientRegistrationRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientRegistrationResponse);
     }
 }

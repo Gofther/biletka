@@ -65,12 +65,12 @@ public class Client {
         this.status = status;
     }
 
-    public void addPlace(Ticket ticket) {
+    public void addTicket(Ticket ticket) {
         if (ticketSet == null) ticketSet = new HashSet<>();
         if (ticket != null) this.ticketSet.add(ticket);
     }
 
-    public void addPlace(Event event) {
+    public void addEvent(Event event) {
         if (eventSet == null) eventSet = new HashSet<>();
         if (event != null) this.eventSet.add(event);
     }
