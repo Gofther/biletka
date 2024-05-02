@@ -7,12 +7,18 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "users")
-public class Users {
+@Table(name = "administrator")
+public class Administrator {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "code")
+    private String code;
+
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "email")
     private String email;
@@ -28,16 +34,15 @@ public class Users {
     @Column(name = "status")
     private StatusUserEnum status;
 
-    @Column(name = "active_code")
-    private String activeCode;
-
-    public Users() {
+    public Administrator() {
     }
 
-    public Users(String email, String password, RoleEnum role, StatusUserEnum status, String activeCode) {
+    public Administrator(String code, String address, String email, String password, RoleEnum role, StatusUserEnum status) {
+        this.code = code;
+        this.address = address;
         this.email = email;
         this.password = password;
         this.role = role;
         this.status = status;
-        this.activeCode = activeCode;
+    }
 }

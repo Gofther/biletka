@@ -1,10 +1,9 @@
 package biletka.main.repository;
 
-import biletka.main.entity.Users;
+import biletka.main.entity.Organization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users, Long> {
-    Users findFirstByEmail(String email);
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 }
