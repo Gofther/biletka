@@ -1,6 +1,7 @@
 package biletka.main.entity;
 
 import biletka.main.entity.event_item.EventAdditionalInformation;
+import biletka.main.entity.event_item.EventBasicInformation;
 import biletka.main.entity.event_item.EventWebWidget;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,6 +25,10 @@ public class Event {
     @JoinColumn(name = "additional")
     private EventAdditionalInformation eventAdditionalInformation;
 
+    @OneToOne
+    @JoinColumn(name = "basic")
+    private EventBasicInformation eventBasicInformation;
+
     @Column(name = "duration")
     private String duration;
 
@@ -37,5 +42,15 @@ public class Event {
     private Boolean status;
 
     public Event() {
+    }
+
+    public Event(EventWebWidget eventWebWidget, EventAdditionalInformation eventAdditionalInformation, EventBasicInformation eventBasicInformation, String duration, Double rating, Timestamp createdAt, Boolean status) {
+        this.eventWebWidget = eventWebWidget;
+        this.eventAdditionalInformation = eventAdditionalInformation;
+        this.eventBasicInformation = eventBasicInformation;
+        this.duration = duration;
+        this.rating = rating;
+        this.createdAt = createdAt;
+        this.status = status;
     }
 }
