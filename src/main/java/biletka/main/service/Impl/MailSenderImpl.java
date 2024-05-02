@@ -50,6 +50,5 @@ public class MailSenderImpl implements MailSender {
 
         helper.setText(html, true);
         mailSender.send(message);
-        log.info(html);
     }
 }

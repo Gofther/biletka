@@ -3,6 +3,7 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.ActivationCode;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.Utils.PasswordEncoder;
+import biletka.main.dto.request.ActiveClientRequest;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
@@ -119,6 +120,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new ClientRegistrationResponse(
                 String.format("The user '" + newUser.getEmail() + "' has been created")
         );
+    }
+
+    /**
+     * Метод активации пользователя с помощью кода
+     * @param activeClientRequest данные для активации
+     * @return сообщение о успешной активации
+     */
+    @Override
+    public ClientRegistrationResponse putActiveUser(ActiveClientRequest activeClientRequest) {
+        Users user = userRepository.findFirstByEmail(activeClientRequest.email());
+
+        if (user == null) {
+            throw new EntityNotFoundException("Entity with email " + activeClientRequest.email() + " not found");
+        } else if (user.getStatus() == StatusUserEnum.ACTIVE) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Activation error", "The account has already been activated!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        user.setStatus(StatusUserEnum.ACTIVE);
+        userRepository.save(user);
+
+        return new ClientRegistrationResponse("The account '" + user.getEmail() + "' is activated");
     }
 
     @Override

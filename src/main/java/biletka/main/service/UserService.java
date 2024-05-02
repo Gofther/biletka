@@ -1,5 +1,6 @@
 package biletka.main.service;
 
+import biletka.main.dto.request.ActiveClientRequest;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
@@ -25,4 +26,11 @@ public interface UserService {
      * @return сообщение о успешном создании пользователя
      */
     ClientRegistrationResponse postNewUser(ClientRegistrationRequest clientRegistrationRequest) throws ParseException, MessagingException;
+
+    /**
+     * Метод активации пользователя с помощью кода
+     * @param activeClientRequest данные для активации
+     * @return сообщение о успешной активации
+     */
+    ClientRegistrationResponse putActiveUser(ActiveClientRequest activeClientRequest);
 }

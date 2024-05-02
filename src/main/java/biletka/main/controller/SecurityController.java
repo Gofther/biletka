@@ -1,5 +1,6 @@
 package biletka.main.controller;
 
+import biletka.main.dto.request.ActiveClientRequest;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
@@ -17,10 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -57,5 +55,17 @@ public class SecurityController {
         ClientRegistrationResponse clientRegistrationResponse = userService.postNewUser(clientRegistrationRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(clientRegistrationResponse);
+    }
+
+    @Operation(
+            summary = "Активация аккаунта",
+            description = "Позволяет изменить данные пользователя, чтобы он был активирован"
+    )
+    @PutMapping("/active")
+    public ResponseEntity<ClientRegistrationResponse> putActiveUser(@Parameter(description = "Данные для активации") @Valid @RequestBody ActiveClientRequest activeClientRequest) {
+        log.trace("SecurityController.putActiveUser /active - activeClientRequest {}", activeClientRequest);
+        ClientRegistrationResponse clientRegistrationResponse = userService.putActiveUser(activeClientRequest);
+
+        return ResponseEntity.accepted().body(clientRegistrationResponse);
     }
 }
