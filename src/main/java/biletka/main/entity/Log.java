@@ -20,4 +20,13 @@ public class Log {
 
     @Column(name = "description")
     private String description;
+
+    public Log() {
+    }
+
+    public Log(String status, String title, String description) {
+        this.status = status;
+        this.title = title;
+        this.description = description;
+    }
 }
