@@ -1,6 +1,5 @@
 package biletka.main.service.Impl;
 
-import biletka.main.entity.Actor;
 import biletka.main.entity.TypeEvent;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
@@ -21,12 +20,16 @@ public class TypeEventServiceImpl implements TypeEventService {
 
     @Override
     public TypeEvent getTypeEventOfId(Long id){
+        log.trace("TypeEventService.getTypeEventOfId - id{}", id);
+
         TypeEvent typeEvent = typeEventRepository.getReferenceById(Long.valueOf(id));
         return typeEvent;
     }
 
     @Override
     public TypeEvent getTypeEventOfName(String type){
+        log.trace("TypeEventService.getTypeEventOfName - type{}", type);
+
         TypeEvent typeEvent = typeEventRepository.findFirstByType(type);
         return typeEvent;
     }
@@ -37,13 +40,17 @@ public class TypeEventServiceImpl implements TypeEventService {
      * @return Созданный тип мероприятия
      */
     @Override
-    public TypeEvent PostNewTypeEvent(String type){
+    public TypeEvent postNewTypeEvent(String type){
+        log.trace("TypeEventService.postNewTypeEvent - type{}", type);
+
         TypeEvent typeEvent = typeEventRepository.findFirstByType(type);
+
         if(typeEvent!= null){
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Post error", "This actor already exists!"));
             throw new InvalidDataException(errorMessages);
         }
+
         TypeEvent newTypeEvent = new TypeEvent(type);
         typeEventRepository.saveAndFlush(newTypeEvent);
         return newTypeEvent;

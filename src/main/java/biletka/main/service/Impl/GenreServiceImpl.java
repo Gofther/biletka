@@ -20,12 +20,16 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getGenreOfId(Long id){
+        log.trace("GenreService.getGenreOfId - id{}", id);
+
         Genre genre = genreRepository.getReferenceById(Long.valueOf(id));
         return genre;
     }
 
     @Override
     public Genre getGenreOfName(String name){
+        log.trace("GenreService.getGenreOfName - name{}", name);
+
         Genre genre = genreRepository.findFirstByName(name);
         return genre;
     }
@@ -36,13 +40,17 @@ public class GenreServiceImpl implements GenreService {
      * @return Созданный жанр
      */
     @Override
-    public Genre PostNewGenre(String name){
+    public Genre postNewGenre(String name){
+        log.trace("GenreService.postNewGenre - name{}", name);
+
         Genre genre = genreRepository.findFirstByName(name);
+
         if(genre!= null){
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Post error", "This genre already exists!"));
             throw new InvalidDataException(errorMessages);
         }
+
         Genre newGenre = new Genre(name);
         genreRepository.saveAndFlush(newGenre);
         return newGenre;

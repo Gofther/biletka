@@ -14,5 +14,5 @@ public interface TagService {
      * @param name - имя актёра
      * @return Созданный актёр
      */
-    Tag PostNewTag(String name);
+    Tag postNewTag(String name);
 }

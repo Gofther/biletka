@@ -14,5 +14,5 @@ public interface TypeEventService {
      * @param type - тип мероприятия
      * @return Созданный тип мероприятия
      */
-    public TypeEvent PostNewTypeEvent(String type);
+    TypeEvent postNewTypeEvent(String type);
 }

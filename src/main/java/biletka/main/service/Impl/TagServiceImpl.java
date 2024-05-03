@@ -35,13 +35,15 @@ public class TagServiceImpl implements TagService {
      * @return Созданный актёр
      */
     @Override
-    public Tag PostNewTag(String name){
+    public Tag postNewTag(String name){
         Tag tag = tagRepository.findFirstByName(name);
+
         if(tag!= null){
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Post error", "This actor already exists!"));
             throw new InvalidDataException(errorMessages);
         }
+
         Tag newTag = new Tag(name);
         tagRepository.saveAndFlush(newTag);
         return newTag;

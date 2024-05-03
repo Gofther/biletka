@@ -19,15 +19,19 @@ public class AgeRatingServiceImpl implements AgeRatingService {
     private final AgeRatingRepository ageRatingRepository;
 
     @Override
-    public AgeRating getAge_ratingOfId(Long id){
-        AgeRating age_rating = ageRatingRepository.getReferenceById(Long.valueOf(id));
-        return age_rating;
+    public AgeRating getAgeRatingOfId(Long id){
+        log.trace("AgeRatingService.getAgeRatingOfId - id{}", id);
+
+        AgeRating ageRating = ageRatingRepository.getReferenceById(Long.valueOf(id));
+        return ageRating;
     }
 
     @Override
-    public AgeRating getAge_ratingOfLimitation(int limitation){
-        AgeRating age_rating = ageRatingRepository.findFirstByLimitation(limitation);
-        return age_rating;
+    public AgeRating getAgeRatingOfLimitation(int limitation){
+        log.trace("AgeRatingService.getAgeRatingOfLimitation - limitation{}", limitation);
+
+        AgeRating ageRating = ageRatingRepository.findFirstByLimitation(limitation);
+        return ageRating;
     }
 
     /**
@@ -36,13 +40,17 @@ public class AgeRatingServiceImpl implements AgeRatingService {
      * @return Созданное возрастное ограничение
      */
     @Override
-    public AgeRating PostNewAgeRating(int limitation){
+    public AgeRating postNewAgeRating(int limitation){
+        log.trace("AgeRatingService.postNewAgeRating - limitation{}", limitation);
+
         AgeRating ageRating = ageRatingRepository.findFirstByLimitation(limitation);
+
         if(ageRating!= null){
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Post error", "This age rating already exists!"));
             throw new InvalidDataException(errorMessages);
         }
+
         AgeRating newAgeRating = new AgeRating(limitation);
         ageRatingRepository.saveAndFlush(newAgeRating);
         return newAgeRating;

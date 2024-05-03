@@ -13,5 +13,5 @@ public interface ActorService {
      * @param name - имя актёра
      * @return Созданный актёр
      */
-    Actor PostNewActor(String name);
+    Actor postNewActor(String name);
 }

@@ -14,5 +14,5 @@ public interface GenreService {
      * @param name - название жанра
      * @return Созданный жанр
      */
-    Genre PostNewGenre(String name);
+    Genre postNewGenre(String name);
 }
