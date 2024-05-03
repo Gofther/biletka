@@ -201,6 +201,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user;
     }
 
+    /**
+     * Метод получения пользователя организации по почте
+     * @param userEmail почта пользователя
+     * @return данные пользователя
+     */
+    @Override
+    public Users getUserOrganizationByEmail(String userEmail) {
+        Users user = userRepository.findFirstByEmail(userEmail);
+
+        if (user == null || user.getRole() != RoleEnum.ORGANIZATION) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        return user;
+    }
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, EntityNotFoundException {

@@ -51,4 +51,11 @@ public interface UserService {
      * @return данные пользователя
      */
     Users getUserByEmail(String userEmail);
+
+    /**
+     * Метод получения пользователя организации по почте
+     * @param userEmail почта пользователя
+     * @return данные пользователя
+     */
+    Users getUserOrganizationByEmail(String userEmail);
 }

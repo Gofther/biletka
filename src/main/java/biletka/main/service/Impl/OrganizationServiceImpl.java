@@ -3,6 +3,7 @@ package biletka.main.service.Impl;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.Organization;
+import biletka.main.entity.Place;
 import biletka.main.entity.Users;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.exception.ErrorMessage;
@@ -72,5 +73,26 @@ public class OrganizationServiceImpl implements OrganizationService {
                 organizationRequest.email(),
                 organizationRequest.fullNameOrganization()
         );
+    }
+
+    /**
+     * Метод получения организации по пользователю
+     * @param user пользователь
+     * @return организация
+     */
+    @Override
+    public Organization getOrganizationByUser(Users user) {
+        return organizationRepository.findFirstByUser(user);
+    }
+
+    /**
+     * Метод добавление площадки к организации
+     * @param newPlace площадка
+     */
+    @Override
+    public void addPlace(Organization organization, Place newPlace) {
+        organization.addPlace(newPlace);
+
+        organizationRepository.save(organization);
     }
 }

@@ -1,6 +1,7 @@
 package biletka.main.repository;
 
 import biletka.main.entity.Organization;
+import biletka.main.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,4 +30,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
             "OR o.email = :email " +
             "OR o.fullNameOrganization = :fullNameOrganization")
     Organization findFirstByFullInfo(String inn, String kbk, String kpp, String ogrn, String oktmo, String email, String fullNameOrganization);
+
+    Organization findFirstByUser(Users user);
 }
