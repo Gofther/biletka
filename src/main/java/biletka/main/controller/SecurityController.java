@@ -3,8 +3,10 @@ package biletka.main.controller;
 import biletka.main.dto.request.ActiveClientRequest;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.request.ClientRegistrationRequest;
+import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
 import biletka.main.dto.response.ClientRegistrationResponse;
+import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.service.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +39,7 @@ public class SecurityController {
     )
     @Hidden
     @PostMapping("/auth")
-    public ResponseEntity<?> createAuthToken(@Parameter(description = "Форма авторизации") @Valid @RequestBody AuthForm authForm) {
+    public ResponseEntity<AuthResponse> createAuthToken(@Parameter(description = "Форма авторизации") @Valid @RequestBody AuthForm authForm) {
         log.trace("SecurityController.createAuthToken /auth - authForm {}", authForm);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authForm.email(), authForm.password()));
         AuthResponse authResponse = userService.getAuthToken(authForm);
@@ -58,6 +60,18 @@ public class SecurityController {
     }
 
     @Operation(
+            summary = "Регистрация организации",
+            description = "Позволяет сохранить новую организацию в базе данных"
+    )
+    @PostMapping("/organization")
+    public ResponseEntity<MessageCreateResponse> postOrganizationRegistration(@Parameter(description = "Данные организации") @Valid @RequestBody OrganizationRegistrationRequest organizationRegistrationRequest) {
+        log.trace("SecurityController.postOrganizationRegistration /organization - organizationRegistrationRequest {}", organizationRegistrationRequest);
+        MessageCreateResponse messageCreateResponse = userService.postNewOrganization(organizationRegistrationRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
+    }
+
+    @Operation(
             summary = "Активация аккаунта",
             description = "Позволяет изменить данные пользователя, чтобы он был активирован"
     )
@@ -68,4 +82,6 @@ public class SecurityController {
 
         return ResponseEntity.accepted().body(clientRegistrationResponse);
     }
+
+
 }

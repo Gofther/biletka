@@ -6,8 +6,11 @@ import biletka.main.Utils.PasswordEncoder;
 import biletka.main.dto.request.ActiveClientRequest;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.request.ClientRegistrationRequest;
+import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
 import biletka.main.dto.response.ClientRegistrationResponse;
+import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.entity.Organization;
 import biletka.main.entity.Users;
 import biletka.main.enums.RoleEnum;
 import biletka.main.enums.StatusUserEnum;
@@ -16,6 +19,7 @@ import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.UserRepository;
 import biletka.main.service.ClientService;
 import biletka.main.service.MailSender;
+import biletka.main.service.OrganizationService;
 import biletka.main.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
@@ -42,6 +46,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final ActivationCode activationCode;
 
     private final ClientService clientService;
+    private final OrganizationService organizationService;
     private final MailSender mailSender;
 
     /**
@@ -123,6 +128,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     /**
+     * Метод сохранения нового организации в бд
+     * @param organizationRequest данные организации
+     * @return сообщение о успешном создании организации
+     */
+    @Override
+    public MessageCreateResponse postNewOrganization(OrganizationRegistrationRequest organizationRequest) {
+        log.trace("UserServiceImpl.postNewOrganization - organizationRequest {}", organizationRequest);
+
+        Users user = userRepository.findFirstByEmail(organizationRequest.email());
+        Organization organization = organizationService.getOrganizationByFullNameOrganization(organizationRequest);
+
+        if (user != null || organization != null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Registration error", "This user already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Users newUser = new Users(
+                organizationRequest.email(),
+                PasswordEncoder.getEncryptedPassword(organizationRequest.password()),
+                RoleEnum.ORGANIZATION,
+                StatusUserEnum.ACTIVE,
+                activationCode.generateActivationCode()
+        );
+
+        userRepository.saveAndFlush(newUser);
+
+        organizationService.postCreateOrganization(organizationRequest, newUser);
+
+        return new MessageCreateResponse(
+                "The organization '" + organizationRequest.fullNameOrganization() + "' has been created"
+        );
+    }
+
+    /**
      * Метод активации пользователя с помощью кода
      * @param activeClientRequest данные для активации
      * @return сообщение о успешной активации
@@ -143,6 +183,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
 
         return new ClientRegistrationResponse("The account '" + user.getEmail() + "' is activated");
+    }
+
+    /**
+     * Метод получения пользователя по почте
+     * @param userEmail почта пользователя
+     * @return данные пользователя
+     */
+    @Override
+    public Users getUserByEmail(String userEmail) {
+        Users user = userRepository.findFirstByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("Entity with email " + userEmail + " not found");
+        }
+
+        return user;
     }
 
     @Override
