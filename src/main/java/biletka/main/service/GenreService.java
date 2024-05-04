@@ -8,4 +8,11 @@ public interface GenreService {
     Genre getGenreOfId(Long id);
 
     Genre getGenreOfName(String name);
+
+    /**
+     * Метод Создания нового жанра и сохранения в бд
+     * @param name - название жанра
+     * @return Созданный жанр
+     */
+    Genre postNewGenre(String name);
 }
