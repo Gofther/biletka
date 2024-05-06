@@ -51,4 +51,23 @@ public class TagServiceImpl implements TagService {
 
         return tag;
     }
+    /**
+     * Метод Создания нового тага и сохранения в бд
+     * @param name - имя актёра
+     * @return Созданный актёр
+     */
+    @Override
+    public Tag postNewTag(String name){
+        Tag tag = tagRepository.findFirstByName(name);
+
+        if(tag!= null){
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Post error", "This actor already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Tag newTag = new Tag(name);
+        tagRepository.saveAndFlush(newTag);
+        return newTag;
+    }
 }

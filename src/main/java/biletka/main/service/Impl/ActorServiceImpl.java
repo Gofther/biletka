@@ -52,4 +52,26 @@ public class ActorServiceImpl implements ActorService{
 
         return actor;
     }
+
+    /**
+     * Метод Создания нового актёра и сохранения в бд
+     * @param name - имя актёра
+     * @return Созданный актёр
+     */
+    @Override
+    public Actor postNewActor(String name){
+        log.trace("ActorService.postNewActor - name{}", name);
+
+        Actor actor = actorRepository.findFirstByName(name);
+
+        if(actor!= null){
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Post error", "This actor already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Actor newActor = new Actor(name);
+        actorRepository.saveAndFlush(newActor);
+        return newActor;
+    }
 }

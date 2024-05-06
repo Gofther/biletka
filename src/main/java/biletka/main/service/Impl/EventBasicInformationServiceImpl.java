@@ -1,10 +1,12 @@
 package biletka.main.service.Impl;
+
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.event_item.EventBasicRequest;
 import biletka.main.entity.AgeRating;
 import biletka.main.entity.Genre;
 import biletka.main.entity.TypeEvent;
 import biletka.main.entity.event_item.EventBasicInformation;
+
 import biletka.main.repository.EventBasicInformationRepository;
 import biletka.main.service.AgeRatingService;
 import biletka.main.service.EventBasicInformationService;
@@ -15,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Set;
 
 
 @Service
