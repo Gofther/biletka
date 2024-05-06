@@ -13,15 +13,14 @@ import biletka.main.service.AgeRatingService;
 public class AgeRatingServiceImpl implements AgeRatingService {
     private final AgeRatingRepository ageRatingRepository;
 
+    /**
+     * Метод получения возрастного ограничения
+     * @param limitation возраст
+     * @return возрастное ограничение
+     */
     @Override
-    public AgeRating getAge_ratingOfId(Long id){
-        AgeRating age_rating = ageRatingRepository.getReferenceById(Long.valueOf(id));
-        return age_rating;
-    }
-
-    @Override
-    public AgeRating getAge_ratingOfLimitation(int limitation){
-        AgeRating age_rating = ageRatingRepository.findFirstByLimitation(limitation);
-        return age_rating;
+    public AgeRating getAgeRatingOfLimitation(int limitation){
+        log.trace("AgeRatingServiceImpl.getAgeRatingOfLimitation - limitation {}", limitation);
+        return ageRatingRepository.findFirstByLimitation(limitation);
     }
 }

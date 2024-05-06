@@ -1,5 +1,7 @@
 # Project Methods
 
+(~) - Необязательный пункт
+
 ## Security
 
 <details>
@@ -126,6 +128,57 @@ RequestBody
     "address": String,
     "place_name": String,
     "city": String
+}
+```
+ResponseBody
+```
+{
+    "message": String
+}
+```
+</details>
+
+---
+## Event
+
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">POST</span> https://localhost:8443/event
+</summary>
+<p>Description: Создание мероприятия и добавления его к организации</p>
+<p>Authorization - TRUE</p>
+
+---
+RequestPart - File
+
+---
+RequestPart - String
+```
+{
+    "event_basic": {
+        "name": String,
+        "name_rus": String,
+        "organizaer": String,
+        "age_rating": String,
+        "type_event": String,
+        "pushkin": Boolean,
+        "eventIdCulture": Long, (~)
+        "show_in_poster": Boolean,
+        "genres": [String]
+    },
+    "event_additional": {
+        "author": String,
+        "director": String,
+        "writer_or_artist": String,
+        "actors": [String],
+        "tags": [String]
+    },
+    "event_wev_widget": {
+        "description": String,
+        "link": "https://afisha.yandex.ru/" + String,
+        "signature": String
+    },
+    "duration": String
 }
 ```
 ResponseBody

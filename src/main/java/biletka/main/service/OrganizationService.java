@@ -2,6 +2,7 @@ package biletka.main.service;
 
 import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Place;
 import biletka.main.entity.Users;
@@ -35,4 +36,10 @@ public interface OrganizationService {
      * @param newPlace площадка
      */
     void addPlace(Organization organization, Place newPlace);
+
+    /**
+     * Метод добавление мероприятия к организации
+     * @param event мероприятие
+     */
+    void addEventAdmin(Organization organization, Event event);
 }

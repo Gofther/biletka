@@ -3,6 +3,7 @@ package biletka.main.entity;
 import biletka.main.entity.event_item.EventAdditionalInformation;
 import biletka.main.entity.event_item.EventBasicInformation;
 import biletka.main.entity.event_item.EventWebWidget;
+import biletka.main.enums.StatusEventEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -39,12 +40,12 @@ public class Event {
     private Timestamp createdAt;
 
     @Column(name = "status")
-    private Boolean status;
+    private StatusEventEnum status;
 
     public Event() {
     }
 
-    public Event(EventWebWidget eventWebWidget, EventAdditionalInformation eventAdditionalInformation, EventBasicInformation eventBasicInformation, String duration, Double rating, Timestamp createdAt, Boolean status) {
+    public Event(EventWebWidget eventWebWidget, EventAdditionalInformation eventAdditionalInformation, EventBasicInformation eventBasicInformation, String duration, Double rating, Timestamp createdAt, StatusEventEnum status) {
         this.eventWebWidget = eventWebWidget;
         this.eventAdditionalInformation = eventAdditionalInformation;
         this.eventBasicInformation = eventBasicInformation;

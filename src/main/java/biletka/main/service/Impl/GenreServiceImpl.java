@@ -1,11 +1,16 @@
 package biletka.main.service.Impl;
 
 import biletka.main.entity.Genre;
+import biletka.main.exception.ErrorMessage;
+import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.GenreRepository;
 import biletka.main.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,16 +18,38 @@ import org.springframework.stereotype.Service;
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
 
-    @Override
-    public Genre getGenreOfId(Long id){
-        Genre genre = genreRepository.getReferenceById(Long.valueOf(id));
-        return genre;
-    }
-
+    /**
+     * Метод поиска жанра
+     * @param name название жанра
+     * @return жанр
+     */
     @Override
     public Genre getGenreOfName(String name){
+        log.trace("GenreServiceImpl.getGenreOfName - name {}", name);
+        return genreRepository.findFirstByName(name);
+    }
+
+    /**
+     * Метод создания жанра
+     * @param name название жанра
+     * @return жанр
+     */
+    @Override
+    public Genre createGenre(String name) {
+        log.trace("GenreServiceImpl.createGenre - name {}", name);
         Genre genre = genreRepository.findFirstByName(name);
-        return genre;
+
+        if (genre != null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Genre error", "This genre already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Genre genreNew = new Genre(name);
+
+        genreRepository.saveAndFlush(genreNew);
+
+        return genreNew;
     }
 }
 

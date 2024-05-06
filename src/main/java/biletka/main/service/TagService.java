@@ -5,7 +5,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface TagService {
-    Tag getTagOfId(Long id);
-
+    /**
+     * Метод получения тега мероприятия
+     * @param name название тега
+     * @return тег
+     */
     Tag getTagOfName(String name);
+
+    /**
+     * Метод создания тега
+     * @param name название тега
+     * @return тег
+     */
+    Tag createTag(String name);
 }

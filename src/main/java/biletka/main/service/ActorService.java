@@ -5,7 +5,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ActorService {
+    /**
+     * Метод получения актёра
+     * @param name имя актёра
+     * @return актёр
+     */
     Actor getActorOfName(String name);
-    Actor getActorOfId(Long id);
 
+    /**
+     * Метод создания актёра
+     * @param name ФИО актера
+     * @return актёр
+     */
+    Actor createActor(String name);
 }

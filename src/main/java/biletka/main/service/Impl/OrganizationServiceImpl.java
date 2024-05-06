@@ -2,6 +2,7 @@ package biletka.main.service.Impl;
 
 import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Place;
 import biletka.main.entity.Users;
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -82,6 +84,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public Organization getOrganizationByUser(Users user) {
+        log.trace("OrganizationServiceImpl.getOrganizationByUser - user {}", user);
         return organizationRepository.findFirstByUser(user);
     }
 
@@ -91,7 +94,24 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public void addPlace(Organization organization, Place newPlace) {
+        log.trace("OrganizationServiceImpl.addPlace - organization {}, newPlace {}", organization, newPlace);
         organization.addPlace(newPlace);
+
+        organizationRepository.save(organization);
+    }
+
+    /**
+     * Метод добавление мероприятия к организации
+     * @param event мероприятие
+     */
+    @Override
+    public void addEventAdmin(Organization organization, Event event) {
+        log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
+        Set<Event> eventSet = organization.getAdminEventSet();
+        eventSet.add(event);
+
+        organization.addEvent(event);
+        organization.setAdminEventSet(eventSet);
 
         organizationRepository.save(organization);
     }

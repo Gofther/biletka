@@ -16,6 +16,9 @@ public class AgeRating {
     @Column (name = "limitation")
     private int limitation;
 
+    public AgeRating() {
+    }
+
     public AgeRating(int limitation) {
         this.limitation = limitation;
     }

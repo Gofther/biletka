@@ -63,6 +63,9 @@ public class EventBasicInformation {
         if (genre != null) this.genres.add(genre);
     }
 
+    public EventBasicInformation() {
+    }
+
     public EventBasicInformation(String name, String symbolicName, String name_rus, String organizaer, AgeRating ageRatingId, TypeEvent typeEventId, Boolean pushkin, Long eventIdCulture, Boolean showInPoster, String img, Set<Genre> genres) {
         this.name = name;
         this.symbolicName = symbolicName;
