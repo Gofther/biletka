@@ -18,41 +18,14 @@ import java.util.List;
 public class AgeRatingServiceImpl implements AgeRatingService {
     private final AgeRatingRepository ageRatingRepository;
 
-    @Override
-    public AgeRating getAgeRatingOfId(Long id){
-        log.trace("AgeRatingService.getAgeRatingOfId - id{}", id);
-
-        AgeRating ageRating = ageRatingRepository.getReferenceById(Long.valueOf(id));
-        return ageRating;
-    }
-
-    @Override
-    public AgeRating getAgeRatingOfLimitation(int limitation){
-        log.trace("AgeRatingService.getAgeRatingOfLimitation - limitation{}", limitation);
-
-        AgeRating ageRating = ageRatingRepository.findFirstByLimitation(limitation);
-        return ageRating;
-    }
-
     /**
-     * Метод Создания нового возрастного ограничения и сохранения в бд
-     * @param limitation - возрастное ограничение
-     * @return Созданное возрастное ограничение
+     * Метод получения возрастного ограничения
+     * @param limitation возраст
+     * @return возрастное ограничение
      */
     @Override
-    public AgeRating postNewAgeRating(int limitation){
-        log.trace("AgeRatingService.postNewAgeRating - limitation{}", limitation);
-
-        AgeRating ageRating = ageRatingRepository.findFirstByLimitation(limitation);
-
-        if(ageRating!= null){
-            List<ErrorMessage> errorMessages = new ArrayList<>();
-            errorMessages.add(new ErrorMessage("Post error", "This age rating already exists!"));
-            throw new InvalidDataException(errorMessages);
-        }
-
-        AgeRating newAgeRating = new AgeRating(limitation);
-        ageRatingRepository.saveAndFlush(newAgeRating);
-        return newAgeRating;
+    public AgeRating getAgeRatingOfLimitation(int limitation){
+        log.trace("AgeRatingServiceImpl.getAgeRatingOfLimitation - limitation {}", limitation);
+        return ageRatingRepository.findFirstByLimitation(limitation);
     }
 }

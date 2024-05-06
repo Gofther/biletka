@@ -1,6 +1,7 @@
 package biletka.main.service.Impl;
 
 import biletka.main.entity.Actor;
+import biletka.main.entity.TypeEvent;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.ActorRepository;
@@ -18,18 +19,37 @@ import java.util.List;
 public class ActorServiceImpl implements ActorService{
     private final ActorRepository actorRepository;
 
+    /**
+     * Метод получения актёра
+     * @param name имя актёра
+     * @return актёр
+     */
     @Override
     public Actor getActorOfName(String name){
-        log.trace("ActorService.getActorOfName - name{}", name);
-
-        Actor actor = actorRepository.findFirstByName(name);
-        return actor;
+        log.trace("ActorServiceImpl.getActorOfName - name {}", name);
+        return actorRepository.findFirstByName(name);
     }
-    @Override
-    public Actor getActorOfId(Long id){
-        log.trace("ActorService.getActorOfId - id{}", id);
 
-        Actor actor = actorRepository.getReferenceById(Long.valueOf(id));
+    /**
+     * Метод создания актёра
+     * @param name ФИО актера
+     * @return актёр
+     */
+    @Override
+    public Actor createActor(String name) {
+        log.trace("ActorServiceImpl.createActor - name {}", name);
+        Actor actor = actorRepository.findFirstByName(name);
+
+        if (actor != null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Genre error", "This actor already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        actor = new Actor(name);
+
+        actorRepository.saveAndFlush(actor);
+
         return actor;
     }
 

@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface TypeEventService {
-    TypeEvent getTypeEventOfId(Long id);
-
     TypeEvent getTypeEventOfName(String type);
 
     /**
-     * Метод Создания нового типа мероприятия и сохранения в бд
-     * @param type - тип мероприятия
-     * @return Созданный тип мероприятия
+     * Метод создания типа мероприятия
+     * @param type навзание типа мероприятия
+     * @return тип мероприятия
      */
-    TypeEvent postNewTypeEvent(String type);
+    TypeEvent createTypeEvent(String type);
 }

@@ -18,41 +18,38 @@ import java.util.List;
 public class TypeEventServiceImpl implements TypeEventService {
     private final TypeEventRepository typeEventRepository;
 
-    @Override
-    public TypeEvent getTypeEventOfId(Long id){
-        log.trace("TypeEventService.getTypeEventOfId - id{}", id);
-
-        TypeEvent typeEvent = typeEventRepository.getReferenceById(Long.valueOf(id));
-        return typeEvent;
-    }
-
+    /**
+     * Метод получения типа мероприятия
+     * @param type название типа мероприяти
+     * @return тип мероприятия
+     */
     @Override
     public TypeEvent getTypeEventOfName(String type){
-        log.trace("TypeEventService.getTypeEventOfName - type{}", type);
+        log.trace("TypeEventServiceImpl.getTypeEventOfName - type {}", type);
 
-        TypeEvent typeEvent = typeEventRepository.findFirstByType(type);
-        return typeEvent;
+        return typeEventRepository.findFirstByType(type);
     }
 
     /**
-     * Метод Создания нового типа мероприятия и сохранения в бд
-     * @param type - тип мероприятия
-     * @return Созданный тип мероприятия
+     * Метод создания типа мероприятия
+     * @param type навзание типа мероприятия
+     * @return тип мероприятия
      */
     @Override
-    public TypeEvent postNewTypeEvent(String type){
-        log.trace("TypeEventService.postNewTypeEvent - type{}", type);
-
+    public TypeEvent createTypeEvent(String type) {
+        log.trace("TypeEventServiceImpl.createTypeEvent - type {}", type);
         TypeEvent typeEvent = typeEventRepository.findFirstByType(type);
 
-        if(typeEvent!= null){
+        if (typeEvent != null) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
-            errorMessages.add(new ErrorMessage("Post error", "This actor already exists!"));
+            errorMessages.add(new ErrorMessage("Genre error", "This genre already exists!"));
             throw new InvalidDataException(errorMessages);
         }
 
-        TypeEvent newTypeEvent = new TypeEvent(type);
-        typeEventRepository.saveAndFlush(newTypeEvent);
-        return newTypeEvent;
+        TypeEvent typeEventNew = new TypeEvent(type);
+
+        typeEventRepository.saveAndFlush(typeEventNew);
+
+        return typeEventNew;
     }
 }

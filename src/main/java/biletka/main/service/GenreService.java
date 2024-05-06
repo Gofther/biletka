@@ -5,14 +5,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface GenreService {
-    Genre getGenreOfId(Long id);
-
+    /**
+     * Метод поиска жанра
+     * @param name название жанра
+     * @return жанр
+     */
     Genre getGenreOfName(String name);
 
     /**
-     * Метод Создания нового жанра и сохранения в бд
-     * @param name - название жанра
-     * @return Созданный жанр
+     * Метод создания жанра
+     * @param name название жанра
+     * @return жанр
      */
-    Genre postNewGenre(String name);
+    Genre createGenre(String name);
 }

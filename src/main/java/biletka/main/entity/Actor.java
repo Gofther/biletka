@@ -16,6 +16,9 @@ public class Actor {
     @Column(name = "name")
     private String name;
 
+    public Actor() {
+    }
+
     public Actor(String name) {
         this.name = name;
     }

@@ -18,19 +18,15 @@ public class EventWebWidget {
     @Column(name = "link")
     private String link;
 
-    @Column(name = "rating_yandex")
-    private Double ratingYandex;
-
     @Column(name = "signature")
     private String signature;
 
     public EventWebWidget() {
     }
 
-    public EventWebWidget(String description, String link, Double ratingYandex, String signature) {
+    public EventWebWidget(String description, String link, String signature) {
         this.description = description;
         this.link = link;
-        this.ratingYandex = ratingYandex;
         this.signature = signature;
     }
 }

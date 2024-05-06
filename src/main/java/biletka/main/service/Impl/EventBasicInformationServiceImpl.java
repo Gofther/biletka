@@ -1,12 +1,12 @@
 package biletka.main.service.Impl;
-import biletka.main.dto.request.EnentItem.EventBasicInformationRequest;
+
+import biletka.main.Utils.ConvertUtils;
+import biletka.main.dto.request.event_item.EventBasicRequest;
 import biletka.main.entity.AgeRating;
 import biletka.main.entity.Genre;
 import biletka.main.entity.TypeEvent;
 import biletka.main.entity.event_item.EventBasicInformation;
-import biletka.main.exception.ErrorMessage;
-import biletka.main.exception.InvalidDataException;
-import biletka.main.repository.ActorRepository;
+
 import biletka.main.repository.EventBasicInformationRepository;
 import biletka.main.service.AgeRatingService;
 import biletka.main.service.EventBasicInformationService;
@@ -16,10 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -27,48 +24,60 @@ import java.util.Set;
 @Slf4j
 public class EventBasicInformationServiceImpl implements EventBasicInformationService {
     private final EventBasicInformationRepository eventBasicInformationRepository;
-    private final AgeRatingService ageRatingService;
+    private final ConvertUtils convertUtils;
+
     private final TypeEventService typeEventService;
+    private final AgeRatingService ageRatingService;
     private final GenreService genreService;
 
     /**
-     * Метод Создания новогой информации о событии и сохранения в бд
-     * @param eventBasicInformationRequest - информация о событии
-     * @return Инициализированная информация о событии
+     * Метод создания и сохранения основной информации о мероприятии в бд
+     * @param eventBasicRequest основная информация для создания
+     * @return основная информация о мероприятии
      */
     @Override
-    public EventBasicInformation postNewEventBasicInformation(EventBasicInformationRequest eventBasicInformationRequest){
-        log.trace("EventBasicInformationService.postNewEventBasicInformation - EventBasicInformationRequest{}", eventBasicInformationRequest);
+    public EventBasicInformation createEventBasic(EventBasicRequest eventBasicRequest, String fullNameFile) {
+        log.trace("EventBasicInformationServiceImpl.createEventBasic - eventBasicRequest {}, fullNameFile {}", eventBasicRequest, fullNameFile);
+        /** Проверка на существование типа мероприятия */
+        TypeEvent type = typeEventService.getTypeEventOfName(eventBasicRequest.typeEvent());
 
-        EventBasicInformation eventBasicInformation = eventBasicInformationRepository.findFirstByName(eventBasicInformationRequest.name());
-
-        if(eventBasicInformation!= null){
-            List<ErrorMessage> errorMessages = new ArrayList<>();
-            errorMessages.add(new ErrorMessage("Post error", "This event basic information already exists!"));
-            throw new InvalidDataException(errorMessages);
+        if (type == null) {
+            type = typeEventService.createTypeEvent(eventBasicRequest.typeEvent());
         }
 
-        String[] genre = eventBasicInformationRequest.genre();
-        Set<Genre> genres = new HashSet<>();
-        for (String s : genre) {
-            genres.add(genreService.getGenreOfName(s));
+        /** Получение возрастного ограничения */
+        AgeRating ageRating = ageRatingService.getAgeRatingOfLimitation(eventBasicRequest.ageRating());
+
+        /** Проверка на существование жанров */
+        Set<Genre> genreSet = new HashSet<>();
+
+        for (String genreRequest: eventBasicRequest.genres()) {
+            Genre genre = genreService.getGenreOfName(genreRequest);
+
+            if (genre == null) {
+                genre = genreService.createGenre(genreRequest);
+            }
+
+            genreSet.add(genre);
         }
 
-        EventBasicInformation newEventBasicInformation = new EventBasicInformation(
-                eventBasicInformationRequest.name(),
-                null,
-                eventBasicInformationRequest.nameRus(),
-                eventBasicInformationRequest.organizer(),
-                ageRatingService.getAgeRatingOfLimitation(eventBasicInformationRequest.ageRating()),
-                typeEventService.getTypeEventOfName(eventBasicInformationRequest.eventType()),
-                eventBasicInformationRequest.pushkin(),
-                eventBasicInformationRequest.eventIDCulture(),
-                eventBasicInformationRequest.showInPoster(),
-                eventBasicInformationRequest.img(),
-                genres
+        /** Сохранение в бд */
+        EventBasicInformation eventBasicInformation = new EventBasicInformation(
+                eventBasicRequest.name(),
+                convertUtils.convertToSymbolicString(eventBasicRequest.name()),
+                eventBasicRequest.nameRus(),
+                eventBasicRequest.organizaer(),
+                ageRating,
+                type,
+                eventBasicRequest.pushkin(),
+                eventBasicRequest.eventIdCulture(),
+                eventBasicRequest.showInPoster(),
+                fullNameFile,
+                genreSet
         );
 
-        eventBasicInformationRepository.saveAndFlush(newEventBasicInformation);
-        return newEventBasicInformation;
+        eventBasicInformationRepository.saveAndFlush(eventBasicInformation);
+
+        return eventBasicInformation;
     }
 }

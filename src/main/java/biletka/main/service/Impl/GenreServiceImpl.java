@@ -18,20 +18,38 @@ import java.util.List;
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
 
-    @Override
-    public Genre getGenreOfId(Long id){
-        log.trace("GenreService.getGenreOfId - id{}", id);
-
-        Genre genre = genreRepository.getReferenceById(Long.valueOf(id));
-        return genre;
-    }
-
+    /**
+     * Метод поиска жанра
+     * @param name название жанра
+     * @return жанр
+     */
     @Override
     public Genre getGenreOfName(String name){
-        log.trace("GenreService.getGenreOfName - name{}", name);
+        log.trace("GenreServiceImpl.getGenreOfName - name {}", name);
+        return genreRepository.findFirstByName(name);
+    }
 
+    /**
+     * Метод создания жанра
+     * @param name название жанра
+     * @return жанр
+     */
+    @Override
+    public Genre createGenre(String name) {
+        log.trace("GenreServiceImpl.createGenre - name {}", name);
         Genre genre = genreRepository.findFirstByName(name);
-        return genre;
+
+        if (genre != null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Genre error", "This genre already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Genre genreNew = new Genre(name);
+
+        genreRepository.saveAndFlush(genreNew);
+
+        return genreNew;
     }
 
     /**

@@ -5,14 +5,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AgeRatingService {
-    AgeRating getAgeRatingOfId(Long id);
-    AgeRating getAgeRatingOfLimitation(int limitation);
-
     /**
-     * Метод Создания нового возрастного ограничения и сохранения в бд
-     * @param limitation - возрастное ограничение
-     * @return Созданное возрастное ограничение
+     * Метод получения возрастного ограничения
+     * @param limitation возраст
+     * @return возрастное ограничение
      */
-    AgeRating postNewAgeRating(int limitation);
+    AgeRating getAgeRatingOfLimitation(int limitation);
 }
 

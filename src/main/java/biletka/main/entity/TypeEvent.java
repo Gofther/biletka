@@ -15,6 +15,9 @@ public class TypeEvent {
     @Column(name = "type")
     private String type;
 
+    public TypeEvent() {
+    }
+
     public TypeEvent(String type) {
         this.type = type;
     }

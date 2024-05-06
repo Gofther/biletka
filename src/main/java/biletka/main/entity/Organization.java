@@ -67,10 +67,7 @@ public class Organization {
 
     @Column(name = "postal_address")
     @BatchSize(size = 6)
-    private Integer postal_address;
-
-    @Column(name = "activation_code")
-    private String activationCode;
+    private Integer postalAddress;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -102,7 +99,7 @@ public class Organization {
     public Organization() {
     }
 
-    public Organization(Users user, String inn, String kbk, String kpp, String ogrn, String oktmo, String contactPhone, String email, String fullNameOrganization, String fullNameSignatory, String legalAddress, String namePayer, String positionSignatory, Integer postal_address, String activationCode, Timestamp createdAt, StatusUserEnum status, Set<Event> adminEventSet) {
+    public Organization(Users user, String inn, String kbk, String kpp, String ogrn, String oktmo, String contactPhone, String email, String fullNameOrganization, String fullNameSignatory, String legalAddress, String namePayer, String positionSignatory, Integer postalAddress, Timestamp createdAt, StatusUserEnum status, Set<Event> adminEventSet) {
         this.user = user;
         this.inn = inn;
         this.kbk = kbk;
@@ -116,8 +113,7 @@ public class Organization {
         this.legalAddress = legalAddress;
         this.namePayer = namePayer;
         this.positionSignatory = positionSignatory;
-        this.postal_address = postal_address;
-        this.activationCode = activationCode;
+        this.postalAddress = postalAddress;
         this.createdAt = createdAt;
         this.status = status;
         this.adminEventSet = adminEventSet;
