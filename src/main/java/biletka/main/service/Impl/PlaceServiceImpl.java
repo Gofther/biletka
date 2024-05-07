@@ -78,4 +78,14 @@ public class PlaceServiceImpl implements PlaceService {
                 "The place '" + newPlace.getPlaceName() + "' at the address '" + newPlace.getAddress() + "' has been successfully created!"
         );
     }
+
+    /**
+     * Метод полечния площадки
+     * @param id id площадки
+     * @return площадка
+     */
+    @Override
+    public Place getPlaceById(Long id) {
+        return placeRepository.getReferenceById(id);
+    }
 }
