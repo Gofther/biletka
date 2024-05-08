@@ -51,5 +51,27 @@ public class GenreServiceImpl implements GenreService {
 
         return genreNew;
     }
+
+    /**
+     * Метод Создания нового жанра и сохранения в бд
+     * @param name - название жанра
+     * @return Созданный жанр
+     */
+    @Override
+    public Genre postNewGenre(String name){
+        log.trace("GenreService.postNewGenre - name{}", name);
+
+        Genre genre = genreRepository.findFirstByName(name);
+
+        if(genre!= null){
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Post error", "This genre already exists!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Genre newGenre = new Genre(name);
+        genreRepository.saveAndFlush(newGenre);
+        return newGenre;
+    }
 }
 
