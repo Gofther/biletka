@@ -18,4 +18,6 @@ public interface ActorService {
      * @return актёр
      */
     Actor createActor(String name);
+
+    Actor postNewActor(String name);
 }

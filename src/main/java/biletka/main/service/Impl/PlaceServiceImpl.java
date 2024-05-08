@@ -15,6 +15,7 @@ import biletka.main.repository.UserRepository;
 import biletka.main.service.OrganizationService;
 import biletka.main.service.PlaceService;
 import biletka.main.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +86,7 @@ public class PlaceServiceImpl implements PlaceService {
      * @return площадка
      */
     @Override
-    public Place getPlaceById(Long id) {
+    public Place getPlaceById(Long id) throws EntityNotFoundException {
         return placeRepository.getReferenceById(id);
     }
 }

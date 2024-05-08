@@ -25,7 +25,7 @@ public record HallCreateRequest(
 
         @NotBlank(message = "Seat group info is mandatory!")
         @JsonProperty("seat_group_info")
-        String seatGroupInfo,
+        String[] seatGroupInfo,
 
         @NotBlank(message = "Place id is mandatory!")
         @JsonProperty("place_id")

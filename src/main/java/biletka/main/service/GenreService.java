@@ -18,4 +18,6 @@ public interface GenreService {
      * @return жанр
      */
     Genre createGenre(String name);
+
+    Genre postNewGenre(String name);
 }

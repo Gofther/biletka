@@ -43,7 +43,7 @@ public class HallServiceImpl implements HallService {
      * @return сообщение о успешном создании зала
      */
     @Override
-    public MessageCreateResponse createHall(String authorization, MultipartFile file, HallCreateRequest hallCreateRequestNew) throws MessagingException {
+    public MessageCreateResponse createHall(String authorization, MultipartFile file, HallCreateRequest hallCreateRequestNew) throws MessagingException, EntityNotFoundException {
         String typeFile = fileUtils.getFileExtension(file.getOriginalFilename());
 
         fileUtils.validationFile(
@@ -69,7 +69,7 @@ public class HallServiceImpl implements HallService {
 
         Place place = placeService.getPlaceById(hallCreateRequestNew.placeId());
 
-        if (organization.getPlaceSet().contains(place)) {
+        if (!organization.getPlaceSet().contains(place)) {
             throw new EntityNotFoundException("A broken token!");
         }
 
@@ -86,7 +86,7 @@ public class HallServiceImpl implements HallService {
                 hallCreateRequestNew.hallName(),
                 hallCreateRequestNew.numberOfSeats(),
                 hallCreateRequestNew.info(),
-                new String[]{hallCreateRequestNew.seatGroupInfo()},
+                hallCreateRequestNew.seatGroupInfo(),
                 null,
                 place
         );
