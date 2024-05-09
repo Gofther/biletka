@@ -18,4 +18,6 @@ public interface TagService {
      * @return тег
      */
     Tag createTag(String name);
+
+    Tag postNewTag(String name);
 }

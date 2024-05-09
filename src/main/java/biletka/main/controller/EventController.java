@@ -4,7 +4,6 @@ import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.service.EventService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +31,7 @@ public class EventController {
             description = "Позволяет создать мероприятие"
     )
     @PostMapping
-    public ResponseEntity<?> postEventCreate(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
+    public ResponseEntity<MessageCreateResponse> postEventCreate(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
                                              @RequestPart("file") MultipartFile file,
                                              @RequestPart("event_create_request") String eventCreateRequest) throws IOException {
         log.trace("EventController.postEventCreate / - file {}, eventCreateRequest {}", file, eventCreateRequest);

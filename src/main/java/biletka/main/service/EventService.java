@@ -2,6 +2,7 @@ package biletka.main.service;
 
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.entity.Event;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,4 +18,11 @@ public interface EventService {
      * @return сообщение оуспешном создании мероприятия
      */
     MessageCreateResponse createEvent(String authorization, MultipartFile file, EventCreateRequest eventCreateRequest) throws IOException;
+
+    /**
+     * Метод получения мероприятия по id
+     * @param id мероприятия
+     * @return мероприятие
+     */
+    Event getEventById(Long id);
 }

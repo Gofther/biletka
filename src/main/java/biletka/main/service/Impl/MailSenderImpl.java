@@ -1,5 +1,6 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.MessageCreator;
 import biletka.main.service.MailSender;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -10,6 +11,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -19,6 +21,7 @@ import org.thymeleaf.context.Context;
 public class MailSenderImpl implements MailSender {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final MessageCreator messageCreator;
     @Value(value = "${application.email.address}")
     private String organization;
     @Value(value = "${application.authorization.path}")
@@ -50,5 +53,23 @@ public class MailSenderImpl implements MailSender {
 
         helper.setText(html, true);
         mailSender.send(message);
+    }
+
+    @Async
+    public void sendHall(MultipartFile file, Long hall_id) throws MessagingException {
+        String subject = "Подтверждение схемы зала";
+        String text = messageCreator.createHallMessage(
+                hall_id);
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo("biletkavrn@gmail.com");
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.addAttachment(file.getOriginalFilename(), file);
+        mimeMessageHelper.setText(text);
+
+        mailSender.send(mimeMessage);
     }
 }
