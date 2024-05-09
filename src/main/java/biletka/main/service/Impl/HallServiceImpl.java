@@ -44,6 +44,7 @@ public class HallServiceImpl implements HallService {
      */
     @Override
     public MessageCreateResponse createHall(String authorization, MultipartFile file, HallCreateRequest hallCreateRequestNew) throws MessagingException, EntityNotFoundException {
+        log.trace("HallServiceImpl.createHall - authorization {}, file {}, hallCreateRequestNew {}", authorization, file, hallCreateRequestNew);
         String typeFile = fileUtils.getFileExtension(file.getOriginalFilename());
 
         fileUtils.validationFile(
@@ -98,5 +99,16 @@ public class HallServiceImpl implements HallService {
         return new MessageCreateResponse(
                 "The hall has been successfully created! Display wait for the administrator to check!"
         );
+    }
+
+    /**
+     * Метод получения зала по id
+     * @param id зала
+     * @return зал
+     */
+    @Override
+    public Hall getHallById(Long id) {
+        log.trace("HallServiceImpl.getHallById - id {}", id);
+        return hallRepository.getReferenceById(id);
     }
 }

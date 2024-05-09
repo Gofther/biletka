@@ -108,4 +108,15 @@ public class EventServiceImpl implements EventService {
                 "The event '" + eventNew.getEventBasicInformation().getName() + "' of the '" + eventNew.getEventBasicInformation().getTypeEventId().getType() + "' type has been successfully created!"
         );
     }
+
+    /**
+     * Метод получения мероприятия по id
+     * @param id мероприятия
+     * @return мероприятие
+     */
+    @Override
+    public Event getEventById(Long id) {
+        log.trace("EventServiceImpl.getEventById - id {}", id);
+        return eventRepository.getReferenceById(id);
+    }
 }
