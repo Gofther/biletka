@@ -3,24 +3,30 @@ package biletka.main.controller;
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 
 @Slf4j
 @RestController
 @RequestMapping("/event")
 @RequiredArgsConstructor
 @Tag(name = "Контроллер ивентов", description = "Всё, что связано с ивентами")
+@CrossOrigin
 public class EventController {
     private final EventService eventService;
 
@@ -39,5 +45,22 @@ public class EventController {
         MessageCreateResponse message = eventService.createEvent(authorization, file, eventCreateRequestNew);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
+    }
+
+    @CrossOrigin
+    @Operation(
+            summary = "Вывод изображения мероприятия",
+            description = "Вывод изображения мероприятия"
+    )
+    @GetMapping("/img/{id}>>{symbolicName}")
+    public void getImageEvent(@PathVariable String id,
+                              @PathVariable String symbolicName,
+                              HttpServletRequest request,
+                              HttpServletResponse response) throws IOException {
+        log.trace("EventController.getImageEvent  /img/{id}-{symbolicName} - id {}, symbolicName {}", id, symbolicName);
+        PublicEventImage publicEventImage = eventService.getImageEvent(id, symbolicName);
+        response.setContentType(publicEventImage.type());
+        response.getOutputStream().write(publicEventImage.imageData());
+        response.getOutputStream().close();
     }
 }

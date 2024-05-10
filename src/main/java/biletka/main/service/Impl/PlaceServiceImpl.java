@@ -39,6 +39,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public MessageCreateResponse postPlaceCreate(String authorization, PlaceCreateRequest placeCreateRequest) throws EntityNotFoundException {
+        log.trace("PlaceServiceImpl.postPlaceCreate - authorization {}, placeCreateRequest {}", authorization, placeCreateRequest);
         String userEmail = jwtTokenUtils.getUsernameFromToken(
                 authorization.substring(7)
         );
@@ -87,6 +88,7 @@ public class PlaceServiceImpl implements PlaceService {
      */
     @Override
     public Place getPlaceById(Long id) throws EntityNotFoundException {
+        log.trace("PlaceServiceImpl.getPlaceById - id {}", id);
         return placeRepository.getReferenceById(id);
     }
 }

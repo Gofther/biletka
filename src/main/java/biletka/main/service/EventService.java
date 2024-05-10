@@ -2,6 +2,7 @@ package biletka.main.service;
 
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.entity.Event;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,4 +26,12 @@ public interface EventService {
      * @return мероприятие
      */
     Event getEventById(Long id);
+
+    /**
+     * Метод получения изображения мероприятия
+     * @param id мероприятия
+     * @param symbolicName символичное название мероприятия
+     * @return данные для изображения
+     */
+    PublicEventImage getImageEvent(String id, String symbolicName) throws IOException;
 }

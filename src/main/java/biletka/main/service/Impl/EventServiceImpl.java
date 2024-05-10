@@ -4,6 +4,7 @@ import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.entity.*;
 import biletka.main.entity.event_item.EventAdditionalInformation;
 import biletka.main.entity.event_item.EventBasicInformation;
@@ -118,5 +119,22 @@ public class EventServiceImpl implements EventService {
     public Event getEventById(Long id) {
         log.trace("EventServiceImpl.getEventById - id {}", id);
         return eventRepository.getReferenceById(id);
+    }
+
+    /**
+     * Метод получения изображения мероприятия
+     * @param id мероприятия
+     * @param symbolicName символичное название мероприятия
+     * @return данные для изображения
+     */
+    @Override
+    public PublicEventImage getImageEvent(String id, String symbolicName) throws EntityNotFoundException, IOException {
+        Event event = eventRepository.findFirstByIdAndSymbolicName(Long.valueOf(id), symbolicName);
+
+        if (event == null) {
+            throw new EntityNotFoundException("The event not found!");
+        }
+
+        return fileUtils.getFileEvent(event.getEventBasicInformation().getImg());
     }
 }
