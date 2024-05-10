@@ -1,31 +1,37 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
-import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.response.OrganizationResponse;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Place;
 import biletka.main.entity.Users;
 import biletka.main.enums.StatusUserEnum;
-import biletka.main.exception.ErrorMessage;
-import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.OrganizationRepository;
 import biletka.main.service.OrganizationService;
+import biletka.main.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+// не ту библиотеку инициализировал. Нужна была не ломбока
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @Slf4j
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
+    private final JwtTokenUtils jwtTokenUtils;
+
+    @Lazy
+    private final UserService userService;
+
 
     /**
      * Метод добавления организации в бд
@@ -114,5 +120,47 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.setAdminEventSet(eventSet);
 
         organizationRepository.save(organization);
+    }
+
+    /**
+     * Метод получения организации по токену
+     * @param authorization - токен авторизации
+     * @return организация
+     */
+    @Override
+    public OrganizationResponse getOrganization(String authorization){
+        log.trace("OrganizationServiceImpl.getAllOrganization - authorization {}", authorization);
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+        return new OrganizationResponse(
+                organization.getId(),
+                organization.getUser(),
+                organization.getInn(),
+                organization.getKbk(),
+                organization.getKpp(),
+                organization.getOgrn(),
+                organization.getOktmo(),
+                organization.getContactPhone(),
+                organization.getEmail(),
+                organization.getFullNameOrganization(),
+                organization.getFullNameSignatory(),
+                organization.getLegalAddress(),
+                organization.getNamePayer(),
+                organization.getPositionSignatory(),
+                organization.getPostalAddress()
+        );
     }
 }

@@ -190,3 +190,78 @@ ResponseBody
 </details>
 
 ---
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">GET</span> https://localhost:8443/event
+</summary>
+<p>Description: Вывод мероприятия по id</p>
+<p>Authorization - TRUE</p>
+
+
+```
+{
+    "id": Long
+}
+```
+ResponseBody
+```
+{
+    "Id": Long,
+    "symbolicName": String,
+    "name_rus": String,
+    "rating": Double,
+    "description": String,
+    "type_event": String,
+    "ageRating": int,
+    "genres": String[],
+    "author": String,
+    "writerOrArtist": String,
+    "duration": String,
+    "tags": String[],
+    "pushkin": Boolean
+}
+```
+</details>
+
+---
+## Organization
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">GET</span> https://localhost:8443/organization
+</summary>
+<p>Description: Вывод организации</p>
+<p>Authorization - TRUE</p>
+
+
+```
+{
+}
+```
+ResponseBody
+```
+{
+    "id": Long,
+    "user": {
+        "id": Long,
+        "email": String,
+        "password": String,
+        "role": String,
+        "status": String,
+        "activeCode": String
+    },
+    "inn": String,
+    "kbk": String,
+    "kpp": String,
+    "ogrn": String,
+    "oktmo": String,
+    "contactPhone": String,
+    "email": String,
+    "fullNameOrganization": String,
+    "fullNameSignatory": String,
+    "legalAddress": String,
+    "namePayer": String,
+    "positionSignatory": String,
+    "postalAddress": Integer
+}
+```
+</details>
