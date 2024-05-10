@@ -79,6 +79,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/place").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
+                        .requestMatchers(HttpMethod.POST,"/place/hall").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
+                        .requestMatchers(HttpMethod.POST,"/event").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
+                        .requestMatchers(HttpMethod.POST,"/session").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .anyRequest().permitAll()
                 );
 

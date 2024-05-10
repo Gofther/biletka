@@ -1,6 +1,7 @@
 package biletka.main.service;
 
 import biletka.main.dto.request.ClientRegistrationRequest;
+import biletka.main.dto.response.FavoriteResponse;
 import biletka.main.entity.Users;
 import org.springframework.stereotype.Service;
 
@@ -14,4 +15,12 @@ public interface ClientService {
      * @param user данные для входа
      */
     void  postNewClient(ClientRegistrationRequest clientRegistrationRequest, Users user) throws ParseException;
+
+    /**
+     * Метод изменения мероприятия в избранном пользователя
+     * @param authorization токен авторизации
+     * @param id мероприятия
+     * @return id и измененный статус избранного
+     */
+    FavoriteResponse toggleEventFavorite(String authorization, Long id);
 }

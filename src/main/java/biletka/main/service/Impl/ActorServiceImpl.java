@@ -1,7 +1,6 @@
 package biletka.main.service.Impl;
 
 import biletka.main.entity.Actor;
-import biletka.main.entity.TypeEvent;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.ActorRepository;

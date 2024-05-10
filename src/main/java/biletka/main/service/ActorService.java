@@ -20,4 +20,6 @@ public interface ActorService {
 
     Actor postNewActor(String name);
     Actor createActor(String name);
+
+    Actor postNewActor(String name);
 }

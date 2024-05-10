@@ -23,6 +23,9 @@ public class Session {
     @Column(name = "start_time")
     private Timestamp startTime;
 
+    @Column(name = "finish_time")
+    private Timestamp finishTime;
+
     @Column(name = "number_of_views")
     private Integer numberOfViews;
 
@@ -47,14 +50,16 @@ public class Session {
     public Session() {
     }
 
-    public Session(Integer sales, Integer onSales, Timestamp startTime, Integer numberOfViews, Double price, Boolean status, Event event, Hall hall) {
+    public Session(Integer sales, Integer onSales, Timestamp startTime, Timestamp finishTime, Integer numberOfViews, Double price, Boolean status, Event event, Hall hall, TypeOfMovie typeOfMovie) {
         this.sales = sales;
         this.onSales = onSales;
         this.startTime = startTime;
+        this.finishTime = finishTime;
         this.numberOfViews = numberOfViews;
         this.price = price;
         this.status = status;
         this.event = event;
         this.hall = hall;
+        this.typeOfMovie = typeOfMovie;
     }
 }

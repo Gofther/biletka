@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final JwtTokenUtils jwtTokenUtils;
     private final ActivationCode activationCode;
 
+    @Lazy
     private final ClientService clientService;
     private final MailSender mailSender;
     @Lazy
