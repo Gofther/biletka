@@ -141,4 +141,14 @@ public class ClientServiceImpl implements ClientService {
 
         return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
     }
+
+    /**
+     * Метод получения клиента
+     * @param user почта пользователя
+     * @return клиент
+     */
+    @Override
+    public Client getClientByUser(Users user) {
+        return clientRepository.findFirstByUser(user);
+    }
 }

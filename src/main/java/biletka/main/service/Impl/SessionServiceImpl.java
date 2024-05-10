@@ -11,6 +11,7 @@ import biletka.main.service.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -19,18 +20,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static java.time.Instant.*;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class SessionServiceImpl implements SessionService {
     private final JwtTokenUtils jwtTokenUtils;
     private final SessionRepository sessionRepository;
 
     private final UserService userService;
     private final OrganizationService organizationService;
+    @Lazy
     private final EventService eventService;
     private final HallService hallService;
     private final TypeOfMovieService typeOfMovieService;
@@ -122,5 +125,11 @@ public class SessionServiceImpl implements SessionService {
         return new MessageCreateResponse(
                 "The session '" + event.getEventBasicInformation().getName() +"' in the hall '" + hall.getHallName() + "' has been successfully created!"
         );
+    }
+
+    @Override
+    public Set<Event> getMassiveEventByCityLimit(City city, Integer offset) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, offset {}", city, offset);
+        return sessionRepository.findAllEventByCity(city, offset);
     }
 }

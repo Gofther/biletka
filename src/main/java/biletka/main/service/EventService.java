@@ -2,6 +2,7 @@ package biletka.main.service;
 
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.entity.Event;
 import org.springframework.stereotype.Service;
@@ -34,4 +35,13 @@ public interface EventService {
      * @return данные для изображения
      */
     PublicEventImage getImageEvent(String id, String symbolicName) throws IOException;
+
+    /**
+     * Метод получения кртакой информации о 10 мероприятиях по городу
+     * @param cityName название города
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @return массив краткой информации
+     */
+    MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset);
 }

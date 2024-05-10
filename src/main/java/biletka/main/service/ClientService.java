@@ -3,6 +3,7 @@ package biletka.main.service;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.response.FavoriteResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
+import biletka.main.entity.Client;
 import biletka.main.entity.Users;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +32,11 @@ public interface ClientService {
      * @return массив мероприятий
      */
     MassivePublicEvent getFavorite(String authorization);
+
+    /**
+     * Метод получения клиента
+     * @param user почта пользователя
+     * @return клиент
+     */
+    Client getClientByUser(Users user);
 }

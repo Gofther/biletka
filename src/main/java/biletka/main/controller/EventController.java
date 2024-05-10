@@ -3,6 +3,7 @@ package biletka.main.controller;
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,6 +48,19 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
+    @Operation(
+            summary = "Вывод 10 мероприятий",
+            description = "Вывод 10 мероприятий по городу"
+    )
+    @GetMapping("/{cityName}")
+    public ResponseEntity<MassivePublicEvent> getEventLimit(@Parameter(description = "название города") @PathVariable String cityName,
+                                                            @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
+                                                            @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset) {
+        log.trace("EventController.getEventLimit / - cityName {}, authorization {}, offset {}", cityName, authorization, offset);
+        MassivePublicEvent massivePublicEvent = eventService.getEventLimit(cityName, authorization, offset);
+        return ResponseEntity.ok(massivePublicEvent);
+    }
+
     @CrossOrigin
     @Operation(
             summary = "Вывод изображения мероприятия",
@@ -55,7 +69,6 @@ public class EventController {
     @GetMapping("/img/{id}>>{symbolicName}")
     public void getImageEvent(@PathVariable String id,
                               @PathVariable String symbolicName,
-                              HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
         log.trace("EventController.getImageEvent  /img/{id}-{symbolicName} - id {}, symbolicName {}", id, symbolicName);
         PublicEventImage publicEventImage = eventService.getImageEvent(id, symbolicName);

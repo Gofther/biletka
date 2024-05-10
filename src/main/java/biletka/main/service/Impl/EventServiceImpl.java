@@ -4,6 +4,8 @@ import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.MassivePublicEvent;
+import biletka.main.dto.universal.PublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.entity.*;
 import biletka.main.entity.event_item.EventAdditionalInformation;
@@ -17,6 +19,7 @@ import biletka.main.service.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +28,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @Slf4j
 public class EventServiceImpl implements EventService {
     private final FileUtils fileUtils;
@@ -37,6 +40,10 @@ public class EventServiceImpl implements EventService {
     private final EventWebWidgetService eventWebWidgetService;
     private final UserService userService;
     private final OrganizationService organizationService;
+    private final CityService cityService;
+    private final ClientService clientService;
+    @Lazy
+    private final SessionService sessionService;
 
     /**
      * Метод создания и добавления мероприятия в бд
@@ -129,6 +136,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public PublicEventImage getImageEvent(String id, String symbolicName) throws EntityNotFoundException, IOException {
+        log.trace("EventServiceImpl.getImageEvent - id {}, symbolicName {}", id, symbolicName);
         Event event = eventRepository.findFirstByIdAndSymbolicName(Long.valueOf(id), symbolicName);
 
         if (event == null) {
@@ -136,5 +144,83 @@ public class EventServiceImpl implements EventService {
         }
 
         return fileUtils.getFileEvent(event.getEventBasicInformation().getImg());
+    }
+
+    /**
+     * Метод получения кртакой информации о 10 мероприятиях по городу
+     * @param cityName название города
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @return массив краткой информации
+     */
+    @Override
+    public MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset) {
+        log.trace("EventServiceImpl.cityName - cityName {}", cityName);
+        City city = cityService.getCityByNameEng(cityName);
+
+        Set<Event> favoriteSet = new HashSet<>();
+        ArrayList<PublicEvent> publicEvents= new ArrayList<>();
+
+        /**  Проверка на пользователя*/
+        if (authorization != null) {
+            String userEmail = jwtTokenUtils.getUsernameFromToken(
+                    authorization.substring(7)
+            );
+
+            Users user = userService.getUserByEmail(userEmail);
+
+            if (user == null) {
+                throw new EntityNotFoundException("A broken token!");
+            }
+
+            Client client = clientService.getClientByUser(user);
+
+            favoriteSet.addAll(client.getEventSet());
+        }
+
+        Set<Event> events = sessionService.getMassiveEventByCityLimit(city, offset);
+
+
+        if (authorization != null) {
+            events.forEach(event -> {
+                Set<String> genres = new HashSet<>();
+
+                event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+                publicEvents.add(
+                        new PublicEvent(
+                                event.getId(),
+                                event.getEventBasicInformation().getName_rus(),
+                                event.getEventBasicInformation().getSymbolicName(),
+                                event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                                genres.toArray(String[]::new),
+                                event.getEventBasicInformation().getImg(),
+                                event.getEventBasicInformation().getTypeEventId().getType(),
+                                favoriteSet.contains(event)
+                        )
+                );
+            });
+        } else {
+            events.forEach(event -> {
+                Set<String> genres = new HashSet<>();
+
+                event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+                publicEvents.add(
+                        new PublicEvent(
+                                event.getId(),
+                                event.getEventBasicInformation().getName_rus(),
+                                event.getEventBasicInformation().getSymbolicName(),
+                                event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                                genres.toArray(String[]::new),
+                                event.getEventBasicInformation().getImg(),
+                                event.getEventBasicInformation().getTypeEventId().getType(),
+                                null
+                        )
+                );
+            });
+        }
+
+        return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
     }
 }
