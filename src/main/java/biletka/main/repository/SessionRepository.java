@@ -10,11 +10,6 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-//    @Query(value = "SELECT * FROM session " +
-//            "WHERE :start BETWEEN session.start_time AND session.finish_time " +
-//            "AND :finish BETWEEN session.start_time AND session.finish_time " +
-//            "AND session.hall_id = :id", nativeQuery = true)
-//    Session findFirstByInfo(Timestamp start, Timestamp finish, Long id);
 
     @Query(value = "SELECT * FROM session " +
             "WHERE session.hall_id = :id " +
@@ -24,7 +19,8 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query("SELECT s.event FROM Session s " +
             "WHERE s.hall.place.city = :city " +
+            "AND s.startTime >= :nowDate " +
             "ORDER BY s.id " +
             "LIMIT 10 OFFSET :offset")
-    Set<Event> findAllEventByCity(City city, Integer offset);
+    Set<Event> findAllEventByCity(City city, Integer offset, Timestamp nowDate);
 }

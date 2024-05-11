@@ -130,6 +130,6 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Set<Event> getMassiveEventByCityLimit(City city, Integer offset) {
         log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, offset {}", city, offset);
-        return sessionRepository.findAllEventByCity(city, offset);
+        return sessionRepository.findAllEventByCity(city, offset, new Timestamp(new Date().getTime()));
     }
 }
