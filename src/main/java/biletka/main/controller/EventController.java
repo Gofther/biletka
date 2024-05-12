@@ -61,6 +61,19 @@ public class EventController {
         return ResponseEntity.ok(massivePublicEvent);
     }
 
+    @Operation(
+            summary = "Вывод 10 анонсов",
+            description = "Вывод 10 мероприятий по городу и будущим сеансам, которых не было"
+    )
+    @GetMapping("/{cityName}/announcement")
+    public ResponseEntity<MassivePublicEvent> getAnnouncementLimit(@Parameter(description = "название города") @PathVariable String cityName,
+                                                  @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
+                                                  @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset) {
+        log.trace("EventController.getAnnouncementLimit / - cityName {}, authorization {}, offset {}", cityName, authorization, offset);
+        MassivePublicEvent massivePublicEvent = eventService.getAnnouncementLimit(cityName, authorization, offset);
+        return ResponseEntity.ok(massivePublicEvent);
+    }
+
     @CrossOrigin
     @Operation(
             summary = "Вывод изображения мероприятия",

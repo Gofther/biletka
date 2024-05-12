@@ -223,4 +223,82 @@ public class EventServiceImpl implements EventService {
 
         return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
     }
+
+    /**
+     * Метод получения анонсов 10 мероприятий по городу
+     * @param cityName название города
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @return массив краткой информации
+     */
+    @Override
+    public MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset) {
+        log.trace("EventServiceImpl.getAnnouncementLimit - cityName {}, offset {}", cityName, offset);
+        City city = cityService.getCityByNameEng(cityName);
+
+        Set<Event> favoriteSet = new HashSet<>();
+        ArrayList<PublicEvent> publicEvents = new ArrayList<>();
+
+        /**  Проверка на пользователя*/
+        if (authorization != null) {
+            String userEmail = jwtTokenUtils.getUsernameFromToken(
+                    authorization.substring(7)
+            );
+
+            Users user = userService.getUserByEmail(userEmail);
+
+            if (user == null) {
+                throw new EntityNotFoundException("A broken token!");
+            }
+
+            Client client = clientService.getClientByUser(user);
+
+            favoriteSet.addAll(client.getEventSet());
+        }
+
+        Set<Event> events = sessionService.getMassiveAnnouncementByCityLimit(city, offset);
+
+
+        if (authorization != null) {
+            events.forEach(event -> {
+                Set<String> genres = new HashSet<>();
+
+                event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+                publicEvents.add(
+                        new PublicEvent(
+                                event.getId(),
+                                event.getEventBasicInformation().getName_rus(),
+                                event.getEventBasicInformation().getSymbolicName(),
+                                event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                                genres.toArray(String[]::new),
+                                event.getEventBasicInformation().getImg(),
+                                event.getEventBasicInformation().getTypeEventId().getType(),
+                                favoriteSet.contains(event)
+                        )
+                );
+            });
+        } else {
+            events.forEach(event -> {
+                Set<String> genres = new HashSet<>();
+
+                event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+                publicEvents.add(
+                        new PublicEvent(
+                                event.getId(),
+                                event.getEventBasicInformation().getName_rus(),
+                                event.getEventBasicInformation().getSymbolicName(),
+                                event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                                genres.toArray(String[]::new),
+                                event.getEventBasicInformation().getImg(),
+                                event.getEventBasicInformation().getTypeEventId().getType(),
+                                null
+                        )
+                );
+            });
+        }
+
+        return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
+    }
 }

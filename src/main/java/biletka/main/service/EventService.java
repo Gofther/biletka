@@ -44,4 +44,13 @@ public interface EventService {
      * @return массив краткой информации
      */
     MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset);
+
+    /**
+     * Метод получения анонсов 10 мероприятий по городу
+     * @param cityName название города
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @return массив краткой информации
+     */
+    MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset);
 }

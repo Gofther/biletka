@@ -127,9 +127,27 @@ public class SessionServiceImpl implements SessionService {
         );
     }
 
+    /**
+     * Метод получения уникальных мероприятий по сеансам
+     * @param city город
+     * @param offset отступ
+     * @return массив мероприятий
+     */
     @Override
     public Set<Event> getMassiveEventByCityLimit(City city, Integer offset) {
         log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, offset {}", city, offset);
         return sessionRepository.findAllEventByCity(city, offset, new Timestamp(new Date().getTime()));
+    }
+
+    /**
+     * Метод получения уникальных мероприятий по сеансам и дате создания мероприятия
+     * @param city город
+     * @param offset отступ
+     * @return массив мероприятий
+     */
+    @Override
+    public Set<Event> getMassiveAnnouncementByCityLimit(City city, Integer offset) {
+        log.trace("SessionServiceImpl.getMassiveAnnouncementByCityLimit - city {}, offset {}", city, offset);
+        return sessionRepository.findAllEventAdvertisementByCity(city, offset, new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime() - 1000000000));
     }
 }

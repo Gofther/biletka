@@ -23,4 +23,12 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "ORDER BY s.id " +
             "LIMIT 10 OFFSET :offset")
     Set<Event> findAllEventByCity(City city, Integer offset, Timestamp nowDate);
+
+    @Query("SELECT s.event FROM Session s " +
+            "WHERE s.hall.place.city = :city " +
+            "AND s.startTime >= :nowDate " +
+            "AND s.event.createdAt >= :createDate " +
+            "ORDER BY s.id " +
+            "LIMIT 10 OFFSET :offset")
+    Set<Event> findAllEventAdvertisementByCity(City city, Integer offset, Timestamp nowDate, Timestamp createDate);
 }

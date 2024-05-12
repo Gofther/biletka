@@ -19,5 +19,19 @@ public interface SessionService {
      */
     MessageCreateResponse sessionCreate(String authorization, SessionCreateRequest sessionCreateRequest);
 
+    /**
+     * Метод получения уникальных мероприятий по сеансам
+     * @param city город
+     * @param offset отступ
+     * @return массив мероприятий
+     */
     Set<Event> getMassiveEventByCityLimit(City city, Integer offset);
+
+    /**
+     * Метод получения уникальных мероприятий по сеансам и дате создания мероприятия
+     * @param city город
+     * @param offset отступ
+     * @return массив мероприятий
+     */
+    Set<Event> getMassiveAnnouncementByCityLimit(City city, Integer offset);
 }
