@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Slf4j
 @RestController
@@ -55,9 +58,10 @@ public class EventController {
     @GetMapping("/{cityName}")
     public ResponseEntity<MassivePublicEvent> getEventLimit(@Parameter(description = "название города") @PathVariable String cityName,
                                                             @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
-                                                            @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset) {
-        log.trace("EventController.getEventLimit / - cityName {}, authorization {}, offset {}", cityName, authorization, offset);
-        MassivePublicEvent massivePublicEvent = eventService.getEventLimit(cityName, authorization, offset);
+                                                            @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
+                                                            @Parameter(description = "дата для выборки") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam Date date) {
+        log.trace("EventController.getEventLimit / - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
+        MassivePublicEvent massivePublicEvent = eventService.getEventLimit(cityName, authorization, offset, date);
         return ResponseEntity.ok(massivePublicEvent);
     }
 
@@ -68,9 +72,10 @@ public class EventController {
     @GetMapping("/{cityName}/announcement")
     public ResponseEntity<MassivePublicEvent> getAnnouncementLimit(@Parameter(description = "название города") @PathVariable String cityName,
                                                   @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
-                                                  @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset) {
-        log.trace("EventController.getAnnouncementLimit / - cityName {}, authorization {}, offset {}", cityName, authorization, offset);
-        MassivePublicEvent massivePublicEvent = eventService.getAnnouncementLimit(cityName, authorization, offset);
+                                                  @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
+                                                  @Parameter(description = "дата для выборки") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        log.trace("EventController.getAnnouncementLimit / - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
+        MassivePublicEvent massivePublicEvent = eventService.getAnnouncementLimit(cityName, authorization, offset, date);
         return ResponseEntity.ok(massivePublicEvent);
     }
 

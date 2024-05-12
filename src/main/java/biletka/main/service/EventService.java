@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Service
 public interface EventService {
@@ -41,9 +42,10 @@ public interface EventService {
      * @param cityName название города
      * @param authorization токен авторизации
      * @param offset отсчет мероприятий
+     * @param date дата для выборки
      * @return массив краткой информации
      */
-    MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset);
+    MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset, Date date);
 
     /**
      * Метод получения анонсов 10 мероприятий по городу
@@ -52,5 +54,5 @@ public interface EventService {
      * @param offset отсчет мероприятий
      * @return массив краткой информации
      */
-    MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset);
+    MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset, Date date);
 }

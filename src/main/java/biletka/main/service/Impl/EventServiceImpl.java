@@ -151,11 +151,12 @@ public class EventServiceImpl implements EventService {
      * @param cityName название города
      * @param authorization токен авторизации
      * @param offset отсчет мероприятий
+     * @param date дата для выборки
      * @return массив краткой информации
      */
     @Override
-    public MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset) {
-        log.trace("EventServiceImpl.cityName - cityName {}", cityName);
+    public MassivePublicEvent getEventLimit(String cityName, String authorization, Integer offset, Date date) {
+        log.trace("EventServiceImpl.cityName - cityName {}, offset {}, date {}", cityName, offset, date);
         City city = cityService.getCityByNameEng(cityName);
 
         Set<Event> favoriteSet = new HashSet<>();
@@ -178,7 +179,7 @@ public class EventServiceImpl implements EventService {
             favoriteSet.addAll(client.getEventSet());
         }
 
-        Set<Event> events = sessionService.getMassiveEventByCityLimit(city, offset);
+        Set<Event> events = sessionService.getMassiveEventByCityLimit(city, offset, date);
 
 
         if (authorization != null) {
@@ -232,8 +233,8 @@ public class EventServiceImpl implements EventService {
      * @return массив краткой информации
      */
     @Override
-    public MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset) {
-        log.trace("EventServiceImpl.getAnnouncementLimit - cityName {}, offset {}", cityName, offset);
+    public MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset, Date date) {
+        log.trace("EventServiceImpl.getAnnouncementLimit - cityName {}, offset {}, date {}", cityName, offset, date);
         City city = cityService.getCityByNameEng(cityName);
 
         Set<Event> favoriteSet = new HashSet<>();
@@ -256,7 +257,7 @@ public class EventServiceImpl implements EventService {
             favoriteSet.addAll(client.getEventSet());
         }
 
-        Set<Event> events = sessionService.getMassiveAnnouncementByCityLimit(city, offset);
+        Set<Event> events = sessionService.getMassiveAnnouncementByCityLimit(city, offset, date);
 
 
         if (authorization != null) {

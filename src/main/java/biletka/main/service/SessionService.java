@@ -7,6 +7,7 @@ import biletka.main.entity.Event;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 @Service
@@ -23,15 +24,17 @@ public interface SessionService {
      * Метод получения уникальных мероприятий по сеансам
      * @param city город
      * @param offset отступ
+     * @param date дата для выборки
      * @return массив мероприятий
      */
-    Set<Event> getMassiveEventByCityLimit(City city, Integer offset);
+    Set<Event> getMassiveEventByCityLimit(City city, Integer offset, Date date);
 
     /**
      * Метод получения уникальных мероприятий по сеансам и дате создания мероприятия
      * @param city город
      * @param offset отступ
+     * @param date дата для выборки
      * @return массив мероприятий
      */
-    Set<Event> getMassiveAnnouncementByCityLimit(City city, Integer offset);
+    Set<Event> getMassiveAnnouncementByCityLimit(City city, Integer offset, Date date);
 }
