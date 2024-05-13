@@ -15,14 +15,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
-import static java.time.Instant.*;
 
 @Service
 @Slf4j
@@ -151,5 +150,22 @@ public class SessionServiceImpl implements SessionService {
     public Set<Event> getMassiveAnnouncementByCityLimit(City city, Integer offset, Date date) {
         log.trace("SessionServiceImpl.getMassiveAnnouncementByCityLimit - city {}, offset {}", city, offset);
         return sessionRepository.findAllEventAdvertisementByCity(city, offset, new Timestamp(date.getTime()), new Timestamp(date.getTime() - 1000000000));
+    }
+
+    /**
+     * Метод получения сеансов мероприятия по городу и дате
+     * @param event мероприятие
+     * @param city город
+     * @param date дата для поиска
+     * @return массив сеансов
+     */
+    @Override
+    public ArrayList<Session> getSessionsByEvent(Event event, City city, Date date) {
+        log.trace("SessionServiceImpl.getSessionsByEvent - event {}, city {}, date {}", event, city, date);
+        return sessionRepository.findAllSessionByEventAndCity(
+                event,
+                city,
+                Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay()),
+                Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atTime(LocalTime.MAX)));
     }
 }

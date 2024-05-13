@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Set;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
@@ -31,4 +32,11 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "ORDER BY s.id " +
             "LIMIT 10 OFFSET :offset")
     Set<Event> findAllEventAdvertisementByCity(City city, Integer offset, Timestamp nowDate, Timestamp createDate);
+
+    @Query("SELECT s FROM Session s " +
+            "WHERE s.event = :event " +
+            "AND s.hall.place.city = :city " +
+            "AND s.startTime BETWEEN :startDay AND :finishDay " +
+            "ORDER BY s.hall.place, s.startTime ")
+    ArrayList<Session> findAllSessionByEventAndCity(Event event, City city, Timestamp startDay, Timestamp finishDay);
 }

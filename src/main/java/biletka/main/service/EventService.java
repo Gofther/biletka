@@ -4,6 +4,7 @@ import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
+import biletka.main.dto.universal.PublicFullInfoEvent;
 import biletka.main.entity.Event;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,4 +56,14 @@ public interface EventService {
      * @return массив краткой информации
      */
     MassivePublicEvent getAnnouncementLimit(String cityName, String authorization, Integer offset, Date date);
+
+    /**
+     * Метод получения полной информации меропрития и места проведения и его сеансов
+     * @param authorization токе авторизации
+     * @param cityName название города
+     * @param eventName id и символьное название мероприятия
+     * @param date дата для поиска
+     * @return полная информация мероприятия
+     */
+    PublicFullInfoEvent getFullInfoEvent(String authorization, String cityName, String eventName, Date date);
 }

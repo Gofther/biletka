@@ -5,6 +5,7 @@ import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
+import biletka.main.dto.universal.PublicFullInfoEvent;
 import biletka.main.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,6 +78,20 @@ public class EventController {
         log.trace("EventController.getAnnouncementLimit / - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
         MassivePublicEvent massivePublicEvent = eventService.getAnnouncementLimit(cityName, authorization, offset, date);
         return ResponseEntity.ok(massivePublicEvent);
+    }
+
+    @Operation(
+            summary = "Вывод полной информации о мероприятии",
+            description = "Вывод полной информации о мероприятии по id и символьному названию"
+    )
+    @GetMapping("/{cityName}/{eventName}")
+    public ResponseEntity<?> getFillInfoEvent(@Parameter(description = "название города") @PathVariable String cityName,
+                                              @Parameter(description = "название мероприятия") @PathVariable String eventName,
+                                              @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
+                                              @Parameter(description = "дата для выборки") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        log.trace("EventController.getAnnouncementLimit / - cityName {}, eventName {}, authorization {}, date {}", cityName, eventName, authorization, date);
+        PublicFullInfoEvent publicFullInfoEvent = eventService.getFullInfoEvent(authorization, cityName, eventName, date);
+        return ResponseEntity.ok(publicFullInfoEvent);
     }
 
     @CrossOrigin
