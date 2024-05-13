@@ -11,26 +11,28 @@ import biletka.main.service.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static java.time.Instant.*;
+import java.util.Set;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class SessionServiceImpl implements SessionService {
     private final JwtTokenUtils jwtTokenUtils;
     private final SessionRepository sessionRepository;
 
     private final UserService userService;
     private final OrganizationService organizationService;
+    @Lazy
     private final EventService eventService;
     private final HallService hallService;
     private final TypeOfMovieService typeOfMovieService;
@@ -122,5 +124,48 @@ public class SessionServiceImpl implements SessionService {
         return new MessageCreateResponse(
                 "The session '" + event.getEventBasicInformation().getName() +"' in the hall '" + hall.getHallName() + "' has been successfully created!"
         );
+    }
+
+    /**
+     * Метод получения уникальных мероприятий по сеансам
+     * @param city город
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    @Override
+    public Set<Event> getMassiveEventByCityLimit(City city, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, offset {}", city, offset);
+        return sessionRepository.findAllEventByCity(city, offset, new Timestamp(date.getTime()));
+    }
+
+    /**
+     * Метод получения уникальных мероприятий по сеансам и дате создания мероприятия
+     * @param city город
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    @Override
+    public Set<Event> getMassiveAnnouncementByCityLimit(City city, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveAnnouncementByCityLimit - city {}, offset {}", city, offset);
+        return sessionRepository.findAllEventAdvertisementByCity(city, offset, new Timestamp(date.getTime()), new Timestamp(date.getTime() - 1000000000));
+    }
+
+    /**
+     * Метод получения сеансов мероприятия по городу и дате
+     * @param event мероприятие
+     * @param city город
+     * @param date дата для поиска
+     * @return массив сеансов
+     */
+    @Override
+    public ArrayList<Session> getSessionsByEvent(Event event, City city, Date date) {
+        log.trace("SessionServiceImpl.getSessionsByEvent - event {}, city {}, date {}", event, city, date);
+        return sessionRepository.findAllSessionByEventAndCity(
+                event,
+                city,
+                Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay()),
+                Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atTime(LocalTime.MAX)));
     }
 }
