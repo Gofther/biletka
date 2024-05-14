@@ -18,15 +18,15 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "widget")
     private EventWebWidget eventWebWidget;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "additional")
     private EventAdditionalInformation eventAdditionalInformation;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "basic")
     private EventBasicInformation eventBasicInformation;
 

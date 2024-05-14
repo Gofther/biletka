@@ -3,8 +3,11 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.response.FavoriteResponse;
+import biletka.main.dto.universal.MassivePublicEvent;
+import biletka.main.dto.universal.PublicEvent;
 import biletka.main.entity.Client;
 import biletka.main.entity.Event;
+import biletka.main.entity.Genre;
 import biletka.main.entity.Users;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.repository.ClientRepository;
@@ -19,7 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -39,6 +45,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public void postNewClient(ClientRegistrationRequest client, Users user) throws ParseException {
+        log.trace("ClientServiceImpl.postNewClient - client {}, user {}", client, user);
         Client newClient = new Client(
             user,
             client.fullName(),
@@ -59,7 +66,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public FavoriteResponse toggleEventFavorite(String authorization, Long id) throws EntityNotFoundException {
-
+        log.trace("ClientServiceImpl.toggleEventFavorite - authorization {}, id {}", authorization, id);
         String userEmail = jwtTokenUtils.getUsernameFromToken(
                 authorization.substring(7)
         );
@@ -90,5 +97,58 @@ public class ClientServiceImpl implements ClientService {
                 event.getId(),
                 !eventFavorite
         );
+    }
+
+    /**
+     * Метод получения массива мероприятий из таблицы избранное у пользователя
+     * @param authorization токен авторизации
+     * @return массив мероприятий
+     */
+    @Override
+    public MassivePublicEvent getFavorite(String authorization) {
+        log.trace("ClientServiceImpl.getFavorite - authorization {}", authorization);
+
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Client client = clientRepository.findFirstByUser(user);
+
+        ArrayList<PublicEvent> publicEvents = new ArrayList<>();
+
+        client.getEventSet().forEach(event -> {
+            Set<String> genres = new HashSet<>();
+
+            event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+            publicEvents.add(new PublicEvent(
+                    event.getId(),
+                    event.getEventBasicInformation().getName_rus(),
+                    event.getEventBasicInformation().getSymbolicName(),
+                    event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                    genres.toArray(String[]::new),
+                    event.getEventBasicInformation().getImg(),
+                    event.getEventBasicInformation().getTypeEventId().getType(),
+                    true
+            ));
+        });
+
+        return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
+    }
+
+    /**
+     * Метод получения клиента
+     * @param user почта пользователя
+     * @return клиент
+     */
+    @Override
+    public Client getClientByUser(Users user) {
+        return clientRepository.findFirstByUser(user);
     }
 }

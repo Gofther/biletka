@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public AuthResponse getAuthToken(AuthForm authForm) {
+        log.trace("UserServiceImpl.getAuthToken - authForm {}", authForm);
         Users user = userRepository.findFirstByEmail(authForm.email());
 
         // Проверка на правильно введнные данные и не актвиный аккаунт
@@ -172,6 +173,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public ClientRegistrationResponse putActiveUser(ActiveClientRequest activeClientRequest) {
+        log.trace("UserServiceImpl.putActiveUser - activeClientRequest {}", activeClientRequest);
         Users user = userRepository.findFirstByEmail(activeClientRequest.email());
 
         if (user == null) {
@@ -195,6 +197,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public Users getUserByEmail(String userEmail) {
+        log.trace("UserServiceImpl.getUserByEmail - userEmail {}", userEmail);
         Users user = userRepository.findFirstByEmail(userEmail);
 
         if (user == null) {
@@ -211,6 +214,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public Users getUserOrganizationByEmail(String userEmail) {
+        log.trace("UserServiceImpl.getUserOrganizationByEmail - userEmail {}", userEmail);
         Users user = userRepository.findFirstByEmail(userEmail);
 
         if (user == null || user.getRole() != RoleEnum.ORGANIZATION) {
@@ -223,7 +227,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, EntityNotFoundException {
-        log.trace("UserServiceImpl.loadUserByUsername - username {}", email);
+        log.trace("UserServiceImpl.loadUserByUsername - email {}", email);
 
         Users user = userRepository.findFirstByEmail(email);
 

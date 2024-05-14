@@ -9,5 +9,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE e.eventBasicInformation.name = :name " +
             "AND e.eventBasicInformation.typeEventId.type = :type")
     Event findFirstByName(String name, String type);
-    Event findFirstById(Long id);
+
+    @Query("SELECT e FROM Event e " +
+            "WHERE e.id = :id " +
+            "AND e.eventBasicInformation.symbolicName = :symbolicName")
+    Event findFirstByIdAndSymbolicName(Long id, String symbolicName);
 }

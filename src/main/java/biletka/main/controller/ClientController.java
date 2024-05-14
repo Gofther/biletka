@@ -1,6 +1,7 @@
 package biletka.main.controller;
 
 import biletka.main.dto.response.FavoriteResponse;
+import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,5 +31,16 @@ public class ClientController {
         FavoriteResponse favoriteResponse = clientService.toggleEventFavorite(authorization, id);
 
         return ResponseEntity.accepted().body(favoriteResponse);
+    }
+
+    @Operation(
+            summary = "Получение массива избранного",
+            description = "Позовляет получить массив мероприятий у избранного пользователя"
+    )
+    @GetMapping("/favorite")
+    public ResponseEntity<MassivePublicEvent> getFavorite(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) {
+        log.trace("ClientController.getFavorite - authorization {}", authorization);
+        MassivePublicEvent massivePublicEvent = clientService.getFavorite(authorization);
+        return ResponseEntity.ok(massivePublicEvent);
     }
 }
