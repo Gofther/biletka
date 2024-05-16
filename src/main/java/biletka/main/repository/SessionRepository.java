@@ -1,8 +1,6 @@
 package biletka.main.repository;
 
-import biletka.main.entity.City;
-import biletka.main.entity.Event;
-import biletka.main.entity.Session;
+import biletka.main.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -39,4 +37,31 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "AND s.startTime BETWEEN :startDay AND :finishDay " +
             "ORDER BY s.hall.place, s.startTime ")
     ArrayList<Session> findAllSessionByEventAndCity(Event event, City city, Timestamp startDay, Timestamp finishDay);
+
+    @Query("SELECT s.event FROM Session s " +
+            "WHERE s.hall.place.city = :city " +
+            "AND s.event.eventBasicInformation.ageRatingId.limitation <= :age " +
+            "AND s.startTime >= :nowDate " +
+            "ORDER BY s.id " +
+            "LIMIT 10 OFFSET :offset")
+    Set<Event> findAllEventByCityAndAge (City city, int age, Integer offset, Timestamp nowDate);
+
+    @Query("SELECT s.event FROM Session s " +
+            "WHERE s.hall.place.city = :city " +
+            "AND s.event.eventBasicInformation.typeEventId.type = :type " +
+            "AND s.startTime >= :nowDate " +
+            "ORDER BY s.id " +
+            "LIMIT 10 OFFSET :offset")
+    Set<Event> findAllEventByCityAndType (City city, String type, Integer offset, Timestamp nowDate);
+
+/*
+    @Query("SELECT s.event FROM Session s " +
+            "WHERE s.hall.place.city = :city " +
+            "AND :genre = ANY(s.event.eventBasicInformation.genres)" +
+            "AND s.startTime >= :nowDate " +
+            "ORDER BY s.id " +
+            "LIMIT 10 OFFSET :offset")
+    Set<Event> findAllEventByCityAndGenre (City city, Genre genre, Integer offset, Timestamp nowDate);
+*/
 }
+

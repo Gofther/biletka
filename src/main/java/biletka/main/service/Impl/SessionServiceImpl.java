@@ -168,4 +168,40 @@ public class SessionServiceImpl implements SessionService {
                 Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay()),
                 Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atTime(LocalTime.MAX)));
     }
+
+    /**
+     * Метод получения уникальных мероприятий по возрасту
+     * @param city город
+     * @param age возраст
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+     @Override
+    public Set<Event> getMassiveEventByCityAndAgeLimit(City city, int age, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, age {}, offset {}", city, age, offset);
+        return sessionRepository.findAllEventByCityAndAge(city, age, offset, new Timestamp(date.getTime()));
+    }
+
+    /**
+     * Метод получения уникальных мероприятий по возрасту
+     * @param city город
+     * @param type тип мероприятия
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    @Override
+    public Set<Event> getMassiveEventByCityAndType(City city, String type, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, type {}, offset {}", city, type, offset);
+        return sessionRepository.findAllEventByCityAndType(city, type, offset, new Timestamp(date.getTime()));
+    }
+
+    /*
+    @Override
+    public Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, genre {}, offset {}", city, genre, offset);
+        return sessionRepository.findAllEventByCityAndGenre(city, genre, offset, new Timestamp(date.getTime()));
+    }
+     */
 }

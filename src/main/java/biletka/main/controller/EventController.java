@@ -109,4 +109,53 @@ public class EventController {
         response.getOutputStream().write(publicEventImage.imageData());
         response.getOutputStream().close();
     }
+
+    @Operation(
+            summary = "Вывод мероприятий по возрасту",
+            description = "Вывод мероприятий по указанному возрасту"
+    )
+    @GetMapping("/{cityName}/age")
+    public ResponseEntity<MassivePublicEvent> getEventByAge(@Parameter(description = "название города") @PathVariable String cityName,
+                                                            @Parameter(description = "возраст") @RequestParam int age,
+                                                            @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
+                                                            @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
+                                                            @Parameter(description = "дата для выборки") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam Date date) {
+        log.trace("EventController.getEventByAge / - cityName {} / - age {}, authorization {}, offset {}, date {}", cityName, age, authorization, offset, date);
+        MassivePublicEvent massivePublicEvent = eventService.getEventsByCityAndAgeLimit(cityName, age, authorization, offset, date);
+        return ResponseEntity.ok(massivePublicEvent);
+    }
+
+            @Operation(
+            summary = "Вывод мероприятий по типу",
+            description = "Вывод мероприятий по указанному типу"
+    )
+    @GetMapping("/{cityName}/type")
+    public ResponseEntity<MassivePublicEvent> getEventByType(@Parameter(description = "название города") @PathVariable String cityName,
+                                                            @Parameter(description = "тип") @RequestParam String type,
+                                                            @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
+                                                            @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
+                                                            @Parameter(description = "дата для выборки") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam Date date) {
+        log.trace("EventController.getEventByType / - cityName {} / - type {}, authorization {}, offset {}, date {}", cityName, type, authorization, offset, date);
+        MassivePublicEvent massivePublicEvent = eventService.getEventsByCityAndType(cityName, type, authorization, offset, date);
+        return ResponseEntity.ok(massivePublicEvent);
+    }
+
+    /*
+    @Operation(
+            summary = "Вывод мероприятий по жанрк",
+            description = "Вывод мероприятий по указанному женру"
+    )
+    @GetMapping("/{cityName}/genre")
+    public ResponseEntity<MassivePublicEvent> getEventByGenre(@Parameter(description = "название города") @PathVariable String cityName,
+                                                             @Parameter(description = "жанр") @RequestParam String genre,
+                                                             @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
+                                                             @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
+                                                             @Parameter(description = "дата для выборки") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam Date date) {
+        log.trace("EventController.getEventByType / - cityName {} / - genre {}, authorization {}, offset {}, date {}", cityName, genre, authorization, offset, date);
+        MassivePublicEvent massivePublicEvent = eventService.getEventsByCityAndGenre(cityName, genre, authorization, offset, date);
+        return ResponseEntity.ok(massivePublicEvent);
+    }
+
+     */
+
 }
