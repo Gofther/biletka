@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -167,5 +168,23 @@ public class SessionServiceImpl implements SessionService {
                 city,
                 Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay()),
                 Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atTime(LocalTime.MAX)));
+    }
+
+    /**
+     * Получение количества сеансов мероприятия организации
+     * @param event мероприятие
+     * @param placeSet площадки
+     * @return количество сеансов
+     */
+    @Override
+    public Integer getTotalByEventAndPlaces(Event event, Set<Place> placeSet) {
+        log.trace("SessionServiceImpl.getTotalByEventAndPlaces - event {}, placeSet {}", event, placeSet);
+        AtomicReference<Integer> total = new AtomicReference<>(0);
+
+        placeSet.forEach(place -> {
+            total.updateAndGet(v -> v + sessionRepository.findSumByEventAndPlace(event, place));
+        });
+
+        return total.get();
     }
 }

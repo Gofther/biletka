@@ -2,6 +2,7 @@ package biletka.main.repository;
 
 import biletka.main.entity.City;
 import biletka.main.entity.Event;
+import biletka.main.entity.Place;
 import biletka.main.entity.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +40,9 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "AND s.startTime BETWEEN :startDay AND :finishDay " +
             "ORDER BY s.hall.place, s.startTime ")
     ArrayList<Session> findAllSessionByEventAndCity(Event event, City city, Timestamp startDay, Timestamp finishDay);
+
+    @Query("SELECT COUNT(s) FROM Session s " +
+            "WHERE s.event = :event " +
+            "AND s.hall.place = :place")
+    Integer findSumByEventAndPlace(Event event, Place place);
 }

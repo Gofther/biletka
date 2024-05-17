@@ -85,7 +85,7 @@ public class EventController {
             description = "Вывод полной информации о мероприятии по id и символьному названию"
     )
     @GetMapping("/{cityName}/{eventName}")
-    public ResponseEntity<?> getFillInfoEvent(@Parameter(description = "название города") @PathVariable String cityName,
+    public ResponseEntity<PublicFullInfoEvent> getFullInfoEvent(@Parameter(description = "название города") @PathVariable String cityName,
                                               @Parameter(description = "название мероприятия") @PathVariable String eventName,
                                               @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                               @Parameter(description = "дата для выборки") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {

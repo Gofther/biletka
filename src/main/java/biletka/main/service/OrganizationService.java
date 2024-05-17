@@ -1,6 +1,7 @@
 package biletka.main.service;
 
 import biletka.main.dto.request.OrganizationRegistrationRequest;
+import biletka.main.dto.response.EventsOrganization;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
@@ -42,4 +43,11 @@ public interface OrganizationService {
      * @param event мероприятие
      */
     void addEventAdmin(Organization organization, Event event);
+
+    /**
+     * Метод получения мероприятий организации
+     * @param authorization токен авторизации
+     * @return массив мероприятий и их количесто
+     */
+    EventsOrganization getEventsOrganization(String authorization);
 }

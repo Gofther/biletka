@@ -4,6 +4,7 @@ import biletka.main.dto.request.SessionCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.City;
 import biletka.main.entity.Event;
+import biletka.main.entity.Place;
 import biletka.main.entity.Session;
 import org.springframework.stereotype.Service;
 
@@ -47,4 +48,12 @@ public interface SessionService {
      * @return массив сеансов
      */
     ArrayList<Session> getSessionsByEvent(Event event, City city, Date date);
+
+    /**
+     * Получение количества сеансов мероприятия организации
+     * @param event мероприятие
+     * @param placeSet площадки
+     * @return количество сеансов мероприятия
+     */
+    Integer getTotalByEventAndPlaces(Event event, Set<Place> placeSet);
 }
