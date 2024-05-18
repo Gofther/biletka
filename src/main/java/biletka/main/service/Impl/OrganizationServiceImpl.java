@@ -4,9 +4,12 @@ import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.EventOrganization;
 import biletka.main.dto.response.EventsOrganization;
+import biletka.main.dto.response.PlaceOrganization;
+import biletka.main.dto.response.PlacesOrganization;
 import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.repository.OrganizationRepository;
+import biletka.main.service.HallService;
 import biletka.main.service.OrganizationService;
 import biletka.main.service.SessionService;
 import biletka.main.service.UserService;
@@ -32,6 +35,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Lazy
     private final UserService userService;
     private final SessionService sessionService;
+    private final HallService hallService;
 
     /**
      * Метод добавления организации в бд
@@ -169,6 +173,51 @@ public class OrganizationServiceImpl implements OrganizationService {
         return new EventsOrganization(
                 eventsOrganization.size(),
                 eventsOrganization.toArray(EventOrganization[]::new)
+        );
+    }
+
+    /**
+     * Метод получения площадок организации
+     * @param authorization токен пользователя
+     * @return массив площадок
+     */
+    @Override
+    public PlacesOrganization getPlacesOrganization(String authorization) {
+        log.trace("OrganizationServiceImpl.getPlacesOrganization - authorization {}", authorization);
+
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        ArrayList<PlaceOrganization> placeOrganizationArrayList = new ArrayList<>();
+
+        organization.getPlaceSet().forEach(place -> {
+            placeOrganizationArrayList.add(
+                    new PlaceOrganization(
+                            place.getId(),
+                            place.getAddress(),
+                            place.getCity().getCityName(),
+                            place.getPlaceName(),
+                            hallService.getTotalByPlace(place)
+                    )
+            );
+        });
+
+        return new PlacesOrganization(
+                placeOrganizationArrayList.size(),
+                placeOrganizationArrayList.toArray(PlaceOrganization[]::new)
         );
     }
 }

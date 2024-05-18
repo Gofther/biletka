@@ -111,4 +111,15 @@ public class HallServiceImpl implements HallService {
         log.trace("HallServiceImpl.getHallById - id {}", id);
         return hallRepository.getReferenceById(id);
     }
+
+    /**
+     * Метод получения количества залов в площадке
+     * @param place площадка
+     * @return количество залов
+     */
+    @Override
+    public Integer getTotalByPlace(Place place) {
+        log.trace("HallServiceImpl.getHallById - place {}", place);
+        return hallRepository.findTotalByPlace(place);
+    }
 }

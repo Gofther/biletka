@@ -1,6 +1,7 @@
 package biletka.main.controller;
 
 import biletka.main.dto.response.EventsOrganization;
+import biletka.main.dto.response.PlacesOrganization;
 import biletka.main.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,9 +25,20 @@ public class OrganizationController {
             description = "Позволяет вывести мероприятии у организации и общее их количество"
     )
     @GetMapping("/event")
-    public ResponseEntity<?> getEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+    public ResponseEntity<EventsOrganization> getEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getEventOrganization /event - authorization {}", authorization);
         EventsOrganization eventsOrganization = organizationService.getEventsOrganization(authorization);
         return ResponseEntity.ok(eventsOrganization);
+    }
+
+    @Operation(
+            summary = "Вывод площадок организации",
+            description = "Позволяет вывести площадки у организации и количество залов"
+    )
+    @GetMapping("/place")
+    public ResponseEntity<PlacesOrganization> getPlaceOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getPlaceOrganization /place - authorization {}", authorization);
+        PlacesOrganization placesOrganization = organizationService.getPlacesOrganization(authorization);
+        return ResponseEntity.ok(placesOrganization);
     }
 }
