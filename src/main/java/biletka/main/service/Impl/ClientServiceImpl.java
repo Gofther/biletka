@@ -2,17 +2,19 @@ package biletka.main.service.Impl;
 
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.ClientRegistrationRequest;
+import biletka.main.dto.request.RatingClientRequest;
 import biletka.main.dto.response.FavoriteResponse;
+import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEvent;
-import biletka.main.entity.Client;
-import biletka.main.entity.Event;
-import biletka.main.entity.Genre;
-import biletka.main.entity.Users;
+import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
+import biletka.main.exception.ErrorMessage;
+import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.ClientRepository;
 import biletka.main.service.ClientService;
 import biletka.main.service.EventService;
+import biletka.main.service.RatingService;
 import biletka.main.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -37,6 +36,7 @@ public class ClientServiceImpl implements ClientService {
     @Lazy
     private final UserService userService;
     private final EventService eventService;
+    private final RatingService ratingService;
 
     /**
      * Метод добавления нового пользователя в бд
@@ -120,6 +120,10 @@ public class ClientServiceImpl implements ClientService {
 
         Client client = clientRepository.findFirstByUser(user);
 
+        if (client == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
         ArrayList<PublicEvent> publicEvents = new ArrayList<>();
 
         client.getEventSet().forEach(event -> {
@@ -149,6 +153,44 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public Client getClientByUser(Users user) {
+        log.trace("ClientServiceImpl.getClientByUser - user {}", user);
         return clientRepository.findFirstByUser(user);
+    }
+
+    /**
+     * Метод изменения рейтинга мероприятия пользователем
+     * @param authorization токен авторизации
+     * @param ratingClientRequest информация для изменения рейтинга мероприятия
+     * @return успешное изменение
+     */
+    @Override
+    public MessageCreateResponse putRatingEvent(String authorization, RatingClientRequest ratingClientRequest) {
+        log.trace("ClientServiceImpl.putRatingEvent - authorization {}, ratingClientRequest {}", authorization, ratingClientRequest);
+
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Client client = clientRepository.findFirstByUser(user);
+
+        if (client == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Event event = eventService.getEventByIdAndSymbolic(ratingClientRequest.eventSymbolic());
+
+        ratingService.createRating(client, event, ratingClientRequest.rating());
+
+        eventService.putRatingEvent(event, ratingClientRequest.rating());
+
+        return new MessageCreateResponse(
+                "The rating has been successfully set!"
+        );
     }
 }
