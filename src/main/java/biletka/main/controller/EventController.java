@@ -140,9 +140,9 @@ public class EventController {
         return ResponseEntity.ok(massivePublicEvent);
     }
 
-    /*
+
     @Operation(
-            summary = "Вывод мероприятий по жанрк",
+            summary = "Вывод мероприятий по жанру",
             description = "Вывод мероприятий по указанному женру"
     )
     @GetMapping("/{cityName}/genre")
@@ -151,11 +151,10 @@ public class EventController {
                                                              @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                                              @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
                                                              @Parameter(description = "дата для выборки") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam Date date) {
-        log.trace("EventController.getEventByType / - cityName {} / - genre {}, authorization {}, offset {}, date {}", cityName, genre, authorization, offset, date);
+        log.trace("EventController.getEventByGenre / - cityName {} / - genre {}, authorization {}, offset {}, date {}", cityName, genre, authorization, offset, date);
         MassivePublicEvent massivePublicEvent = eventService.getEventsByCityAndGenre(cityName, genre, authorization, offset, date);
         return ResponseEntity.ok(massivePublicEvent);
     }
 
-     */
 
 }

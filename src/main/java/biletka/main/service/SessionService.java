@@ -62,5 +62,5 @@ public interface SessionService {
 
     Set<Event> getMassiveEventByCityAndType(City city, String type, Integer offset, Date date);
 
-    //Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date);
+    Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date);
 }

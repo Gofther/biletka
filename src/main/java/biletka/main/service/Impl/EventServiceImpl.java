@@ -64,7 +64,7 @@ public class EventServiceImpl implements EventService {
 
         fileUtils.validationFile(
                 typeFile,
-                pattern
+                new String[]{"png", "jpg"}
         );
 
         /**  Проверка на организацию пользователя*/
@@ -505,7 +505,7 @@ public class EventServiceImpl implements EventService {
         return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
     }
 
-    /*
+
     @Override
     public MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date) {
         log.trace("EventServiceImpl.cityName - cityName {}, genre {}, offset {}, date {}", cityName, Genre, offset, date);
@@ -554,5 +554,5 @@ public class EventServiceImpl implements EventService {
 
         return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
     }
-    */
+
 }

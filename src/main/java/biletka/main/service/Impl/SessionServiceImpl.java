@@ -197,11 +197,11 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.findAllEventByCityAndType(city, type, offset, new Timestamp(date.getTime()));
     }
 
-    /*
+
     @Override
     public Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date) {
         log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, genre {}, offset {}", city, genre, offset);
         return sessionRepository.findAllEventByCityAndGenre(city, genre, offset, new Timestamp(date.getTime()));
     }
-     */
+
 }

@@ -79,5 +79,5 @@ public interface EventService {
 
     MassivePublicEvent getEventsByCityAndType(String cityName, String type, String authorization, Integer offset, Date date);
 
-    //MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date);
+    MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date);
 }

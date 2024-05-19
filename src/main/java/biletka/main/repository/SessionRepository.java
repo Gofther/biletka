@@ -54,14 +54,14 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "LIMIT 10 OFFSET :offset")
     Set<Event> findAllEventByCityAndType (City city, String type, Integer offset, Timestamp nowDate);
 
-/*
     @Query("SELECT s.event FROM Session s " +
             "WHERE s.hall.place.city = :city " +
-            "AND :genre = ANY(s.event.eventBasicInformation.genres)" +
+            "AND EXISTS(SELECT g FROM s.event.eventBasicInformation.genres g " +
+            "WHERE g = :genre) " +
             "AND s.startTime >= :nowDate " +
             "ORDER BY s.id " +
             "LIMIT 10 OFFSET :offset")
     Set<Event> findAllEventByCityAndGenre (City city, Genre genre, Integer offset, Timestamp nowDate);
-*/
+
 }
 
