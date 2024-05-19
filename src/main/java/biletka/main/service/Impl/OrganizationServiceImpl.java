@@ -2,10 +2,7 @@ package biletka.main.service.Impl;
 
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
-import biletka.main.dto.response.EventOrganization;
-import biletka.main.dto.response.EventsOrganization;
-import biletka.main.dto.response.PlaceOrganization;
-import biletka.main.dto.response.PlacesOrganization;
+import biletka.main.dto.response.*;
 import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.repository.OrganizationRepository;
@@ -135,21 +132,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public EventsOrganization getEventsOrganization(String authorization) {
         log.trace("OrganizationServiceImpl.getEventsOrganization - authorization {}", authorization);
 
-        String userEmail = jwtTokenUtils.getUsernameFromToken(
-                authorization.substring(7)
-        );
-
-        Users user = userService.getUserOrganizationByEmail(userEmail);
-
-        if (user == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
-
-        Organization organization = getOrganizationByUser(user);
-
-        if (organization == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
+        Organization organization = tokenVerification(authorization);
 
         ArrayList<EventOrganization> eventsOrganization = new ArrayList<>();
 
@@ -185,21 +168,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public PlacesOrganization getPlacesOrganization(String authorization) {
         log.trace("OrganizationServiceImpl.getPlacesOrganization - authorization {}", authorization);
 
-        String userEmail = jwtTokenUtils.getUsernameFromToken(
-                authorization.substring(7)
-        );
-
-        Users user = userService.getUserOrganizationByEmail(userEmail);
-
-        if (user == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
-
-        Organization organization = getOrganizationByUser(user);
-
-        if (organization == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
+        Organization organization = tokenVerification(authorization);
 
         ArrayList<PlaceOrganization> placeOrganizationArrayList = new ArrayList<>();
 
@@ -219,5 +188,72 @@ public class OrganizationServiceImpl implements OrganizationService {
                 placeOrganizationArrayList.size(),
                 placeOrganizationArrayList.toArray(PlaceOrganization[]::new)
         );
+    }
+
+    /**
+     * Метод получения залов у организации
+     * @param authorization токе авторизации
+     * @return массив залов
+     */
+    @Override
+    public MassivePlacesAndHalls getPlacesAndSession(String authorization) {
+        log.trace("OrganizationServiceImpl.getPlacesAndSession - authorization {}", authorization);
+        Organization organization = tokenVerification(authorization);
+
+        ArrayList<PlaceHallOrganization> placeHallOrganizationArrayList = new ArrayList<>();
+
+        organization.getPlaceSet().forEach(place -> {
+            ArrayList<HallOrganization> hallOrganizationArrayList = new ArrayList<>();
+
+            hallService.getAllHallByPlace(place).forEach(hall -> {
+                hallOrganizationArrayList.add(
+                        new HallOrganization(
+                                hall.getId(),
+                                hall.getHallNumber(),
+                                hall.getHallName(),
+                                hall.getNumberOfSeats(),
+                                hall.getInfo()
+                        )
+                );
+            });
+
+            placeHallOrganizationArrayList.add(
+                    new PlaceHallOrganization(
+                            place.getId(),
+                            place.getPlaceName(),
+                            place.getAddress(),
+                            place.getCity().getCityName(),
+                            hallOrganizationArrayList.toArray(HallOrganization[]::new)
+                    )
+            );
+        });
+
+        return new MassivePlacesAndHalls(placeHallOrganizationArrayList.toArray(PlaceHallOrganization[]::new));
+    }
+
+    /**
+     * Проверка токена авторизации и вывод организации
+     * @param token токен авторизации
+     * @return организация
+     */
+    public Organization tokenVerification(String token) {
+        log.trace("OrganizationServiceImpl.tokenVerification - token {}", token);
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                token.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        return organization;
     }
 }

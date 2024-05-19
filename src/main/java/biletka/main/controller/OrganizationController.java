@@ -1,6 +1,7 @@
 package biletka.main.controller;
 
 import biletka.main.dto.response.EventsOrganization;
+import biletka.main.dto.response.MassivePlacesAndHalls;
 import biletka.main.dto.response.PlacesOrganization;
 import biletka.main.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +41,16 @@ public class OrganizationController {
         log.trace("OrganizationController.getPlaceOrganization /place - authorization {}", authorization);
         PlacesOrganization placesOrganization = organizationService.getPlacesOrganization(authorization);
         return ResponseEntity.ok(placesOrganization);
+    }
+
+    @Operation(
+            summary = "Вывод залов по площадкам организации",
+            description = "Позволяет вывести залы по площадкам организации"
+    )
+    @GetMapping("/hall")
+    public ResponseEntity<MassivePlacesAndHalls> getHallOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
+        MassivePlacesAndHalls massivePlacesAndHalls = organizationService.getPlacesAndSession(authorization);
+        return ResponseEntity.ok(massivePlacesAndHalls);
     }
 }

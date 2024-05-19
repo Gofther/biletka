@@ -71,13 +71,7 @@ public class ClientServiceImpl implements ClientService {
                 authorization.substring(7)
         );
 
-        Users user = userService.getUserByEmail(userEmail);
-
-        if (user == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
-
-        Client client = clientRepository.findFirstByUser(user);
+        Client client = tokenVerification(authorization);
         Event event = eventService.getEventById(id);
 
         if (event == null) {
@@ -108,21 +102,7 @@ public class ClientServiceImpl implements ClientService {
     public MassivePublicEvent getFavorite(String authorization) {
         log.trace("ClientServiceImpl.getFavorite - authorization {}", authorization);
 
-        String userEmail = jwtTokenUtils.getUsernameFromToken(
-                authorization.substring(7)
-        );
-
-        Users user = userService.getUserByEmail(userEmail);
-
-        if (user == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
-
-        Client client = clientRepository.findFirstByUser(user);
-
-        if (client == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
+        Client client = tokenVerification(authorization);
 
         ArrayList<PublicEvent> publicEvents = new ArrayList<>();
 
@@ -167,8 +147,27 @@ public class ClientServiceImpl implements ClientService {
     public MessageCreateResponse putRatingEvent(String authorization, RatingClientRequest ratingClientRequest) {
         log.trace("ClientServiceImpl.putRatingEvent - authorization {}, ratingClientRequest {}", authorization, ratingClientRequest);
 
+        Client client = tokenVerification(authorization);
+
+        Event event = eventService.getEventByIdAndSymbolic(ratingClientRequest.eventSymbolic());
+
+        ratingService.createRating(client, event, ratingClientRequest.rating());
+
+        eventService.putRatingEvent(event, ratingClientRequest.rating());
+
+        return new MessageCreateResponse(
+                "The rating has been successfully set!"
+        );
+    }
+    /**
+     * Проверка токена авторизации и вывод пользователя
+     * @param token токен авторизации
+     * @return организация
+     */
+    public Client tokenVerification(String token) {
+        log.trace("ClientServiceImpl.tokenVerification - token {}", token);
         String userEmail = jwtTokenUtils.getUsernameFromToken(
-                authorization.substring(7)
+                token.substring(7)
         );
 
         Users user = userService.getUserByEmail(userEmail);
@@ -183,14 +182,7 @@ public class ClientServiceImpl implements ClientService {
             throw new EntityNotFoundException("A broken token!");
         }
 
-        Event event = eventService.getEventByIdAndSymbolic(ratingClientRequest.eventSymbolic());
-
-        ratingService.createRating(client, event, ratingClientRequest.rating());
-
-        eventService.putRatingEvent(event, ratingClientRequest.rating());
-
-        return new MessageCreateResponse(
-                "The rating has been successfully set!"
-        );
+        return client;
     }
+
 }

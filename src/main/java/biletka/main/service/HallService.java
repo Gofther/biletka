@@ -8,6 +8,8 @@ import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Set;
+
 @Service
 public interface HallService {
     /**
@@ -32,4 +34,11 @@ public interface HallService {
      * @return количество залов
      */
     Integer getTotalByPlace(Place place);
+
+    /**
+     * Метод получения массива залов по площадке
+     * @param place площадка
+     * @return массив залов
+     */
+    Set<Hall> getAllHallByPlace(Place place);
 }
