@@ -3,7 +3,9 @@ package biletka.main.controller;
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.HallCreateRequest;
 import biletka.main.dto.request.PlaceCreateRequest;
+import biletka.main.dto.response.MassiveCityResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.service.CityService;
 import biletka.main.service.HallService;
 import biletka.main.service.PlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlaceController {
     private final PlaceService placeService;
     private final HallService hallService;
+    private final CityService cityService;
 
     private final ConvertUtils convertToJSON;
 
@@ -56,5 +59,16 @@ public class PlaceController {
         MessageCreateResponse messageCreateResponse = hallService.createHall(authorization, file, hallCreateRequestNew);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
+    }
+
+    @Operation(
+            summary = "Вывод всех городов",
+            description = "Позволяет вывести все города из бд"
+    )
+    @GetMapping("/city")
+    public ResponseEntity<MassiveCityResponse> getAllCity() {
+        log.trace("PlaceController.getAllCity /city");
+        MassiveCityResponse cities = cityService.getAllCity();
+        return ResponseEntity.ok(cities);
     }
 }

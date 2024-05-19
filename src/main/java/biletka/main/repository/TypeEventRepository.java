@@ -12,6 +12,4 @@ public interface TypeEventRepository extends JpaRepository<TypeEvent, Long>{
     @Query("SELECT t FROM TypeEvent t " +
             "WHERE t.type = :type")
     TypeEvent findFirstByType(String type);
-
-    List<TypeEvent> findAll();
 }

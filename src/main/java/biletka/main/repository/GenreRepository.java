@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface GenreRepository extends JpaRepository<Genre, Long>{
     Genre findFirstByName(String name);
-
-    List<Genre> findAll();
 }
