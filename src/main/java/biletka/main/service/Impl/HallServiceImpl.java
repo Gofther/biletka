@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -110,5 +111,27 @@ public class HallServiceImpl implements HallService {
     public Hall getHallById(Long id) {
         log.trace("HallServiceImpl.getHallById - id {}", id);
         return hallRepository.getReferenceById(id);
+    }
+
+    /**
+     * Метод получения количества залов в площадке
+     * @param place площадка
+     * @return количество залов
+     */
+    @Override
+    public Integer getTotalByPlace(Place place) {
+        log.trace("HallServiceImpl.getHallById - place {}", place);
+        return hallRepository.findTotalByPlace(place);
+    }
+
+    /**
+     * Метод получения массива залов по площадке
+     * @param place площадка
+     * @return массив залов
+     */
+    @Override
+    public Set<Hall> getAllHallByPlace(Place place) {
+        log.trace("HallServiceImpl.getAllHallByPlace - place {}", place);
+        return hallRepository.findAllByPlace(place);
     }
 }

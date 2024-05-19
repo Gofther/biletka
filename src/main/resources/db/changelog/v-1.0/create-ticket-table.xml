@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-ticket-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.ticket
+            (
+            id bigserial NOT NULL,
+            activation_code character varying(255) COLLATE pg_catalog."default",
+            email character varying(255) COLLATE pg_catalog."default",
+            full_name character varying(255) COLLATE pg_catalog."default",
+            is_extinguished boolean,
+            is_reserved boolean,
+            phone character varying(255) COLLATE pg_catalog."default",
+            price double precision,
+            row_number integer,
+            seat_number integer,
+            cheque_id bigserial,
+            session_id bigserial,
+            CONSTRAINT ticket_pkey PRIMARY KEY (id),
+            CONSTRAINT uk_5yit3mgb8vflbb3lwho8846d2 UNIQUE (cheque_id),
+            CONSTRAINT fk5x0dvk4itqbdpu2dxdo02b5f7 FOREIGN KEY (session_id)
+            REFERENCES public.session (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkjalq3807mdm8iw2woggp6l2on FOREIGN KEY (cheque_id)
+            REFERENCES public.cheque (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

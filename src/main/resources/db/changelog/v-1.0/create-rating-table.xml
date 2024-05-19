@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-rating-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.rating
+            (
+            id bigserial NOT NULL,
+            rating double precision,
+            client_id bigserial,
+            event_id bigserial,
+            CONSTRAINT rating_pkey PRIMARY KEY (id),
+            CONSTRAINT uk_7e9ux9h41lqif92vf8h8w5bdn UNIQUE (event_id),
+            CONSTRAINT uk_iqg6gm9nfvq7sep3edd9fvtjy UNIQUE (client_id),
+            CONSTRAINT fk3v4vy8jeel8mwmqm3t7uqi3dm FOREIGN KEY (client_id)
+            REFERENCES public.client (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkrndl54g8x53w4qmxu5pdfdr8p FOREIGN KEY (event_id)
+            REFERENCES public.event (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

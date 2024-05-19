@@ -1,18 +1,19 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
-import biletka.main.dto.response.MessageCreateResponse;
-import biletka.main.entity.Event;
-import biletka.main.entity.Organization;
-import biletka.main.entity.Place;
-import biletka.main.entity.Users;
+import biletka.main.dto.response.*;
+import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
-import biletka.main.exception.ErrorMessage;
-import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.OrganizationRepository;
+import biletka.main.service.HallService;
 import biletka.main.service.OrganizationService;
+import biletka.main.service.SessionService;
+import biletka.main.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -22,10 +23,16 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @Slf4j
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
+    private final JwtTokenUtils jwtTokenUtils;
+
+    @Lazy
+    private final UserService userService;
+    private final SessionService sessionService;
+    private final HallService hallService;
 
     /**
      * Метод добавления организации в бд
@@ -114,5 +121,139 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.setAdminEventSet(eventSet);
 
         organizationRepository.save(organization);
+    }
+
+    /**
+     * Метод получения мероприятий организации
+     * @param authorization токен авторизации
+     * @return массив мероприятий и их количесто
+     */
+    @Override
+    public EventsOrganization getEventsOrganization(String authorization) {
+        log.trace("OrganizationServiceImpl.getEventsOrganization - authorization {}", authorization);
+
+        Organization organization = tokenVerification(authorization);
+
+        ArrayList<EventOrganization> eventsOrganization = new ArrayList<>();
+
+        organization.getEventSet().forEach(event -> {
+            eventsOrganization.add(
+                    new EventOrganization(
+                        event.getId(),
+                        event.getEventBasicInformation().getName_rus(),
+                        event.getEventBasicInformation().getSymbolicName(),
+                        event.getRating(),
+                        event.getDuration(),
+                        event.getEventBasicInformation().getPushkin(),
+                        event.getEventAdditionalInformation().getTagSet().toArray(Tag[]::new),
+                        event.getEventBasicInformation().getGenres().toArray(Genre[]::new),
+                        String.valueOf(event.getEventBasicInformation().getAgeRatingId().getLimitation()),
+                        sessionService.getTotalByEventAndPlaces(event, organization.getPlaceSet())
+                )
+            );
+        });
+
+        return new EventsOrganization(
+                eventsOrganization.size(),
+                eventsOrganization.toArray(EventOrganization[]::new)
+        );
+    }
+
+    /**
+     * Метод получения площадок организации
+     * @param authorization токен пользователя
+     * @return массив площадок
+     */
+    @Override
+    public PlacesOrganization getPlacesOrganization(String authorization) {
+        log.trace("OrganizationServiceImpl.getPlacesOrganization - authorization {}", authorization);
+
+        Organization organization = tokenVerification(authorization);
+
+        ArrayList<PlaceOrganization> placeOrganizationArrayList = new ArrayList<>();
+
+        organization.getPlaceSet().forEach(place -> {
+            placeOrganizationArrayList.add(
+                    new PlaceOrganization(
+                            place.getId(),
+                            place.getAddress(),
+                            place.getCity().getCityName(),
+                            place.getPlaceName(),
+                            hallService.getTotalByPlace(place)
+                    )
+            );
+        });
+
+        return new PlacesOrganization(
+                placeOrganizationArrayList.size(),
+                placeOrganizationArrayList.toArray(PlaceOrganization[]::new)
+        );
+    }
+
+    /**
+     * Метод получения залов у организации
+     * @param authorization токе авторизации
+     * @return массив залов
+     */
+    @Override
+    public MassivePlacesAndHalls getPlacesAndSession(String authorization) {
+        log.trace("OrganizationServiceImpl.getPlacesAndSession - authorization {}", authorization);
+        Organization organization = tokenVerification(authorization);
+
+        ArrayList<PlaceHallOrganization> placeHallOrganizationArrayList = new ArrayList<>();
+
+        organization.getPlaceSet().forEach(place -> {
+            ArrayList<HallOrganization> hallOrganizationArrayList = new ArrayList<>();
+
+            hallService.getAllHallByPlace(place).forEach(hall -> {
+                hallOrganizationArrayList.add(
+                        new HallOrganization(
+                                hall.getId(),
+                                hall.getHallNumber(),
+                                hall.getHallName(),
+                                hall.getNumberOfSeats(),
+                                hall.getInfo()
+                        )
+                );
+            });
+
+            placeHallOrganizationArrayList.add(
+                    new PlaceHallOrganization(
+                            place.getId(),
+                            place.getPlaceName(),
+                            place.getAddress(),
+                            place.getCity().getCityName(),
+                            hallOrganizationArrayList.toArray(HallOrganization[]::new)
+                    )
+            );
+        });
+
+        return new MassivePlacesAndHalls(placeHallOrganizationArrayList.toArray(PlaceHallOrganization[]::new));
+    }
+
+    /**
+     * Проверка токена авторизации и вывод организации
+     * @param token токен авторизации
+     * @return организация
+     */
+    public Organization tokenVerification(String token) {
+        log.trace("OrganizationServiceImpl.tokenVerification - token {}", token);
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                token.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        return organization;
     }
 }

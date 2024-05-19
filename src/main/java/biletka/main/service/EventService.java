@@ -66,4 +66,18 @@ public interface EventService {
      * @return полная информация мероприятия
      */
     PublicFullInfoEvent getFullInfoEvent(String authorization, String cityName, String eventName, Date date);
+
+    /**
+     * Метод получения мероприятия по id и символьному названию
+     * @param eventSymbolic id и символьное название
+     * @return мероприятие
+     */
+    Event getEventByIdAndSymbolic(String eventSymbolic);
+
+    /**
+     * Метод изменения рейтинга мероприятия
+     * @param event мероприятие
+     * @param rating рейтинг пользователя
+     */
+    void putRatingEvent(Event event, Double rating);
 }

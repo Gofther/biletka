@@ -44,6 +44,7 @@ public class EventServiceImpl implements EventService {
     private final ClientService clientService;
     @Lazy
     private final SessionService sessionService;
+    private final RatingService ratingService;
 
     /**
      * Метод создания и добавления мероприятия в бд
@@ -365,7 +366,7 @@ public class EventServiceImpl implements EventService {
         event.getEventAdditionalInformation().getActorSet().forEach(actor -> actors.add(actor.getName()));
         event.getEventAdditionalInformation().getTagSet().forEach(tag -> tags.add(tag.getName()));
 
-        PublicFullInfoEvent publicSession = new PublicFullInfoEvent(
+        return new PublicFullInfoEvent(
                 event.getId(),
                 event.getEventBasicInformation().getName_rus(),
                 event.getEventBasicInformation().getSymbolicName(),
@@ -383,7 +384,49 @@ public class EventServiceImpl implements EventService {
                 authorization == null ? null : favoriteSet.contains(event),
                 massiveSessionEvents.toArray(MassiveSessionEvent[]::new)
         );
+    }
 
-        return publicSession;
+    /**
+     * Метод получения мероприятия по id и символьному названию
+     * @param eventSymbolic id и символьное название
+     * @return мероприятие
+     */
+    @Override
+    public Event getEventByIdAndSymbolic(String eventSymbolic) {
+        log.trace("EventServiceImpl.getEventByIdAndSymbolic - eventSymbolic {}", eventSymbolic);
+
+        String[] eventStringName = eventSymbolic.split("-", 2);
+
+        if (!Pattern.compile("^\\d+$").matcher(eventStringName[0]).matches() &&
+                !Pattern.compile("^[A-Za-z0-9._%+@-]+$").matcher(eventStringName[1]).matches()
+        ) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Event error", "The event line was entered incorrectly!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Event event = eventRepository.findFirstByIdAndSymbolicName(Long.valueOf(eventStringName[0]), eventStringName[1]);
+
+        if (event == null) {
+            throw new EntityNotFoundException("There is no such event!");
+        }
+
+        return event;
+    }
+
+    /**
+     * Метод изменения рейтинга мероприятия
+     * @param event мероприятие
+     * @param rating рейтинг пользователя
+     */
+    @Override
+    public void putRatingEvent(Event event, Double rating) {
+        log.trace("EventServiceImpl.putRatingEvent - event {}", event);
+        Double totalRating = ratingService.getTotalRatingByEvent(event);
+
+        event.setRating(
+                (event.getRating() + rating) / totalRating
+        );
+        eventRepository.save(event);
     }
 }

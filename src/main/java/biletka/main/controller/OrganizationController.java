@@ -1,0 +1,56 @@
+package biletka.main.controller;
+
+import biletka.main.dto.response.EventsOrganization;
+import biletka.main.dto.response.MassivePlacesAndHalls;
+import biletka.main.dto.response.PlacesOrganization;
+import biletka.main.service.OrganizationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@RestController
+@RequestMapping("/organization")
+@RequiredArgsConstructor
+@Tag(name = "Контроллер ивентов", description = "Всё, что связано с ивентами")
+@CrossOrigin
+public class OrganizationController {
+    private final OrganizationService organizationService;
+
+    @Operation(
+            summary = "Вывод мероприятий организации",
+            description = "Позволяет вывести мероприятии у организации и общее их количество"
+    )
+    @GetMapping("/event")
+    public ResponseEntity<EventsOrganization> getEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getEventOrganization /event - authorization {}", authorization);
+        EventsOrganization eventsOrganization = organizationService.getEventsOrganization(authorization);
+        return ResponseEntity.ok(eventsOrganization);
+    }
+
+    @Operation(
+            summary = "Вывод площадок организации",
+            description = "Позволяет вывести площадки у организации и количество залов"
+    )
+    @GetMapping("/place")
+    public ResponseEntity<PlacesOrganization> getPlaceOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getPlaceOrganization /place - authorization {}", authorization);
+        PlacesOrganization placesOrganization = organizationService.getPlacesOrganization(authorization);
+        return ResponseEntity.ok(placesOrganization);
+    }
+
+    @Operation(
+            summary = "Вывод залов по площадкам организации",
+            description = "Позволяет вывести залы по площадкам организации"
+    )
+    @GetMapping("/hall")
+    public ResponseEntity<MassivePlacesAndHalls> getHallOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
+        MassivePlacesAndHalls massivePlacesAndHalls = organizationService.getPlacesAndSession(authorization);
+        return ResponseEntity.ok(massivePlacesAndHalls);
+    }
+}
