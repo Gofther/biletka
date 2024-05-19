@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-organization-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.organization
+            (
+            id bigserial NOT NULL,
+            contact_phone character varying(255) COLLATE pg_catalog."default",
+            created_at timestamp(6) without time zone,
+            email character varying(255) COLLATE pg_catalog."default",
+            full_name_organization character varying(255) COLLATE pg_catalog."default",
+            full_name_signatory character varying(255) COLLATE pg_catalog."default",
+            inn character varying(255) COLLATE pg_catalog."default",
+            kbk character varying(255) COLLATE pg_catalog."default",
+            kpp character varying(255) COLLATE pg_catalog."default",
+            legal_address character varying(255) COLLATE pg_catalog."default",
+            name_payer character varying(255) COLLATE pg_catalog."default",
+            ogrn character varying(255) COLLATE pg_catalog."default",
+            oktmo character varying(255) COLLATE pg_catalog."default",
+            position_signatory character varying(255) COLLATE pg_catalog."default",
+            postal_address integer,
+            status character varying(255) COLLATE pg_catalog."default",
+            user_id bigserial,
+            CONSTRAINT organization_pkey PRIMARY KEY (id),
+            CONSTRAINT uk_q13wkhwj7885gg61lwiyanwis UNIQUE (user_id),
+            CONSTRAINT fk7klnupuuu0cbbqabirlp4oujm FOREIGN KEY (user_id)
+            REFERENCES public.users (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT organization_status_check CHECK (status::text = ANY (ARRAY['ACTIVE'::character varying, 'BANNED'::character varying, 'INACTIVE'::character varying]::text[]))
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

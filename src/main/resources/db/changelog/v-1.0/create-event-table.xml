@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-event-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.event
+            (
+            id bigserial NOT NULL,
+            created_at timestamp(6) without time zone,
+            duration character varying(255) COLLATE pg_catalog."default",
+            rating double precision,
+            status smallint,
+            additional bigserial,
+            basic bigserial,
+            widget bigserial,
+            admin_organization bigserial,
+            CONSTRAINT event_pkey PRIMARY KEY (id),
+            CONSTRAINT uk_cgj6olwm9ybdr3lxrfhgdkgv5 UNIQUE (widget),
+            CONSTRAINT uk_gb77dogmrcajnrauqavs3im1e UNIQUE (basic),
+            CONSTRAINT uk_haajr7gg3ol96ucw5tbt35c9x UNIQUE (additional),
+            CONSTRAINT fk77b4ebhf2ha08k7jhaw7oq9y5 FOREIGN KEY (additional)
+            REFERENCES public.event_additional_information (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkbs8i837l9470fr2k2o900eohc FOREIGN KEY (widget)
+            REFERENCES public.event_web_widget (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkgig8rsrnhagpu15hns5wxf7sq FOREIGN KEY (admin_organization)
+            REFERENCES public.organization (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkr5l48fjnrhu1om3mujnrrqcgw FOREIGN KEY (basic)
+            REFERENCES public.event_basic_information (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT event_status_check CHECK (status >= 0 AND status &lt;= 2)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

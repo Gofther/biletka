@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-place-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.place
+            (
+            id bigserial NOT NULL,
+            address character varying(255) COLLATE pg_catalog."default",
+            created_at timestamp(6) without time zone,
+            place_name character varying(255) COLLATE pg_catalog."default",
+            city_id bigint,
+            CONSTRAINT place_pkey PRIMARY KEY (id),
+            CONSTRAINT fkd0im63f67sps1ty7956t9ahn4 FOREIGN KEY (city_id)
+            REFERENCES public.city (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

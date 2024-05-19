@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-additional-tag-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.additional_tag
+            (
+            additional_id bigserial NOT NULL,
+            tag_id bigserial NOT NULL,
+            CONSTRAINT additional_tag_pkey PRIMARY KEY (additional_id, tag_id),
+            CONSTRAINT fknmrb23k1mo43xmtgwwt6m7mog FOREIGN KEY (tag_id)
+            REFERENCES public.tag (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkrt35348ee5pcpwqfgix6esue5 FOREIGN KEY (additional_id)
+            REFERENCES public.event_additional_information (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>
