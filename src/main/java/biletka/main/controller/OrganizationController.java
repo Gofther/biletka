@@ -1,6 +1,7 @@
 package biletka.main.controller;
 
 import biletka.main.dto.response.EventResponse;
+import biletka.main.dto.response.MassiveTotalSessions;
 import biletka.main.dto.response.OrganizationResponse;
 import biletka.main.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,5 +29,15 @@ public class OrganizationController {
     public ResponseEntity<OrganizationResponse> getOrganization(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization){
         System.out.println(organizationService.getOrganization(authorization));
         return ResponseEntity.status(HttpStatus.OK).body(organizationService.getOrganization(authorization));
+    }
+
+    @Operation(
+            summary = "Вывод количества сеансов на день",
+            description = "Вывод количества сеансов на день по площадками"
+    )
+    @GetMapping("/session_sum")
+    public ResponseEntity<MassiveTotalSessions> getTotalSessionByOrganization(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization){
+        log.trace("OrganizationController.getTotalSessionByOrganization / - authorization {}", authorization);
+        return ResponseEntity.status(HttpStatus.OK).body(organizationService.getSessionsByOrganization(authorization));
     }
 }

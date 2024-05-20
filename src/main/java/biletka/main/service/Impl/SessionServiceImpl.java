@@ -204,4 +204,16 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.findAllEventByCityAndGenre(city, genre, offset, new Timestamp(date.getTime()));
     }
 
+
+    /**
+     * Метод получения количества сеансов на площадке
+     * @param place площадка
+     * @return количество сеансов
+     */
+    @Override
+    public int getSumSession(Place place) {
+        log.trace("SessionServiceImpl.getSumSession - place {}", place);
+        Set<Session> sessions = sessionRepository.findAllSessionByPlace(place);
+        return sessions.size();
+    }
 }

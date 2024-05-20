@@ -2,11 +2,7 @@ package biletka.main.service;
 
 import biletka.main.dto.request.SessionCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
-import biletka.main.entity.AgeRating;
-import biletka.main.entity.City;
-import biletka.main.entity.Event;
-import biletka.main.entity.Session;
-import biletka.main.entity.Genre;
+import biletka.main.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -63,4 +59,6 @@ public interface SessionService {
     Set<Event> getMassiveEventByCityAndType(City city, String type, Integer offset, Date date);
 
     Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date);
+
+    int getSumSession(Place place);
 }

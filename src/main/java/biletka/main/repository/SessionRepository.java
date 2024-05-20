@@ -63,5 +63,8 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "LIMIT 10 OFFSET :offset")
     Set<Event> findAllEventByCityAndGenre (City city, Genre genre, Integer offset, Timestamp nowDate);
 
+    @Query("SELECT s FROM Session s " +
+    "WHERE s.hall.place = :place")
+    Set<Session> findAllSessionByPlace(Place place);
 }
 

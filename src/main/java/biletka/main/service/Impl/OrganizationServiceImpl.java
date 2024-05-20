@@ -2,7 +2,9 @@ package biletka.main.service.Impl;
 
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
+import biletka.main.dto.response.MassiveTotalSessions;
 import biletka.main.dto.response.OrganizationResponse;
+import biletka.main.dto.response.TotalSession;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Place;
@@ -10,6 +12,7 @@ import biletka.main.entity.Users;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.repository.OrganizationRepository;
 import biletka.main.service.OrganizationService;
+import biletka.main.service.SessionService;
 import biletka.main.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 // не ту библиотеку инициализировал. Нужна была не ломбока
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
@@ -28,6 +32,7 @@ import java.util.Set;
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final JwtTokenUtils jwtTokenUtils;
+    private final SessionService sessionService;
 
     @Lazy
     private final UserService userService;
@@ -163,4 +168,45 @@ public class OrganizationServiceImpl implements OrganizationService {
                 organization.getPostalAddress()
         );
     }
+
+    /**
+     * Метод получения сеансов по токену
+     * @param authorization - токен авторизации
+     * @return массив сеансов по площадкам
+     */
+    @Override
+    public MassiveTotalSessions getSessionsByOrganization(String authorization){
+        log.trace("OrganizationServiceImpl.getSessionsByOrganization - authorization {}", authorization);
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        ArrayList<TotalSession> sessions = new ArrayList<>();
+
+        Set<Place> placeSet = organization.getPlaceSet();
+        placeSet.forEach(place -> {
+            sessions.add(
+                    new TotalSession(
+                        place.getId(),
+                        place.getAddress(),
+                        place.getPlaceName(),
+                        sessionService.getSumSession(place)
+                    )
+            );
+        });
+        return new MassiveTotalSessions(sessions.toArray(TotalSession[]::new));
+    }
+
 }
