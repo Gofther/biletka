@@ -25,7 +25,7 @@ public class OrganizationController {
             summary = "Вывод мероприятий организации",
             description = "Позволяет вывести мероприятии у организации и общее их количество"
     )
-    @GetMapping("/event")
+    @GetMapping("/events")
     public ResponseEntity<EventsOrganization> getEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getEventOrganization /event - authorization {}", authorization);
         EventsOrganization eventsOrganization = organizationService.getEventsOrganization(authorization);
@@ -36,7 +36,7 @@ public class OrganizationController {
             summary = "Вывод площадок организации",
             description = "Позволяет вывести площадки у организации и количество залов"
     )
-    @GetMapping("/place")
+    @GetMapping("/places")
     public ResponseEntity<PlacesOrganization> getPlaceOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getPlaceOrganization /place - authorization {}", authorization);
         PlacesOrganization placesOrganization = organizationService.getPlacesOrganization(authorization);
@@ -47,7 +47,7 @@ public class OrganizationController {
             summary = "Вывод залов по площадкам организации",
             description = "Позволяет вывести залы по площадкам организации"
     )
-    @GetMapping("/hall")
+    @GetMapping("/halls")
     public ResponseEntity<MassivePlacesAndHalls> getHallOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
         MassivePlacesAndHalls massivePlacesAndHalls = organizationService.getPlacesAndSession(authorization);
