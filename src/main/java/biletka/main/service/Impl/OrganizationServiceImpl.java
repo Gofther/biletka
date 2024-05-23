@@ -2,9 +2,10 @@ package biletka.main.service.Impl;
 
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
-import biletka.main.dto.response.MassiveTotalSessions;
 import biletka.main.dto.response.OrganizationResponse;
-import biletka.main.dto.response.TotalSession;
+import biletka.main.dto.response.TotalSession.PlacesByOrganization;
+import biletka.main.dto.response.TotalSession.TotalSession;
+import biletka.main.dto.response.TotalSession.EventsByPlace;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Place;
@@ -172,10 +173,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     /**
      * Метод получения сеансов по токену
      * @param authorization - токен авторизации
-     * @return массив сеансов по площадкам
+     * @return массив сеансов по площадкам и мероприятиям
      */
     @Override
-    public MassiveTotalSessions getSessionsByOrganization(String authorization){
+    public TotalSession getSessionsByOrganization(String authorization){
         log.trace("OrganizationServiceImpl.getSessionsByOrganization - authorization {}", authorization);
         String userEmail = jwtTokenUtils.getUsernameFromToken(
                 authorization.substring(7)
@@ -193,20 +194,21 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new EntityNotFoundException("A broken token!");
         }
 
-        ArrayList<TotalSession> sessions = new ArrayList<>();
+        ArrayList<PlacesByOrganization> places = new ArrayList<>();
 
         Set<Place> placeSet = organization.getPlaceSet();
+
         placeSet.forEach(place -> {
-            sessions.add(
-                    new TotalSession(
-                        place.getId(),
-                        place.getAddress(),
-                        place.getPlaceName(),
-                        sessionService.getSumSession(place)
+            places.add(
+                    new PlacesByOrganization(
+                            place.getPlaceName(),
+                            place.getCity().getCityName(),
+                            place.getAddress(),
+                            sessionService.getSessionByPlaceAndEvent(place)
                     )
             );
         });
-        return new MassiveTotalSessions(sessions.toArray(TotalSession[]::new));
+        return new TotalSession(places.toArray(PlacesByOrganization[]::new));
     }
 
 }

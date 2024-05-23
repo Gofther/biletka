@@ -4,6 +4,7 @@ import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.response.TotalSession.EventsByPlace;
 import biletka.main.dto.universal.*;
 import biletka.main.entity.*;
 import biletka.main.entity.event_item.EventAdditionalInformation;
@@ -506,6 +507,15 @@ public class EventServiceImpl implements EventService {
     }
 
 
+    /**
+     * Метод получения мероприятия по городу и жанру
+     * @param cityName название города
+     * @param Genre тип мероприятия
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
     @Override
     public MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date) {
         log.trace("EventServiceImpl.cityName - cityName {}, genre {}, offset {}, date {}", cityName, Genre, offset, date);
@@ -554,5 +564,6 @@ public class EventServiceImpl implements EventService {
 
         return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
     }
+
 
 }

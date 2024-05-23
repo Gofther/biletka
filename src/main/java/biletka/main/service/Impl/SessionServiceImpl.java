@@ -3,6 +3,8 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.SessionCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.response.TotalSession.EventsByPlace;
+import biletka.main.dto.response.TotalSession.SessionResponse;
 import biletka.main.entity.*;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
@@ -184,7 +186,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     /**
-     * Метод получения уникальных мероприятий по возрасту
+     * Метод получения уникальных мероприятий по городу и типу
      * @param city город
      * @param type тип мероприятия
      * @param offset отступ
@@ -198,6 +200,14 @@ public class SessionServiceImpl implements SessionService {
     }
 
 
+    /**
+     * Метод получения мероприятий по
+     * @param city город
+     * @param genre жанр
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
     @Override
     public Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date) {
         log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, genre {}, offset {}", city, genre, offset);
@@ -206,14 +216,43 @@ public class SessionServiceImpl implements SessionService {
 
 
     /**
-     * Метод получения количества сеансов на площадке
+     * Метод получения сеансов на площадке
      * @param place площадка
      * @return количество сеансов
      */
     @Override
-    public int getSumSession(Place place) {
-        log.trace("SessionServiceImpl.getSumSession - place {}", place);
-        Set<Session> sessions = sessionRepository.findAllSessionByPlace(place);
-        return sessions.size();
+    public EventsByPlace[] getSessionByPlaceAndEvent(Place place) {
+        log.trace("SessionServiceImpl.getSessionByPlaceAndEvent - place {}", place);
+
+        ArrayList<EventsByPlace> eventsByPlaces = new ArrayList<>();
+
+        ArrayList<SessionResponse> sessionResponses = new ArrayList<>();
+
+        Set<Event> events = sessionRepository.findEventsByPlace(place);
+        events.forEach(event -> {
+            Set<Session> sessions = sessionRepository.findAllSessionByPlaceAndEvent(place, event);
+            sessions.forEach(session -> {
+                sessionResponses.add(
+                        new SessionResponse(
+                                session.getSales(),
+                                session.getOnSales(),
+                                session.getStartTime(),
+                                session.getFinishTime(),
+                                session.getNumberOfViews(),
+                                session.getPrice(),
+                                session.getStatus()
+                        )
+                );
+            });
+            eventsByPlaces.add(
+                    new EventsByPlace(
+                            event.getEventBasicInformation().getName(),
+                            event.getEventBasicInformation().getTypeEventId().getType(),
+                            sessionResponses.toArray(SessionResponse[]::new)
+                    )
+            );
+        });
+
+        return eventsByPlaces.toArray(EventsByPlace[]::new);
     }
 }

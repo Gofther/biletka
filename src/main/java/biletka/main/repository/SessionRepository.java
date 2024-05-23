@@ -64,7 +64,12 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     Set<Event> findAllEventByCityAndGenre (City city, Genre genre, Integer offset, Timestamp nowDate);
 
     @Query("SELECT s FROM Session s " +
-    "WHERE s.hall.place = :place")
-    Set<Session> findAllSessionByPlace(Place place);
+    "WHERE s.hall.place = :place " +
+    "AND s.event = :event ")
+    Set<Session> findAllSessionByPlaceAndEvent(Place place, Event event);
+
+    @Query("SELECT s.event FROM Session s " +
+    "WHERE s.hall.place = :place ")
+    Set<Event> findEventsByPlace(Place place);
 }
 
