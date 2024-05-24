@@ -212,7 +212,8 @@ public class OrganizationServiceImpl implements OrganizationService {
                                 hall.getHallNumber(),
                                 hall.getHallName(),
                                 hall.getNumberOfSeats(),
-                                hall.getInfo()
+                                hall.getInfo(),
+                                hall.getScheme() == null
                         )
                 );
             });

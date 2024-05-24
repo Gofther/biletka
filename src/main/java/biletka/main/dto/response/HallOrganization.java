@@ -16,6 +16,9 @@ public record HallOrganization(
         Integer seats,
 
         @JsonProperty("info")
-        String info
+        String info,
+
+        @JsonProperty("status")
+        boolean status
 ) {
 }

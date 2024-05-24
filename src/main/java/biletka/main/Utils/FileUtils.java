@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 @Component
 @Slf4j
 public class FileUtils {
-    @Value("${app.file.directory}")
-    private String directory;
+    @Value("${app.file.directory.event}")
+    private String directoryEvent;
 
     /**
      * метод получения типа файла и проверка на многотиповость
@@ -64,7 +64,7 @@ public class FileUtils {
      * @param file файла
      */
     public void fileUpload(MultipartFile file, String fileName) throws IOException {
-        File convertFile = new File(directory+fileName);
+        File convertFile = new File(directoryEvent+fileName);
         convertFile.createNewFile();
         FileOutputStream fileOut = new FileOutputStream(convertFile);
         fileOut.write(file.getBytes());
@@ -73,10 +73,10 @@ public class FileUtils {
 
     public PublicEventImage getFileEvent(String img) throws IOException {
         /** Получение файла */
-        File file = new File(directory + "event/" + img);
+        File file = new File(directoryEvent + img);
 
         /** Получение содержание файла в массиве байтов */
-        byte[] content = Files.readAllBytes(Paths.get(directory + "event/" + img));
+        byte[] content = Files.readAllBytes(Paths.get(directoryEvent + img));
 
         /** Получение mime типа файла */
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));

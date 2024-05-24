@@ -77,7 +77,7 @@ public class SessionServiceImpl implements SessionService {
         /** Проврека зала на существование */
         Hall hall = hallService.getHallById(sessionCreateRequest.hallId());
 
-        if (hall == null) {
+        if (hall == null || hall.getScheme() == null) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Hall error", "The hall does not exist!"));
             throw new InvalidDataException(errorMessages);
