@@ -4,7 +4,6 @@ import biletka.main.Utils.PasswordEncoder;
 import biletka.main.enums.RoleEnum;
 import biletka.main.service.AdministratorService;
 import biletka.main.service.Impl.UserServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +37,6 @@ import static org.springframework.security.web.server.authorization.IpAddressRea
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserServiceImpl userService;
-    private final AdministratorService administratorService;
     private final JwtRequestFilter jwtRequestFilter;
 
     @Bean
@@ -95,7 +93,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/session").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers("/client**").hasAuthority(RoleEnum.CLIENT.getAuthority())
                         .requestMatchers("/organization**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
-                        .requestMatchers("/dGlja2V0QWRtaW4=**" ).access(hasIpAddress())
+                        .requestMatchers(HttpMethod.POST, "/dGlja2V0QWRtaW4=" ).permitAll()
                         .anyRequest().permitAll()
                 );
 
@@ -103,22 +101,5 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    private AuthorizationManager<RequestAuthorizationContext> hasIpAddress() {
-        ArrayList<IpAddressMatcher> ipAddressMatchers = administratorService.getMassiveIpAddress();
-        return (authentication, context) -> {
-            HttpServletRequest request = context.getRequest();
-            boolean statusUser = false;
-
-            for (IpAddressMatcher ip: ipAddressMatchers) {
-                if (ip.matches(request)) {
-                    statusUser = true;
-                    break;
-                }
-            }
-
-            return new AuthorizationDecision(statusUser);
-        };
     }
 }

@@ -11,4 +11,11 @@ import java.util.ArrayList;
 public interface AdministratorRepository extends JpaRepository<Administrator, Long> {
     @Query("SELECT a.address FROM Administrator a")
     ArrayList<String> getAllIp();
+
+    @Query("SELECT a FROM Administrator a " +
+            "WHERE a.email = :email " +
+            "AND a.address = :remoteAddr")
+    Administrator findFirstByEmailAndAddress(String email, String remoteAddr);
+
+    Administrator findFirstByEmail(String email);
 }

@@ -1,5 +1,9 @@
 package biletka.main.service;
 
+import biletka.main.dto.request.AuthForm;
+import biletka.main.dto.response.AuthResponse;
+import biletka.main.entity.Administrator;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Service;
 
@@ -7,5 +11,13 @@ import java.util.ArrayList;
 
 @Service
 public interface AdministratorService {
-    ArrayList<IpAddressMatcher> getMassiveIpAddress();
+
+    /**
+     * Метод аутентификации администратор
+     * @param authForm форма аутентификации
+     * @return токен для авторизации
+     */
+    AuthResponse postAuth(AuthForm authForm, HttpServletRequest request);
+
+    Administrator getAdminByEmail(String email);
 }
