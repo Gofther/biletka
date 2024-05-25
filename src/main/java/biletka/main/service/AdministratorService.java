@@ -20,4 +20,6 @@ public interface AdministratorService {
     AuthResponse postAuth(AuthForm authForm, HttpServletRequest request);
 
     Administrator getAdminByEmail(String email);
+
+    boolean checkAdminByIp(String request);
 }

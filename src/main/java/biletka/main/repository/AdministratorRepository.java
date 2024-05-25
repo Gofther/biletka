@@ -18,4 +18,6 @@ public interface AdministratorRepository extends JpaRepository<Administrator, Lo
     Administrator findFirstByEmailAndAddress(String email, String remoteAddr);
 
     Administrator findFirstByEmail(String email);
+
+    Administrator findFirstByAddress(String request);
 }

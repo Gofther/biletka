@@ -1,9 +1,11 @@
 package biletka.main.config;
 
+import biletka.main.Utils.IpAddressUtils;
 import biletka.main.Utils.PasswordEncoder;
 import biletka.main.enums.RoleEnum;
 import biletka.main.service.AdministratorService;
 import biletka.main.service.Impl.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,7 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserServiceImpl userService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final IpAddressUtils ipAddressUtils;
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -93,7 +96,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/session").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers("/client**").hasAuthority(RoleEnum.CLIENT.getAuthority())
                         .requestMatchers("/organization**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
-                        .requestMatchers(HttpMethod.POST, "/dGlja2V0QWRtaW4=" ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/dGlja2V0QWRtaW4=" ).access(hasIpAddress())
                         .anyRequest().permitAll()
                 );
 
@@ -101,5 +104,19 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    private AuthorizationManager<RequestAuthorizationContext> hasIpAddress() {
+        return (authentication, context) -> {
+            boolean statusUser = false;
+            HttpServletRequest request = context.getRequest();
+            System.out.println(request.getRemoteAddr());
+            System.out.println(ipAddressUtils.checkIpAdministrator(request.getRemoteAddr()));
+            if (ipAddressUtils.checkIpAdministrator(request.getRemoteAddr())) {
+                statusUser = true;
+            }
+
+            return new AuthorizationDecision(statusUser);
+        };
     }
 }

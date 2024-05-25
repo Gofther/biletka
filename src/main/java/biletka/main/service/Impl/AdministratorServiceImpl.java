@@ -72,4 +72,9 @@ public class AdministratorServiceImpl implements AdministratorService {
     public Administrator getAdminByEmail(String email) {
         return administratorRepository.findFirstByEmail(email);
     }
+
+    @Override
+    public boolean checkAdminByIp(String request) {
+        return administratorRepository.findFirstByAddress(request) != null;
+    }
 }
