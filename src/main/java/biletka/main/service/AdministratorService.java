@@ -8,6 +8,7 @@ import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public interface AdministratorService {
@@ -22,4 +23,6 @@ public interface AdministratorService {
     Administrator getAdminByEmail(String email);
 
     boolean checkAdminByIp(String request);
+
+    Administrator getAdminByIpAndEmail(String usernameFromToken, String remoteAddr);
 }

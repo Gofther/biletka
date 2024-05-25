@@ -3,7 +3,6 @@ package biletka.main.config;
 import biletka.main.Utils.IpAddressUtils;
 import biletka.main.Utils.PasswordEncoder;
 import biletka.main.enums.RoleEnum;
-import biletka.main.service.AdministratorService;
 import biletka.main.service.Impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +18,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-
-import static org.springframework.security.web.server.authorization.IpAddressReactiveAuthorizationManager.hasIpAddress;
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasRole;
 
 @Configuration
 @EnableMethodSecurity
@@ -97,6 +95,7 @@ public class SecurityConfig {
                         .requestMatchers("/client**").hasAuthority(RoleEnum.CLIENT.getAuthority())
                         .requestMatchers("/organization**").hasAuthority(RoleEnum.ORGANIZATION.getAuthority())
                         .requestMatchers(HttpMethod.POST, "/dGlja2V0QWRtaW4=" ).access(hasIpAddress())
+                        .requestMatchers(HttpMethod.POST, "/security/organization").hasAuthority(RoleEnum.ADMIN.getAuthority())
                         .anyRequest().permitAll()
                 );
 
@@ -110,8 +109,7 @@ public class SecurityConfig {
         return (authentication, context) -> {
             boolean statusUser = false;
             HttpServletRequest request = context.getRequest();
-            System.out.println(request.getRemoteAddr());
-            System.out.println(ipAddressUtils.checkIpAdministrator(request.getRemoteAddr()));
+
             if (ipAddressUtils.checkIpAdministrator(request.getRemoteAddr())) {
                 statusUser = true;
             }

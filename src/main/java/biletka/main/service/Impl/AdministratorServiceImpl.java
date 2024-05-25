@@ -5,6 +5,7 @@ import biletka.main.Utils.PasswordEncoder;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.response.AuthResponse;
 import biletka.main.entity.Administrator;
+import biletka.main.enums.RoleEnum;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.AdministratorRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,5 +78,18 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Override
     public boolean checkAdminByIp(String request) {
         return administratorRepository.findFirstByAddress(request) != null;
+    }
+
+    @Override
+    public Administrator getAdminByIpAndEmail(String usernameFromToken, String remoteAddr)  {
+        Administrator administrator = administratorRepository.findFirstByEmailAndAddress(usernameFromToken, remoteAddr);
+
+        if (administrator == null) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Forbidden", "Access Denied"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        return administrator;
     }
 }
