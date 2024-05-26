@@ -461,8 +461,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public MassivePublicEvent getEventsByCityAndType(String cityName, String type, String authorization, Integer offset, Date date) {
         log.trace("EventServiceImpl.cityName - cityName {}, type {}, offset {}, date {}", cityName, type, offset, date);
-        City city = cityService.getCityByNameEng(cityName);
-
+        Set<Event> eventSet = new HashSet<>();
         Set<Event> favoriteSet = new HashSet<>();
         ArrayList<PublicEvent> publicEvents= new ArrayList<>();
 
@@ -482,9 +481,28 @@ public class EventServiceImpl implements EventService {
 
         }
 
-        Set<Event> events = sessionService.getMassiveEventByCityAndType(city, type, offset, date);
+        String[] citys = cityName.split(", ");
+        String[] types = type.split(", ");
 
-        events.forEach(event -> {
+        // Преобразование в Set
+        Set<City> citySet = new HashSet<>();
+        for(String c: citys) {
+            City city = cityService.getCityByNameEng(c);
+            citySet.add(city);
+        }
+
+        Set<String> typeSet = new HashSet<>();
+        for(String t: types) {
+            typeSet.add(t);
+        }
+
+        citySet.forEach(c -> {
+            typeSet.forEach(t -> {
+                eventSet.addAll(sessionService.getMassiveEventByCityAndType(c, t, offset, date));
+            });
+        });
+
+        eventSet.forEach(event -> {
             Set<String> genres = new HashSet<>();
 
             event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
@@ -519,12 +537,12 @@ public class EventServiceImpl implements EventService {
     @Override
     public MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date) {
         log.trace("EventServiceImpl.cityName - cityName {}, genre {}, offset {}, date {}", cityName, Genre, offset, date);
-        City city = cityService.getCityByNameEng(cityName);
 
         Set<Event> favoriteSet = new HashSet<>();
         ArrayList<PublicEvent> publicEvents= new ArrayList<>();
+        Set<Event> eventSet = new HashSet<>();
 
-       //  Проверка на пользователя
+        //  Проверка на пользователя
         if (authorization != null) {
             String userEmail = jwtTokenUtils.getUsernameFromToken(
                     authorization.substring(7)
@@ -540,13 +558,31 @@ public class EventServiceImpl implements EventService {
 
         }
 
-        Genre g = genreService.getGenreOfName(Genre);
-        Set<Event> events = sessionService.getMassiveEventByCityAndGenre(city, g, offset, date);
+        String[] citys = cityName.split(", ");
+        String[] genres = Genre.split(", ");
 
-        events.forEach(event -> {
-            Set<String> genres = new HashSet<>();
+        // Преобразование в Set
+        Set<City> citySet = new HashSet<>();
+        for(String c: citys) {
+            City city = cityService.getCityByNameEng(c);
+            citySet.add(city);
+        }
+        Set<Genre> genreSet = new HashSet<>();
+        for(String g: genres) {
+            Genre genre = genreService.getGenreOfName(g);
+            genreSet.add(genre);
+        }
 
-            event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+        citySet.forEach(c -> {
+            genreSet.forEach(g -> {
+                eventSet.addAll(sessionService.getMassiveEventByCityAndGenre(c, g, offset, date));
+            });
+        });
+
+        eventSet.forEach(event -> {
+            Set<String> Genres = new HashSet<>();
+
+            event.getEventBasicInformation().getGenres().forEach(genre -> Genres.add(genre.getName()));
 
             publicEvents.add(
                     new PublicEvent(
@@ -554,7 +590,7 @@ public class EventServiceImpl implements EventService {
                             event.getEventBasicInformation().getName_rus(),
                             event.getEventBasicInformation().getSymbolicName(),
                             event.getEventBasicInformation().getAgeRatingId().getLimitation(),
-                            genres.toArray(String[]::new),
+                            Genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
                             authorization == null ? null : favoriteSet.contains(event)

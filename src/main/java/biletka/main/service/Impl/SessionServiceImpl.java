@@ -6,6 +6,7 @@ import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.response.TotalSession.EventsByPlace;
 import biletka.main.dto.response.TotalSession.SessionResponse;
 import biletka.main.entity.*;
+import biletka.main.entity.Event;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.SessionRepository;
@@ -66,6 +67,7 @@ public class SessionServiceImpl implements SessionService {
             throw new EntityNotFoundException("A broken token!");
         }
 
+
         /** Проврека мероприятия на существование */
         Event event = eventService.getEventById(sessionCreateRequest.eventId());
 
@@ -77,6 +79,7 @@ public class SessionServiceImpl implements SessionService {
 
         /** Проврека зала на существование */
         Hall hall = hallService.getHallById(sessionCreateRequest.hallId());
+
 
         if (hall == null) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
@@ -195,7 +198,7 @@ public class SessionServiceImpl implements SessionService {
      */
     @Override
     public Set<Event> getMassiveEventByCityAndType(City city, String type, Integer offset, Date date) {
-        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, type {}, offset {}", city, type, offset);
+        log.trace("SessionServiceImpl.getMassiveEventByCityAndGenre - city {}, type {}, offset {}", city, type, offset);
         return sessionRepository.findAllEventByCityAndType(city, type, offset, new Timestamp(date.getTime()));
     }
 
@@ -210,7 +213,7 @@ public class SessionServiceImpl implements SessionService {
      */
     @Override
     public Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date) {
-        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, genre {}, offset {}", city, genre, offset);
+        log.trace("SessionServiceImpl.getMassiveEventByCityAndGenre - city {}, genre {}, offset {}", city, genre, offset);
         return sessionRepository.findAllEventByCityAndGenre(city, genre, offset, new Timestamp(date.getTime()));
     }
 
