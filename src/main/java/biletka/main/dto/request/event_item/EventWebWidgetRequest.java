@@ -11,7 +11,6 @@ public record EventWebWidgetRequest(
 
         @JsonProperty("link")
         @Pattern(regexp = "https://afisha.yandex.ru/", message = "Invalid link format")
-        @NotBlank(message = "Link is mandatory!")
         String link,
         @JsonProperty("signature")
         @NotBlank(message = "Signature is mandatory!")

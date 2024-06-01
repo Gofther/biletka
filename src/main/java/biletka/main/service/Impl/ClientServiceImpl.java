@@ -119,7 +119,8 @@ public class ClientServiceImpl implements ClientService {
                     genres.toArray(String[]::new),
                     event.getEventBasicInformation().getImg(),
                     event.getEventBasicInformation().getTypeEventId().getType(),
-                    true
+                    true,
+                    event.getEventWebWidget().getDescription()
             ));
         });
 

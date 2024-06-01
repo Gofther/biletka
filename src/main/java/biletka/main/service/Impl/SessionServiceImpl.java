@@ -54,7 +54,6 @@ public class SessionServiceImpl implements SessionService {
         );
 
         Users user = userService.getUserOrganizationByEmail(userEmail);
-
         if (user == null) {
             throw new EntityNotFoundException("A broken token!");
         }
@@ -73,15 +72,16 @@ public class SessionServiceImpl implements SessionService {
             errorMessages.add(new ErrorMessage("Event error", "The event does not exist!"));
             throw new InvalidDataException(errorMessages);
         }
-
+        System.out.println(1);
         /** Проврека зала на существование */
         Hall hall = hallService.getHallById(sessionCreateRequest.hallId());
 
-        if (hall == null || hall.getScheme() == null) {
+        if (hall == null) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Hall error", "The hall does not exist!"));
             throw new InvalidDataException(errorMessages);
         }
+        System.out.println(2);
 
         /** Проврека времени */
         LocalDateTime start = sessionCreateRequest.startTime();
@@ -93,19 +93,23 @@ public class SessionServiceImpl implements SessionService {
             errorMessages.add(new ErrorMessage("Start time error", "The date and time of the start of the event must be in the future!"));
             throw new InvalidDataException(errorMessages);
         }
+        System.out.println(3);
 
         /** Получения типа сеанса */
         TypeOfMovie typeOfMovie = typeOfMovieService.getTypeByName(sessionCreateRequest.typeOfMovie());
 
+        System.out.println(4);
         /** Проврерка на существование сеанса */
         Session[] sessions = sessionRepository.findSessionsByInfo(Timestamp.valueOf(sessionCreateRequest.startTime()), Timestamp.valueOf(finish), hall.getId());
 
+        System.out.println(5);
         if (sessions.length != 0) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Session error", "It is impossible to create a session, because the hall does not exist, or it is occupied!"));
             throw new InvalidDataException(errorMessages);
         }
 
+        System.out.println(6);
         /** Сохранение сеанса */
         Session session = new Session(
                 0,
@@ -122,6 +126,7 @@ public class SessionServiceImpl implements SessionService {
 
         sessionRepository.saveAndFlush(session);
 
+        System.out.println(8);
         return new MessageCreateResponse(
                 "The session '" + event.getEventBasicInformation().getName() +"' in the hall '" + hall.getHallName() + "' has been successfully created!"
         );
