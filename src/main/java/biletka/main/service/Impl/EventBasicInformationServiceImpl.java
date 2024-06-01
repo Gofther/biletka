@@ -40,10 +40,10 @@ public class EventBasicInformationServiceImpl implements EventBasicInformationSe
     public EventBasicInformation createEventBasic(EventBasicRequest eventBasicRequest, String fullNameFile) {
         log.trace("EventBasicInformationServiceImpl.createEventBasic - eventBasicRequest {}, fullNameFile {}", eventBasicRequest, fullNameFile);
         /** Проверка на существование типа мероприятия */
-        TypeEvent type = typeEventService.getTypeEventOfName(eventBasicRequest.typeEvent());
+        TypeEvent type = typeEventService.getTypeEventOfName(eventBasicRequest.typeEvent().substring(0, 1).toUpperCase() + eventBasicRequest.typeEvent().substring(1).toLowerCase());
 
         if (type == null) {
-            type = typeEventService.createTypeEvent(eventBasicRequest.typeEvent());
+            type = typeEventService.createTypeEvent(eventBasicRequest.typeEvent().substring(0, 1).toUpperCase() + eventBasicRequest.typeEvent().substring(1).toLowerCase());
         }
 
         /** Получение возрастного ограничения */
@@ -53,7 +53,7 @@ public class EventBasicInformationServiceImpl implements EventBasicInformationSe
         Set<Genre> genreSet = new HashSet<>();
 
         for (String genreRequest: eventBasicRequest.genres()) {
-            Genre genre = genreService.getGenreOfName(genreRequest);
+            Genre genre = genreService.getGenreOfName(genreRequest.substring(0, 1).toUpperCase() + genreRequest.substring(1).toLowerCase());
 
             if (genre == null) {
                 genre = genreService.createGenre(genreRequest);

@@ -10,6 +10,7 @@ import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.AuthResponse;
 import biletka.main.dto.response.ClientRegistrationResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.entity.Administrator;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Users;
 import biletka.main.enums.RoleEnum;
@@ -17,10 +18,7 @@ import biletka.main.enums.StatusUserEnum;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.UserRepository;
-import biletka.main.service.ClientService;
-import biletka.main.service.MailSender;
-import biletka.main.service.OrganizationService;
-import biletka.main.service.UserService;
+import biletka.main.service.*;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -49,6 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Lazy
     private final ClientService clientService;
     private final OrganizationService organizationService;
+    private final AdministratorService administratorService;
     private final MailSender mailSender;
 
     /**
@@ -231,6 +230,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Users user = userRepository.findFirstByEmail(email);
 
         if (user == null) {
+            if (administratorService.getAdminByEmail(email) != null) {
+                Administrator administrator = administratorService.getAdminByEmail(email);
+                return new User(
+                        administrator.getEmail(),
+                        administrator.getPassword(),
+                        Collections.singleton(administrator.getRole())
+                );
+            }
             throw new EntityNotFoundException("Entity with email " + email + " not found");
         }
 

@@ -1,5 +1,7 @@
 package biletka.main.service.Impl;
 
+import biletka.main.dto.response.MassiveTypeResponse;
+import biletka.main.dto.response.TypeResponse;
 import biletka.main.entity.TypeEvent;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
@@ -51,5 +53,26 @@ public class TypeEventServiceImpl implements TypeEventService {
         typeEventRepository.saveAndFlush(typeEventNew);
 
         return typeEventNew;
+    }
+
+    /**
+     * Метод вывода всех возможных типов мероприятия
+     * @return массив типов
+     */
+    @Override
+    public MassiveTypeResponse getAllType() {
+        log.trace("TypeEventServiceImpl.getAllType");
+        ArrayList<TypeResponse> typeResponseArrayList = new ArrayList<>();
+
+        typeEventRepository.findAll().forEach(typeEvent -> {
+            typeResponseArrayList.add(
+                    new TypeResponse(
+                        typeEvent.getId(),
+                        typeEvent.getType()
+                )
+            );
+        });
+
+        return new MassiveTypeResponse(typeResponseArrayList.toArray(TypeResponse[]::new));
     }
 }

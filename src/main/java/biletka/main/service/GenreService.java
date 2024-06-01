@@ -1,5 +1,6 @@
 package biletka.main.service;
 
+import biletka.main.dto.response.MassiveGenreResponse;
 import biletka.main.entity.Genre;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +21,10 @@ public interface GenreService {
     Genre createGenre(String name);
 
     Genre postNewGenre(String name);
+
+    /**
+     * Метод получения всех жанров
+     * @return массив жанров
+     */
+    MassiveGenreResponse getAllGenre();
 }

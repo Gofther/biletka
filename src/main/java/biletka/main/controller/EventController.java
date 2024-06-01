@@ -2,11 +2,16 @@ package biletka.main.controller;
 
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.EventCreateRequest;
+import biletka.main.dto.response.GenreResponse;
+import biletka.main.dto.response.MassiveGenreResponse;
+import biletka.main.dto.response.MassiveTypeResponse;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.dto.universal.PublicFullInfoEvent;
 import biletka.main.service.EventService;
+import biletka.main.service.GenreService;
+import biletka.main.service.TypeEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,6 +39,8 @@ import java.util.Date;
 @CrossOrigin
 public class EventController {
     private final EventService eventService;
+    private final GenreService genreService;
+    private final TypeEventService typeEventService;
 
     private final ConvertUtils convertToJSON;
 
@@ -61,7 +68,7 @@ public class EventController {
                                                             @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                                             @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
                                                             @Parameter(description = "дата для выборки") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam Date date) {
-        log.trace("EventController.getEventLimit / - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
+        log.trace("EventController.getEventLimit /cityName - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
         MassivePublicEvent massivePublicEvent = eventService.getEventLimit(cityName, authorization, offset, date);
         return ResponseEntity.ok(massivePublicEvent);
     }
@@ -75,7 +82,7 @@ public class EventController {
                                                   @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                                   @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
                                                   @Parameter(description = "дата для выборки") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
-        log.trace("EventController.getAnnouncementLimit / - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
+        log.trace("EventController.getAnnouncementLimit /cityName/announcement - cityName {}, authorization {}, offset {}, date {}", cityName, authorization, offset, date);
         MassivePublicEvent massivePublicEvent = eventService.getAnnouncementLimit(cityName, authorization, offset, date);
         return ResponseEntity.ok(massivePublicEvent);
     }
@@ -89,7 +96,7 @@ public class EventController {
                                               @Parameter(description = "название мероприятия") @PathVariable String eventName,
                                               @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                               @Parameter(description = "дата для выборки") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
-        log.trace("EventController.getAnnouncementLimit / - cityName {}, eventName {}, authorization {}, date {}", cityName, eventName, authorization, date);
+        log.trace("EventController.getAnnouncementLimit /cityName/eventName - cityName {}, eventName {}, authorization {}, date {}", cityName, eventName, authorization, date);
         PublicFullInfoEvent publicFullInfoEvent = eventService.getFullInfoEvent(authorization, cityName, eventName, date);
         return ResponseEntity.ok(publicFullInfoEvent);
     }
@@ -108,5 +115,27 @@ public class EventController {
         response.setContentType(publicEventImage.type());
         response.getOutputStream().write(publicEventImage.imageData());
         response.getOutputStream().close();
+    }
+
+    @Operation(
+            summary = "Вывод жанров",
+            description = "Позволяет вывести все возможные жанры"
+    )
+    @GetMapping("/genre")
+    public ResponseEntity<MassiveGenreResponse> getAllGenre() {
+        log.trace("EventController.getAllGenre  /genre");
+        MassiveGenreResponse genres = genreService.getAllGenre();
+        return ResponseEntity.ok(genres);
+    }
+
+    @Operation(
+            summary = "Вывод типов мероприятия",
+            description = "Позволяет вывести все возможные типы мероприятий"
+    )
+    @GetMapping("/type")
+    public ResponseEntity<MassiveTypeResponse> getAllType() {
+        log.trace("EventController.getAllType  /type");
+        MassiveTypeResponse types = typeEventService.getAllType();
+        return ResponseEntity.ok(types);
     }
 }

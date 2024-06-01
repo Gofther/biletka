@@ -90,6 +90,7 @@ public class EventServiceImpl implements EventService {
             throw new InvalidDataException(errorMessages);
         }
 
+        System.out.println(organization.getId());
         /** Создание дочерних элементов */
         EventBasicInformation eventBasicInformation = eventBasicInformationService.createEventBasic(eventCreateRequest.eventBasicRequest(), file.getOriginalFilename());
         EventAdditionalInformation eventAdditionalInformation = eventAdditionalInformationService.createEventAdditional(eventCreateRequest.eventAdditional());
@@ -106,12 +107,12 @@ public class EventServiceImpl implements EventService {
         );
 
         eventRepository.saveAndFlush(eventNew);
-
+        System.out.println(organization.getId());
         /** Добавление мероприятия к организации */
         organizationService.addEventAdmin(organization, eventNew);
 
         /** Сохранение файла */
-        fileUtils.fileUpload(file, "event/" + eventNew.getId() + "-" + eventNew.getEventBasicInformation().getSymbolicName() + "." + typeFile);
+        fileUtils.fileUpload(file, eventNew.getId() + "-" + eventNew.getEventBasicInformation().getImg() + "." + typeFile);
 
         return new MessageCreateResponse(
                 "The event '" + eventNew.getEventBasicInformation().getName() + "' of the '" + eventNew.getEventBasicInformation().getTypeEventId().getType() + "' type has been successfully created!"
@@ -144,7 +145,7 @@ public class EventServiceImpl implements EventService {
             throw new EntityNotFoundException("The event not found!");
         }
 
-        return fileUtils.getFileEvent(event.getEventBasicInformation().getImg());
+        return fileUtils.getFileEvent(event.getId() + "-" + event.getEventBasicInformation().getImg());
     }
 
     /**
@@ -196,7 +197,8 @@ public class EventServiceImpl implements EventService {
                             genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });
@@ -219,6 +221,7 @@ public class EventServiceImpl implements EventService {
         Set<Event> favoriteSet = new HashSet<>();
         ArrayList<PublicEvent> publicEvents = new ArrayList<>();
 
+        System.out.println(1);
         /**  Проверка на пользователя*/
         if (authorization != null) {
             String userEmail = jwtTokenUtils.getUsernameFromToken(
@@ -236,7 +239,8 @@ public class EventServiceImpl implements EventService {
             favoriteSet.addAll(client.getEventSet());
         }
 
-        Set<Event> events = sessionService.getMassiveAnnouncementByCityLimit(city, offset, date);
+        Set<Event> events = eventRepository.getMassiveAnnouncementByLimit(new Timestamp(date.getTime() - 1000000000));
+//        events.addAll(eventRepository.getMassiveAnnouncementByLimit(new Timestamp(date.getTime() - 1000000000)));
 
         events.forEach(event -> {
             Set<String> genres = new HashSet<>();
@@ -252,7 +256,8 @@ public class EventServiceImpl implements EventService {
                             genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });
