@@ -1,5 +1,6 @@
 package biletka.main.controller;
 
+import biletka.main.Utils.IpAddressUtils;
 import biletka.main.dto.request.ActiveClientRequest;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.request.ClientRegistrationRequest;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ import java.text.ParseException;
 public class SecurityController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final IpAddressUtils ipAddressUtils;
 
     @Operation(
             summary = "Аутентификация пользователя",
@@ -64,10 +67,12 @@ public class SecurityController {
             description = "Позволяет сохранить новую организацию в базе данных"
     )
     @PostMapping("/organization")
-    public ResponseEntity<MessageCreateResponse> postOrganizationRegistration(@Parameter(description = "Данные организации") @Valid @RequestBody OrganizationRegistrationRequest organizationRegistrationRequest) {
+    public ResponseEntity<MessageCreateResponse> postOrganizationRegistration(@Parameter(description = "Данные организации") @Valid @RequestBody OrganizationRegistrationRequest organizationRegistrationRequest,
+                                                                              @Parameter(description = "Тело запроса клиента")HttpServletRequest request,
+                                                                              @Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) {
         log.trace("SecurityController.postOrganizationRegistration /organization - organizationRegistrationRequest {}", organizationRegistrationRequest);
+        ipAddressUtils.checkIpInAdministrator(request, authorization);
         MessageCreateResponse messageCreateResponse = userService.postNewOrganization(organizationRegistrationRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
     }
 

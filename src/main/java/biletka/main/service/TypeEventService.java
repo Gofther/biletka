@@ -1,5 +1,6 @@
 package biletka.main.service;
 
+import biletka.main.dto.response.MassiveTypeResponse;
 import biletka.main.entity.TypeEvent;
 import org.springframework.stereotype.Service;
 
@@ -13,4 +14,10 @@ public interface TypeEventService {
      * @return тип мероприятия
      */
     TypeEvent createTypeEvent(String type);
+
+    /**
+     * Метод вывода всех возможных типов мероприятия
+     * @return массив типов
+     */
+    MassiveTypeResponse getAllType();
 }

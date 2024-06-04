@@ -1,7 +1,9 @@
 package biletka.main.service;
 
 import biletka.main.dto.request.ClientRegistrationRequest;
+import biletka.main.dto.request.RatingClientRequest;
 import biletka.main.dto.response.FavoriteResponse;
+import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.entity.Client;
 import biletka.main.entity.Users;
@@ -39,4 +41,12 @@ public interface ClientService {
      * @return клиент
      */
     Client getClientByUser(Users user);
+
+    /**
+     * Метод изменения рейтинга мероприятия пользователем
+     * @param authorization токен авторизации
+     * @param ratingClientRequest информация для изменения рейтинга мероприятия
+     * @return успешное изменение
+     */
+    MessageCreateResponse putRatingEvent(String authorization, RatingClientRequest ratingClientRequest);
 }

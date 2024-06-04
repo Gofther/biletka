@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-client-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.client
+            (
+            id bigserial NOT NULL,
+            birthday timestamp(6) without time zone,
+            created_at timestamp(6) without time zone,
+            full_name character varying(255) COLLATE pg_catalog."default",
+            phone character varying(255) COLLATE pg_catalog."default",
+            status character varying(255) COLLATE pg_catalog."default",
+            user_id bigserial,
+            CONSTRAINT client_pkey PRIMARY KEY (id),
+            CONSTRAINT uk_1ixfyfepst9sjbo9op1v65fg0 UNIQUE (user_id),
+            CONSTRAINT fkbxisi412kym1baqfr00rxd8yo FOREIGN KEY (user_id)
+            REFERENCES public.users (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT client_status_check CHECK (status::text = ANY (ARRAY['ACTIVE'::character varying, 'BANNED'::character varying, 'INACTIVE'::character varying]::text[]))
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException.Forbidden;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,6 +63,13 @@ public class ExceptionConveyorHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ErrorResponse onAuthenticationException(AuthenticationException ex) {
         return createResponseException(HttpStatus.UNAUTHORIZED, "Uncorrected login or password", ex.getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(Forbidden.class)
+    public ErrorResponse onForbiddenException(Forbidden e) {
+        return createResponseException(HttpStatus.FORBIDDEN, "Forbidden", e.getMessage());
     }
 
     private ErrorResponse createResponseException(HttpStatus status, String error, String message) {

@@ -71,5 +71,9 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     @Query("SELECT s.event FROM Session s " +
     "WHERE s.hall.place = :place ")
     Set<Event> findEventsByPlace(Place place);
-}
 
+    @Query("SELECT COUNT(s) FROM Session s " +
+            "WHERE s.event = :event " +
+            "AND s.hall.place = :place")
+    Integer findSumByEventAndPlace(Event event, Place place);
+}

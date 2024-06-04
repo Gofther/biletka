@@ -2,20 +2,22 @@ package biletka.main.controller;
 
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.dto.request.EventCreateRequest;
+import biletka.main.dto.response.MassiveGenreResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.response.MassiveTypeResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEventImage;
 import biletka.main.dto.universal.PublicFullInfoEvent;
 import biletka.main.service.EventService;
+import biletka.main.service.GenreService;
+import biletka.main.service.TypeEventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,8 @@ import java.util.Date;
 @CrossOrigin
 public class EventController {
     private final EventService eventService;
+    private final GenreService genreService;
+    private final TypeEventService typeEventService;
 
     private final ConvertUtils convertToJSON;
 
@@ -85,7 +89,7 @@ public class EventController {
             description = "Вывод полной информации о мероприятии по id и символьному названию"
     )
     @GetMapping("/{cityName}/{eventName}")
-    public ResponseEntity<?> getFillInfoEvent(@Parameter(description = "название города") @PathVariable String cityName,
+    public ResponseEntity<PublicFullInfoEvent> getFullInfoEvent(@Parameter(description = "название города") @PathVariable String cityName,
                                               @Parameter(description = "название мероприятия") @PathVariable String eventName,
                                               @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                               @Parameter(description = "дата для выборки") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
@@ -157,4 +161,26 @@ public class EventController {
     }
 
 
+
+    @Operation(
+            summary = "Вывод жанров",
+            description = "Позволяет вывести все возможные жанры"
+    )
+    @GetMapping("/genre")
+    public ResponseEntity<MassiveGenreResponse> getAllGenre() {
+        log.trace("EventController.getAllGenre  /genre");
+        MassiveGenreResponse genres = genreService.getAllGenre();
+        return ResponseEntity.ok(genres);
+    }
+
+    @Operation(
+            summary = "Вывод типов мероприятия",
+            description = "Позволяет вывести все возможные типы мероприятий"
+    )
+    @GetMapping("/type")
+    public ResponseEntity<MassiveTypeResponse> getAllType() {
+        log.trace("EventController.getAllType  /type");
+        MassiveTypeResponse types = typeEventService.getAllType();
+        return ResponseEntity.ok(types);
+    }
 }

@@ -46,6 +46,7 @@ public class EventServiceImpl implements EventService {
     private final GenreService genreService;
     @Lazy
     private final SessionService sessionService;
+    private final RatingService ratingService;
 
     /**
      * Метод создания и добавления мероприятия в бд
@@ -94,6 +95,7 @@ public class EventServiceImpl implements EventService {
             throw new InvalidDataException(errorMessages);
         }
 
+        System.out.println(organization.getId());
         /** Создание дочерних элементов */
         EventBasicInformation eventBasicInformation = eventBasicInformationService.createEventBasic(eventCreateRequest.eventBasicRequest(), file.getOriginalFilename());
         EventAdditionalInformation eventAdditionalInformation = eventAdditionalInformationService.createEventAdditional(eventCreateRequest.eventAdditional());
@@ -110,12 +112,12 @@ public class EventServiceImpl implements EventService {
         );
 
         eventRepository.saveAndFlush(eventNew);
-
+        System.out.println(organization.getId());
         /** Добавление мероприятия к организации */
         organizationService.addEventAdmin(organization, eventNew);
 
         /** Сохранение файла */
-        fileUtils.fileUpload(file, "event/" + eventNew.getId() + "-" + eventNew.getEventBasicInformation().getSymbolicName() + "." + typeFile);
+        fileUtils.fileUpload(file, eventNew.getId() + "-" + eventNew.getEventBasicInformation().getImg() + "." + typeFile);
 
         return new MessageCreateResponse(
                 "The event '" + eventNew.getEventBasicInformation().getName() + "' of the '" + eventNew.getEventBasicInformation().getTypeEventId().getType() + "' type has been successfully created!"
@@ -148,7 +150,7 @@ public class EventServiceImpl implements EventService {
             throw new EntityNotFoundException("The event not found!");
         }
 
-        return fileUtils.getFileEvent(event.getEventBasicInformation().getImg());
+        return fileUtils.getFileEvent(event.getId() + "-" + event.getEventBasicInformation().getImg());
     }
 
     /**
@@ -200,7 +202,8 @@ public class EventServiceImpl implements EventService {
                             genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });
@@ -223,6 +226,7 @@ public class EventServiceImpl implements EventService {
         Set<Event> favoriteSet = new HashSet<>();
         ArrayList<PublicEvent> publicEvents = new ArrayList<>();
 
+        System.out.println(1);
         /**  Проверка на пользователя*/
         if (authorization != null) {
             String userEmail = jwtTokenUtils.getUsernameFromToken(
@@ -240,7 +244,8 @@ public class EventServiceImpl implements EventService {
             favoriteSet.addAll(client.getEventSet());
         }
 
-        Set<Event> events = sessionService.getMassiveAnnouncementByCityLimit(city, offset, date);
+        Set<Event> events = eventRepository.getMassiveAnnouncementByLimit(new Timestamp(date.getTime() - 1000000000));
+//        events.addAll(eventRepository.getMassiveAnnouncementByLimit(new Timestamp(date.getTime() - 1000000000)));
 
         events.forEach(event -> {
             Set<String> genres = new HashSet<>();
@@ -256,7 +261,8 @@ public class EventServiceImpl implements EventService {
                             genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });
@@ -370,7 +376,7 @@ public class EventServiceImpl implements EventService {
         event.getEventAdditionalInformation().getActorSet().forEach(actor -> actors.add(actor.getName()));
         event.getEventAdditionalInformation().getTagSet().forEach(tag -> tags.add(tag.getName()));
 
-        PublicFullInfoEvent publicSession = new PublicFullInfoEvent(
+        return new PublicFullInfoEvent(
                 event.getId(),
                 event.getEventBasicInformation().getName_rus(),
                 event.getEventBasicInformation().getSymbolicName(),
@@ -388,8 +394,50 @@ public class EventServiceImpl implements EventService {
                 authorization == null ? null : favoriteSet.contains(event),
                 massiveSessionEvents.toArray(MassiveSessionEvent[]::new)
         );
+    }
 
-        return publicSession;
+    /**
+     * Метод получения мероприятия по id и символьному названию
+     * @param eventSymbolic id и символьное название
+     * @return мероприятие
+     */
+    @Override
+    public Event getEventByIdAndSymbolic(String eventSymbolic) {
+        log.trace("EventServiceImpl.getEventByIdAndSymbolic - eventSymbolic {}", eventSymbolic);
+
+        String[] eventStringName = eventSymbolic.split("-", 2);
+
+        if (!Pattern.compile("^\\d+$").matcher(eventStringName[0]).matches() &&
+                !Pattern.compile("^[A-Za-z0-9._%+@-]+$").matcher(eventStringName[1]).matches()
+        ) {
+            List<ErrorMessage> errorMessages = new ArrayList<>();
+            errorMessages.add(new ErrorMessage("Event error", "The event line was entered incorrectly!"));
+            throw new InvalidDataException(errorMessages);
+        }
+
+        Event event = eventRepository.findFirstByIdAndSymbolicName(Long.valueOf(eventStringName[0]), eventStringName[1]);
+
+        if (event == null) {
+            throw new EntityNotFoundException("There is no such event!");
+        }
+
+        return event;
+    }
+
+    /**
+     * Метод изменения рейтинга мероприятия
+     * @param event мероприятие
+     * @param rating рейтинг пользователя
+     */
+    @Override
+    public void putRatingEvent(Event event, Double rating) {
+        log.trace("EventServiceImpl.putRatingEvent - event {}", event);
+        Double totalRating = ratingService.getTotalRatingByEvent(event);
+
+        event.setRating(
+                (event.getRating() + rating) / totalRating
+        );
+        eventRepository.save(event);
     }
 
     /**
@@ -441,7 +489,8 @@ public class EventServiceImpl implements EventService {
                             genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            "description"
                     )
             );
         });
@@ -516,7 +565,8 @@ public class EventServiceImpl implements EventService {
                             genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            "description"
                     )
             );
         });
@@ -593,7 +643,8 @@ public class EventServiceImpl implements EventService {
                             Genres.toArray(String[]::new),
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
-                            authorization == null ? null : favoriteSet.contains(event)
+                            authorization == null ? null : favoriteSet.contains(event),
+                            "description"
                     )
             );
         });

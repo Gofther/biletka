@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-event-web-widget-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.event_web_widget
+            (
+            id bigserial NOT NULL,
+            description character varying(255) COLLATE pg_catalog."default",
+            link character varying(255) COLLATE pg_catalog."default",
+            signature character varying(255) COLLATE pg_catalog."default",
+            CONSTRAINT event_web_widget_pkey PRIMARY KEY (id)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

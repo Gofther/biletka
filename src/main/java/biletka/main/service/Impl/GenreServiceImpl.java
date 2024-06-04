@@ -1,5 +1,7 @@
 package biletka.main.service.Impl;
 
+import biletka.main.dto.response.GenreResponse;
+import biletka.main.dto.response.MassiveGenreResponse;
 import biletka.main.entity.Genre;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
@@ -72,6 +74,27 @@ public class GenreServiceImpl implements GenreService {
         Genre newGenre = new Genre(name);
         genreRepository.saveAndFlush(newGenre);
         return newGenre;
+    }
+
+    /**
+     * Метод получения всех жанров
+     * @return массив жанров
+     */
+    @Override
+    public MassiveGenreResponse getAllGenre() {
+        log.trace("GenreService.getAllGenre");
+        ArrayList<GenreResponse> genreResponseArrayList = new ArrayList<>();
+
+        genreRepository.findAll().forEach(genre -> {
+            genreResponseArrayList.add(
+                    new GenreResponse(
+                            genre.getId(),
+                            genre.getName()
+                    )
+            );
+        });
+
+        return new MassiveGenreResponse(genreResponseArrayList.toArray(GenreResponse[]::new));
     }
 }
 

@@ -1,6 +1,9 @@
 package biletka.main.service;
 
 import biletka.main.dto.request.OrganizationRegistrationRequest;
+import biletka.main.dto.response.EventsOrganization;
+import biletka.main.dto.response.MassivePlacesAndHalls;
+import biletka.main.dto.response.PlacesOrganization;
 
 import biletka.main.dto.response.OrganizationResponse;
 import biletka.main.dto.response.TotalSession.TotalSession;
@@ -58,4 +61,25 @@ public interface OrganizationService {
      * @return массив сеансов по площадкам и мероприятиям
      */
     TotalSession getSessionsByOrganization(String authorization);
+
+    /**
+     * Метод получения мероприятий организации
+     * @param authorization токен пользователя
+     * @return массив мероприятий и их количесто
+     */
+    EventsOrganization getEventsOrganization(String authorization);
+
+    /**
+     * Метод получения площадок организации
+     * @param authorization токен пользователя
+     * @return массив площадок
+     */
+    PlacesOrganization getPlacesOrganization(String authorization);
+
+    /**
+     * Метод получения залов у организации
+     * @param authorization токе авторизации
+     * @return массив залов
+     */
+    MassivePlacesAndHalls getPlacesAndSession(String authorization);
 }

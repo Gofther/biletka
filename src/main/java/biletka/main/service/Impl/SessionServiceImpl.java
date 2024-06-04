@@ -6,7 +6,6 @@ import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.response.TotalSession.EventsByPlace;
 import biletka.main.dto.response.TotalSession.SessionResponse;
 import biletka.main.entity.*;
-import biletka.main.entity.Event;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.SessionRepository;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Slf4j
@@ -67,7 +67,6 @@ public class SessionServiceImpl implements SessionService {
             throw new EntityNotFoundException("A broken token!");
         }
 
-
         /** Проврека мероприятия на существование */
         Event event = eventService.getEventById(sessionCreateRequest.eventId());
 
@@ -79,7 +78,6 @@ public class SessionServiceImpl implements SessionService {
 
         /** Проврека зала на существование */
         Hall hall = hallService.getHallById(sessionCreateRequest.hallId());
-
 
         if (hall == null) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
@@ -257,5 +255,23 @@ public class SessionServiceImpl implements SessionService {
         });
 
         return eventsByPlaces.toArray(EventsByPlace[]::new);
+    }
+
+    /**
+     * Получение количества сеансов мероприятия организации
+     * @param event мероприятие
+     * @param placeSet площадки
+     * @return количество сеансов
+     */
+    @Override
+    public Integer getTotalByEventAndPlaces(Event event, Set<Place> placeSet) {
+        log.trace("SessionServiceImpl.getTotalByEventAndPlaces - event {}, placeSet {}", event, placeSet);
+        AtomicReference<Integer> total = new AtomicReference<>(0);
+
+        placeSet.forEach(place -> {
+            total.updateAndGet(v -> v + sessionRepository.findSumByEventAndPlace(event, place));
+        });
+
+        return total.get();
     }
 }

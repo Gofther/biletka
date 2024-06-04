@@ -25,6 +25,9 @@ public record PublicEvent(
         String typeEvent,
 
         @JsonProperty("favorite")
-        Boolean favorite
+        Boolean favorite,
+
+        @JsonProperty("description")
+        String description
 ) {
 }

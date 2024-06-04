@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-additional-actor-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.additional_actor
+            (
+                additional_id bigserial NOT NULL,
+                actor_id bigserial NOT NULL,
+                CONSTRAINT additional_actor_pkey PRIMARY KEY (additional_id, actor_id),
+                CONSTRAINT fkdp0g4wpk4jfjwo9afvc4rbeie FOREIGN KEY (additional_id)
+                REFERENCES public.event_additional_information (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION,
+                CONSTRAINT fkfw2eb5wyp1x2rwijjy47td1bb FOREIGN KEY (actor_id)
+                REFERENCES public.actor (id) MATCH SIMPLE
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

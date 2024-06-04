@@ -16,14 +16,18 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
+
 @Slf4j
 public class HallServiceImpl implements HallService {
     private final HallRepository hallRepository;
@@ -110,5 +114,27 @@ public class HallServiceImpl implements HallService {
     public Hall getHallById(Long id) {
         log.trace("HallServiceImpl.getHallById - id {}", id);
         return hallRepository.getReferenceById(id);
+    }
+
+    /**
+     * Метод получения количества залов в площадке
+     * @param place площадка
+     * @return количество залов
+     */
+    @Override
+    public Integer getTotalByPlace(Place place) {
+        log.trace("HallServiceImpl.getHallById - place {}", place);
+        return hallRepository.findTotalByPlace(place);
+    }
+
+    /**
+     * Метод получения массива залов по площадке
+     * @param place площадка
+     * @return массив залов
+     */
+    @Override
+    public Set<Hall> getAllHallByPlace(Place place) {
+        log.trace("HallServiceImpl.getAllHallByPlace - place {}", place);
+        return hallRepository.findAllByPlace(place);
     }
 }

@@ -1,5 +1,6 @@
 package biletka.main.service;
 
+import biletka.main.dto.response.MassiveCityResponse;
 import biletka.main.entity.City;
 import org.springframework.stereotype.Service;
 
@@ -11,4 +12,10 @@ public interface CityService {
      * @return город
      */
     City getCityByNameEng(String name);
+
+    /**
+     * Метод получения всех городов
+     * @return массив городов
+     */
+    MassiveCityResponse getAllCity();
 }

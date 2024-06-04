@@ -98,4 +98,18 @@ public interface EventService {
      * @return массив краткой информации
      */
     MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date);
+
+    /**
+     * Метод получения мероприятия по id и символьному названию
+     * @param eventSymbolic id и символьное название
+     * @return мероприятие
+     */
+    Event getEventByIdAndSymbolic(String eventSymbolic);
+
+    /**
+     * Метод изменения рейтинга мероприятия
+     * @param event мероприятие
+     * @param rating рейтинг пользователя
+     */
+    void putRatingEvent(Event event, Double rating);
 }
