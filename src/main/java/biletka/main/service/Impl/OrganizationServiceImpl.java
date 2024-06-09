@@ -58,8 +58,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 organizationRequest.positionSignatory(),
                 Integer.valueOf(organizationRequest.postalAddress()),
                 new Timestamp(new Date().getTime()),
-                StatusUserEnum.ACTIVE,
-                null
+                StatusUserEnum.ACTIVE
         );
 
         organizationRepository.saveAndFlush(organization);
@@ -107,21 +106,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationRepository.save(organization);
     }
 
-    /**
-     * Метод добавление мероприятия к организации
-     * @param event мероприятие
-     */
-    @Override
-    public void addEventAdmin(Organization organization, Event event) {
-        log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
-        Set<Event> eventSet = organization.getAdminEventSet();
-        eventSet.add(event);
-
-        organization.addEvent(event);
-        organization.setAdminEventSet(eventSet);
-
-        organizationRepository.save(organization);
-    }
+//    /**
+//     * Метод добавление мероприятия к организации
+//     * @param event мероприятие
+//     */
+//    @Override
+//    public void addEventAdmin(Organization organization, Event event) {
+//        log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
+//        Set<Event> eventSet = organization.getAdminEventSet();
+//        eventSet.add(event);
+//
+//        organization.addEvent(event);
+//        organization.setAdminEventSet(eventSet);
+//
+//        organizationRepository.save(organization);
+//    }
 
     /**
      * Метод получения мероприятий организации

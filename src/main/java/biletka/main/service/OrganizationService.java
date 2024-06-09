@@ -39,11 +39,11 @@ public interface OrganizationService {
      */
     void addPlace(Organization organization, Place newPlace);
 
-    /**
-     * Метод добавление мероприятия к организации
-     * @param event мероприятие
-     */
-    void addEventAdmin(Organization organization, Event event);
+//    /**
+//     * Метод добавление мероприятия к организации
+//     * @param event мероприятие
+//     */
+//    void addEventAdmin(Organization organization, Event event);
 
     /**
      * Метод получения мероприятий организации

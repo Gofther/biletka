@@ -109,7 +109,7 @@ public class EventServiceImpl implements EventService {
         eventRepository.saveAndFlush(eventNew);
         System.out.println(organization.getId());
         /** Добавление мероприятия к организации */
-        organizationService.addEventAdmin(organization, eventNew);
+        //organizationService.addEventAdmin(organization, eventNew);
 
         /** Сохранение файла */
         fileUtils.fileUpload(file, eventNew.getId() + "-" + eventNew.getEventBasicInformation().getImg() + "." + typeFile);
