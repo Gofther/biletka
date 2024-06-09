@@ -2,18 +2,30 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
-    <changeSet id="create-event-basic-information-table" author="Dmitrii">
+    <changeSet id="create-event-basic-information-table" author="VadimMor">
         <sql>
             CREATE TABLE IF NOT EXISTS public.event_basic_information
             (
-                basic_information_id bigserial NOT NULL,
-                img character varying(255) COLLATE pg_catalog."default",
-                name character varying(255) COLLATE pg_catalog."default",
-                organizer character varying(255) COLLATE pg_catalog."default",
-                symbolic_name character varying(255) COLLATE pg_catalog."default",
-                age_rating_id bigint,
-                event_type_id bigint,
-                CONSTRAINT event_basic_information_pkey PRIMARY KEY (basic_information_id)
+            id bigserial NOT NULL,
+            event_id_culture bigint,
+            img character varying(255) COLLATE pg_catalog."default",
+            name character varying(255) COLLATE pg_catalog."default",
+            name_rus character varying(255) COLLATE pg_catalog."default",
+            organizaer character varying(255) COLLATE pg_catalog."default",
+            pushkin boolean,
+            show_in_poster boolean,
+            symbolic_name character varying(255) COLLATE pg_catalog."default",
+            age_id bigint,
+            type_id bigint,
+            CONSTRAINT event_basic_information_pkey PRIMARY KEY (id),
+            CONSTRAINT fkklu6rye5rhp8wnb3kqcrh1dc7 FOREIGN KEY (age_id)
+            REFERENCES public.age_rating (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkn9bm4mecrtuh73qvv6r3pv7k FOREIGN KEY (type_id)
+            REFERENCES public.type_event (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
             )
         </sql>
     </changeSet>

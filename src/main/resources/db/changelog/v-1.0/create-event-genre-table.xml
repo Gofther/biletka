@@ -2,22 +2,22 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
-    <changeSet id="create-event-genre-table" author="Dmitrii">
+    <changeSet id="create-event-genre-table" author="VadimMor">
         <sql>
             CREATE TABLE IF NOT EXISTS public.event_genre
             (
-                basic_information_id bigserial NOT NULL,
-                genre_id bigserial NOT NULL,
-                CONSTRAINT event_genre_pkey PRIMARY KEY (basic_information_id, genre_id),
-                CONSTRAINT fk5nearhompurfhv6qrt792v4pj FOREIGN KEY (genre_id)
-                REFERENCES public.genre (genre_id) MATCH SIMPLE
-                ON UPDATE NO ACTION
-                ON DELETE NO ACTION,
-                CONSTRAINT fkl8pcu6617q7hxnm98o7if14k1 FOREIGN KEY (basic_information_id)
-                REFERENCES public.event_basic_information (basic_information_id) MATCH SIMPLE
-                ON UPDATE NO ACTION
-                ON DELETE NO ACTION
-                )
+            basic_information_id bigserial NOT NULL,
+            genre_id bigserial NOT NULL,
+            CONSTRAINT event_genre_pkey PRIMARY KEY (basic_information_id, genre_id),
+            CONSTRAINT fk1qa002q788e40hnyhqlavdxhb FOREIGN KEY (basic_information_id)
+            REFERENCES public.event_basic_information (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fk5nearhompurfhv6qrt792v4pj FOREIGN KEY (genre_id)
+            REFERENCES public.genre (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
         </sql>
     </changeSet>
 </databaseChangeLog>

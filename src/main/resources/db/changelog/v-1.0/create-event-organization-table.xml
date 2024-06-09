@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-event-organization-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.event_organization
+            (
+            organization_id bigserial NOT NULL,
+            event_id bigserial NOT NULL,
+            CONSTRAINT event_organization_pkey PRIMARY KEY (organization_id, event_id),
+            CONSTRAINT fkl1ue0kq78t4toj2fdg6tif64f FOREIGN KEY (event_id)
+            REFERENCES public.event (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkqt2wb623ivhsvsnaljcgj5gyq FOREIGN KEY (organization_id)
+            REFERENCES public.organization (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

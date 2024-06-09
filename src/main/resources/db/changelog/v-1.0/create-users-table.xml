@@ -2,19 +2,19 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
-    <changeSet id="create-users-table" author="Dmitrii">
+    <changeSet id="create-users-table" author="VadimMor">
         <sql>
             CREATE TABLE IF NOT EXISTS public.users
             (
-                favorite_genre_id integer,
-                user_id bigserial NOT NULL,
-                birthday timestamp(6) without time zone,
-                role character varying(255) COLLATE pg_catalog."default",
+                id bigserial NOT NULL,
+                active_code character varying(255) COLLATE pg_catalog."default",
                 email character varying(255) COLLATE pg_catalog."default",
-                fio character varying(255) COLLATE pg_catalog."default",
                 password character varying(255) COLLATE pg_catalog."default",
-                phone character varying(255) COLLATE pg_catalog."default",
-                CONSTRAINT users_pkey PRIMARY KEY (user_id)
+                role character varying(255) COLLATE pg_catalog."default",
+                status character varying(255) COLLATE pg_catalog."default",
+                CONSTRAINT users_pkey PRIMARY KEY (id),
+                CONSTRAINT users_role_check CHECK (role::text = ANY (ARRAY['ADMIN'::character varying, 'ORGANIZATION'::character varying, 'CLIENT'::character varying]::text[])),
+                CONSTRAINT users_status_check CHECK (status::text = ANY (ARRAY['ACTIVE'::character varying, 'BANNED'::character varying, 'INACTIVE'::character varying]::text[]))
             )
         </sql>
     </changeSet>

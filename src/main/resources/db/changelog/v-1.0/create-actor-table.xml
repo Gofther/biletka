@@ -2,12 +2,13 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
-    <changeSet id="create-actor-table" author="Dmitrii">
+    <changeSet id="create-actor-table" author="VadimMor">
         <sql>
-            CREATE TABLE IF NOT EXISTS public.actor (
-                actor_id bigserial NOT NULL,
+            CREATE TABLE IF NOT EXISTS public.actor
+            (
+                id bigserial NOT NULL,
                 name character varying(255) COLLATE pg_catalog."default",
-                CONSTRAINT actor_pkey PRIMARY KEY (actor_id)
+                CONSTRAINT actor_pkey PRIMARY KEY (id)
             )
         </sql>
     </changeSet>

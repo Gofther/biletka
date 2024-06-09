@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-log-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.log
+            (
+            id bigserial NOT NULL,
+            description character varying(255) COLLATE pg_catalog."default",
+            status character varying(255) COLLATE pg_catalog."default",
+            title character varying(255) COLLATE pg_catalog."default",
+            CONSTRAINT log_pkey PRIMARY KEY (id)
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

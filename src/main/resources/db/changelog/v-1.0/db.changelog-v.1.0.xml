@@ -3,27 +3,39 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    
-    <include file="create-actor-table.xml" relativeToChangelogFile="true"/>
+
     <include file="create-event-additional-information-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-additional-information-actors-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-type-event-table.xml" relativeToChangelogFile="true"/>
     <include file="create-age-rating-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-city-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-event-duration-table.xml" relativeToChangelogFile="true"/>
     <include file="create-event-basic-information-table.xml" relativeToChangelogFile="true"/>
     <include file="create-event-web-widget-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-genre-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-organization-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-city-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-actor-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-additional-actor-table.xml" relativeToChangelogFile="true"/>
     <include file="create-tag-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-type-of-event-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-type-of-movie-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-event-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-users-table.xml" relativeToChangelogFile="true"/>
     <include file="create-additional-tag-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-place-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-organization-place-table.xml" relativeToChangelogFile="true"/>
-    <include file="create-hall-scheme-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-administrator-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-genre-table.xml" relativeToChangelogFile="true"/>
     <include file="create-event-genre-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-client-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-organization-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-event-organization-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-favorite-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-place-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-hall-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-place-organization-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-type-of-movie-table.xml" relativeToChangelogFile="true"/>
     <include file="create-session-table.xml" relativeToChangelogFile="true"/>
-
+    <include file="create-rating-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-cheque-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-ticket-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-basket-table.xml" relativeToChangelogFile="true"/>
+    <include file="create-log-table.xml" relativeToChangelogFile="true"/>
+    <include file="insert-values-age-rating-table.xml" relativeToChangelogFile="true"/>
+    <include file="insert-values-city-table.xml" relativeToChangelogFile="true"/>
+    <include file="insert-values-genre-table.xml" relativeToChangelogFile="true"/>
+    <include file="insert-values-type-of-event-table.xml" relativeToChangelogFile="true"/>
+    <include file="insert-values-type-of-movie-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
