@@ -111,6 +111,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      * Метод добавление мероприятия к организации
      * @param event мероприятие
      */
+    /*
     @Override
     public void addEventAdmin(Organization organization, Event event) {
         log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
@@ -122,6 +123,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         organizationRepository.save(organization);
     }
+
+     */
 
     /**
      * Метод получения мероприятий организации
@@ -137,6 +140,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         ArrayList<EventOrganization> eventsOrganization = new ArrayList<>();
 
         organization.getEventSet().forEach(event -> {
+            System.out.println(event);
             eventsOrganization.add(
                     new EventOrganization(
                         event.getId(),

@@ -112,9 +112,8 @@ public class EventServiceImpl implements EventService {
         );
 
         eventRepository.saveAndFlush(eventNew);
-        System.out.println(organization.getId());
         /** Добавление мероприятия к организации */
-        organizationService.addEventAdmin(organization, eventNew);
+        //organizationService.addEventAdmin(organization, eventNew);
 
         /** Сохранение файла */
         fileUtils.fileUpload(file, eventNew.getId() + "-" + eventNew.getEventBasicInformation().getImg() + "." + typeFile);
@@ -144,6 +143,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public PublicEventImage getImageEvent(String id, String symbolicName) throws EntityNotFoundException, IOException {
         log.trace("EventServiceImpl.getImageEvent - id {}, symbolicName {}", id, symbolicName);
+        System.out.println(symbolicName);
         Event event = eventRepository.findFirstByIdAndSymbolicName(Long.valueOf(id), symbolicName);
 
         if (event == null) {
@@ -304,6 +304,8 @@ public class EventServiceImpl implements EventService {
 
         String[] eventStringName = eventName.split("-", 2);
 
+        System.out.println(eventStringName[0]);
+        System.out.println(eventStringName[1]);
         if (!Pattern.compile("^\\d+$").matcher(eventStringName[0]).matches() &&
                 !Pattern.compile("^[A-Za-z0-9._%+@-]+$").matcher(eventStringName[1]).matches()
         ) {
@@ -490,7 +492,7 @@ public class EventServiceImpl implements EventService {
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
                             authorization == null ? null : favoriteSet.contains(event),
-                            "description"
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });
@@ -566,7 +568,7 @@ public class EventServiceImpl implements EventService {
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
                             authorization == null ? null : favoriteSet.contains(event),
-                            "description"
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });
@@ -644,7 +646,7 @@ public class EventServiceImpl implements EventService {
                             event.getEventBasicInformation().getImg(),
                             event.getEventBasicInformation().getTypeEventId().getType(),
                             authorization == null ? null : favoriteSet.contains(event),
-                            "description"
+                            event.getEventWebWidget().getDescription()
                     )
             );
         });

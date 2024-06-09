@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizationController {
     private final OrganizationService organizationService;
 
-    @Operation(
+    @Operation(//
             summary = "Получение организации",
             description = "Позволяет получить организацию по токену"
     )
@@ -35,7 +35,11 @@ public class OrganizationController {
         return ResponseEntity.status(HttpStatus.OK).body(organizationService.getOrganization(authorization));
     }
 
-    @GetMapping("/events")
+    @Operation(
+            summary = "Вывод мероприятий организации",
+            description = "Позволяет вывести мероприятии у организации и общее их количество"
+    )
+    @GetMapping("/events")//
     public ResponseEntity<EventsOrganization> getEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getEventOrganization /event - authorization {}", authorization);
         EventsOrganization eventsOrganization = organizationService.getEventsOrganization(authorization);
@@ -44,14 +48,19 @@ public class OrganizationController {
 
     @Operation(
             summary = "Вывод количества сеансов на день",
-            description = "Вывод количества сеансов на день по площадками"
+            description = "Вывод количества сеансов на день по площадкам"
     )
     @GetMapping("/session_sum")
     public ResponseEntity<TotalSession> getTotalSessionByOrganization(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) {
         log.trace("OrganizationController.getTotalSessionByOrganization / - authorization {}", authorization);
         return ResponseEntity.status(HttpStatus.OK).body(organizationService.getSessionsByOrganization(authorization));
     }
-    @GetMapping("/places")
+
+    @Operation(
+            summary = "Вывод площадок организации",
+            description = "Позволяет вывести площадки у организации и количество залов"
+    )
+    @GetMapping("/places")//
     public ResponseEntity<PlacesOrganization> getPlaceOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getPlaceOrganization /place - authorization {}", authorization);
         PlacesOrganization placesOrganization = organizationService.getPlacesOrganization(authorization);
@@ -62,7 +71,7 @@ public class OrganizationController {
             summary = "Вывод залов по площадкам организации",
             description = "Позволяет вывести залы по площадкам организации"
     )
-    @GetMapping("/halls")
+    @GetMapping("/halls")//
     public ResponseEntity<MassivePlacesAndHalls> getHallOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
         MassivePlacesAndHalls massivePlacesAndHalls = organizationService.getPlacesAndSession(authorization);

@@ -46,7 +46,7 @@ public interface OrganizationService {
      * Метод добавление мероприятия к организации
      * @param event мероприятие
      */
-    void addEventAdmin(Organization organization, Event event);
+    //void addEventAdmin(Organization organization, Event event);
 
     /**
      * Метод получения организации по токену
