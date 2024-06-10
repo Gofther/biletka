@@ -43,7 +43,7 @@ public class EventAdditionalInformation {
     )
     private Set<Tag> tagSet = new HashSet<>();
 
-    public void addGenres(Actor actor) {
+    public void addActor(Actor actor) {
         if (actorSet == null) actorSet = new HashSet<>();
         if (actor != null) this.actorSet.add(actor);
     }

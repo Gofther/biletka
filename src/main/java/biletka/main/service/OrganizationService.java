@@ -4,6 +4,9 @@ import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.EventsOrganization;
 import biletka.main.dto.response.MassivePlacesAndHalls;
 import biletka.main.dto.response.PlacesOrganization;
+
+import biletka.main.dto.response.OrganizationResponse;
+import biletka.main.dto.response.TotalSession.TotalSession;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
 import biletka.main.entity.Place;
@@ -43,7 +46,21 @@ public interface OrganizationService {
      * Метод добавление мероприятия к организации
      * @param event мероприятие
      */
-    void addEventAdmin(Organization organization, Event event);
+    //void addEventAdmin(Organization organization, Event event);
+
+    /**
+     * Метод получения организации по токену
+     * @param authorization - токен авторизации
+     * @return организация
+     */
+    OrganizationResponse getOrganization(String authorization);
+
+    /**
+     * Метод получения сеансов по токену
+     * @param authorization - токен авторизации
+     * @return массив сеансов по площадкам и мероприятиям
+     */
+    TotalSession getSessionsByOrganization(String authorization);
 
     /**
      * Метод получения мероприятий организации

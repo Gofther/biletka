@@ -3,6 +3,8 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.*;
+import biletka.main.dto.response.TotalSession.PlacesByOrganization;
+import biletka.main.dto.response.TotalSession.TotalSession;
 import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.repository.OrganizationRepository;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -28,10 +29,9 @@ import java.util.Set;
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final JwtTokenUtils jwtTokenUtils;
-
+    private final SessionService sessionService;
     @Lazy
     private final UserService userService;
-    private final SessionService sessionService;
     private final HallService hallService;
 
     /**
@@ -111,6 +111,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      * Метод добавление мероприятия к организации
      * @param event мероприятие
      */
+    /*
     @Override
     public void addEventAdmin(Organization organization, Event event) {
         log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
@@ -122,6 +123,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         organizationRepository.save(organization);
     }
+
+     */
 
     /**
      * Метод получения мероприятий организации
@@ -137,6 +140,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         ArrayList<EventOrganization> eventsOrganization = new ArrayList<>();
 
         organization.getEventSet().forEach(event -> {
+            System.out.println(event);
             eventsOrganization.add(
                     new EventOrganization(
                         event.getId(),
@@ -257,4 +261,88 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return organization;
     }
+
+    /**
+     * Метод получения организации по токену
+     * @param authorization - токен авторизации
+     * @return организация
+     */
+    @Override
+    public OrganizationResponse getOrganization(String authorization){
+        log.trace("OrganizationServiceImpl.getAllOrganization - authorization {}", authorization);
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+        return new OrganizationResponse(
+                organization.getId(),
+                organization.getUser(),
+                organization.getInn(),
+                organization.getKbk(),
+                organization.getKpp(),
+                organization.getOgrn(),
+                organization.getOktmo(),
+                organization.getContactPhone(),
+                organization.getEmail(),
+                organization.getFullNameOrganization(),
+                organization.getFullNameSignatory(),
+                organization.getLegalAddress(),
+                organization.getNamePayer(),
+                organization.getPositionSignatory(),
+                organization.getPostalAddress()
+        );
+    }
+
+    /**
+     * Метод получения сеансов по токену
+     * @param authorization - токен авторизации
+     * @return массив сеансов по площадкам и мероприятиям
+     */
+    @Override
+    public TotalSession getSessionsByOrganization(String authorization){
+        log.trace("OrganizationServiceImpl.getSessionsByOrganization - authorization {}", authorization);
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        ArrayList<PlacesByOrganization> places = new ArrayList<>();
+
+        Set<Place> placeSet = organization.getPlaceSet();
+
+        placeSet.forEach(place -> {
+            places.add(
+                    new PlacesByOrganization(
+                            place.getPlaceName(),
+                            place.getCity().getCityName(),
+                            place.getAddress(),
+                            sessionService.getSessionByPlaceAndEvent(place)
+                    )
+            );
+        });
+        return new TotalSession(places.toArray(PlacesByOrganization[]::new));
+    }
+
 }

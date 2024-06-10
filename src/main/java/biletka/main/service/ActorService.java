@@ -17,6 +17,8 @@ public interface ActorService {
      * @param name ФИО актера
      * @return актёр
      */
+
+    //Actor postNewActor(String name);
     Actor createActor(String name);
 
     Actor postNewActor(String name);

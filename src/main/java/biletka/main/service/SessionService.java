@@ -6,6 +6,9 @@ import biletka.main.entity.City;
 import biletka.main.entity.Event;
 import biletka.main.entity.Place;
 import biletka.main.entity.Session;
+import biletka.main.dto.response.TotalSession.EventsByPlace;
+import biletka.main.dto.response.TotalSession.SessionResponse;
+import biletka.main.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -56,4 +59,41 @@ public interface SessionService {
      * @return количество сеансов мероприятия
      */
     Integer getTotalByEventAndPlaces(Event event, Set<Place> placeSet);
+
+    /**
+     * Метод получения уникальных мероприятий по возрасту
+     * @param city город
+     * @param age возраст
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    Set<Event> getMassiveEventByCityAndAgeLimit(City city, int age, Integer offset, Date date);
+
+    /**
+     * Метод получения уникальных мероприятий по городу и типу
+     * @param city город
+     * @param type тип мероприятия
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    Set<Event> getMassiveEventByCityAndType(City city, String type, Integer offset, Date date);
+
+    /**
+     * Метод получения мероприятий по
+     * @param city город
+     * @param genre жанр
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date);
+
+    /**
+     * Метод получения сеансов на площадке
+     * @param place площадка
+     * @return количество сеансов
+     */
+    EventsByPlace[] getSessionByPlaceAndEvent(Place place);
 }

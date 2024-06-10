@@ -76,9 +76,9 @@ public class Organization {
     @Column(name = "status")
     private StatusUserEnum status;
 
-    @OneToMany
-    @JoinColumn(name = "admin_organization")
-    private Set<Event> adminEventSet;
+    //@OneToMany
+    //@JoinColumn(name = "admin_organization")
+    //private Set<Event> adminEventSet;
 
     @ManyToMany
     @JoinTable(
@@ -116,7 +116,7 @@ public class Organization {
         this.postalAddress = postalAddress;
         this.createdAt = createdAt;
         this.status = status;
-        this.adminEventSet = adminEventSet;
+        //this.adminEventSet = adminEventSet;
     }
 
     public void addEvent(Event event) {

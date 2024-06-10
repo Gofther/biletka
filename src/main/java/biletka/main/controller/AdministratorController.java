@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/dGlja2V0QWRtaW4=")
+@RequestMapping("/dGlja2V0QWRtaW4=") //
 @RequiredArgsConstructor
 @Tag(name = "Контроллер администрации", description = "Всё, что связано с администрированием")
 public class AdministratorController {
     private final AuthenticationManager authenticationManager;
     private final AdministratorService administratorService;
 
-    @PostMapping
+    @PostMapping //
     public ResponseEntity<AuthResponse> postAuth(@Parameter(description = "Форма авторизации") @Valid @RequestBody AuthForm authForm,
                                                  @Parameter(description = "Http данные") HttpServletRequest request) {
         log.trace("AdministratorController.postAuth - / - authForm {}", authForm);
