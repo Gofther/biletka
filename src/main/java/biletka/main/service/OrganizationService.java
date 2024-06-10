@@ -3,6 +3,7 @@ package biletka.main.service;
 import biletka.main.dto.request.OrganizationRegistrationRequest;
 import biletka.main.dto.response.EventsOrganization;
 import biletka.main.dto.response.MassivePlacesAndHalls;
+import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.response.PlacesOrganization;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
@@ -26,6 +27,13 @@ public interface OrganizationService {
      */
     Organization getOrganizationByFullNameOrganization(OrganizationRegistrationRequest organizationRegistrationRequest);
 
+    /**
+     * Метод добавления мероприятия к организации
+     * @param eventId id мероприятия
+     * @param authorization токен авторизации
+     * @return успешное создание записи
+     */
+    MessageCreateResponse postEventOrganization(String authorization, Long eventId);
     /**
      * Метод получения организации по пользователю
      * @param user пользователь
