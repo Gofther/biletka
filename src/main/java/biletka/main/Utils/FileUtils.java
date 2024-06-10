@@ -88,4 +88,19 @@ public class FileUtils {
                 mimeType
         );
     }
+    @Value("${app.file.directory.hall}")
+    private String directoryHall;
+
+    /**
+     * Метод сохранения svg файла для зала
+     * @param file файл
+     */
+    public void fileUploadHall(MultipartFile file, String fileName) throws IOException {
+        File convertFile = new File(directoryHall+fileName);
+        convertFile.createNewFile();
+        FileOutputStream fileOut = new FileOutputStream(convertFile);
+        fileOut.write(file.getBytes());
+        fileOut.close();
+    }
+
 }

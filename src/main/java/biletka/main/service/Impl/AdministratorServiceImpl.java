@@ -1,15 +1,21 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.Utils.PasswordEncoder;
 import biletka.main.dto.request.AuthForm;
 import biletka.main.dto.response.AuthResponse;
+import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.Administrator;
+import biletka.main.entity.Hall;
 import biletka.main.enums.RoleEnum;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.AdministratorRepository;
+import biletka.main.repository.HallRepository;
 import biletka.main.service.AdministratorService;
+import biletka.main.service.HallService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +24,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +36,10 @@ import java.util.List;
 @Slf4j
 public class AdministratorServiceImpl implements AdministratorService {
     private final AdministratorRepository administratorRepository;
+    private final HallRepository hallRepository;
+    private final HallService hallService;
     private final JwtTokenUtils jwtTokenUtils;
+    private final FileUtils fileUtils;
 
     /**
      * Метод аутентификации администратор
@@ -70,6 +81,35 @@ public class AdministratorServiceImpl implements AdministratorService {
         );
     }
 
+    @Override
+    public MessageCreateResponse postHallScheme(String authorization, Long hallId, MultipartFile file, String scheme) throws IOException {
+        String typeFile = fileUtils.getFileExtension(file.getOriginalFilename());
+
+        fileUtils.validationFile(
+                typeFile,
+                new String[]{"svg"}
+        );
+
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Administrator admin = getAdminByEmail(userEmail);
+
+        if (admin == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Hall hall = hallService.getHallById(hallId);
+        hall.setScheme(scheme);
+        hallRepository.save(hall);
+
+        fileUtils.fileUploadHall(file,file.getOriginalFilename());
+
+        return new MessageCreateResponse(
+                "File '" + file.getOriginalFilename() + "'and scheme has been saved for hall " + hallId
+        );
+    }
     @Override
     public Administrator getAdminByEmail(String email) {
         return administratorRepository.findFirstByEmail(email);
