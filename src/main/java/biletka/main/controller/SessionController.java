@@ -1,7 +1,9 @@
 package biletka.main.controller;
 
 import biletka.main.dto.request.SessionCreateRequest;
+import biletka.main.dto.response.HallSchemeResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.entity.Session;
 import biletka.main.service.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,5 +34,23 @@ public class SessionController {
         MessageCreateResponse messageCreateResponse = sessionService.sessionCreate(authorization, sessionCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
+    }
+    //Тестовый метод TODO:удалить
+    @GetMapping
+    public ResponseEntity<Session> getSessionById(@RequestParam Long id) {
+        Session session = sessionService.getSessionById(id);
+        return ResponseEntity.ok(session);
+    }
+
+    @Operation(
+            summary = "Вывод схемы зала",
+            description = "Позволяет вывести схему зала по сеансу"
+    )
+    @GetMapping("/scheme")
+    public ResponseEntity<HallSchemeResponse> getSessionHallScheme(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
+                                                                   @Parameter(description = "id сессии") @RequestParam Long id) {
+        log.trace("SessionController.getSessionHallScheme /scheme - authorization {}, sessionId {}",authorization,id);
+        HallSchemeResponse hallScheme = sessionService.getSessionHallScheme(authorization,id);
+        return ResponseEntity.ok(hallScheme);
     }
 }

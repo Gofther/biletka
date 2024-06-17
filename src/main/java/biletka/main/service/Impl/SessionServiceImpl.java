@@ -1,13 +1,20 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.ConvertUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.SessionCreateRequest;
+import biletka.main.dto.response.HallScheme.SchemeFloor;
+import biletka.main.dto.response.HallScheme.SchemeRow;
+import biletka.main.dto.response.HallScheme.SchemeSeat;
+import biletka.main.dto.response.HallSchemeResponse;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.*;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.SessionRepository;
+import biletka.main.repository.TicketRepository;
 import biletka.main.service.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +37,15 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SessionServiceImpl implements SessionService {
     private final JwtTokenUtils jwtTokenUtils;
     private final SessionRepository sessionRepository;
-
+    private final TicketRepository ticketRepository;
+    private final ConvertUtils convertUtils;
     private final UserService userService;
     private final OrganizationService organizationService;
     @Lazy
     private final EventService eventService;
     private final HallService hallService;
     private final TypeOfMovieService typeOfMovieService;
+
 
     /**
      * Метод создания и сохранения сеанса мероприятия в бд
@@ -191,5 +200,75 @@ public class SessionServiceImpl implements SessionService {
         });
 
         return total.get();
+    }
+
+    /**
+     * Метод получения сеансов мероприятия id
+     * @param sessionId id сеанса
+     * @return массив сеансов
+     */
+    @Override
+    public Session getSessionById(Long sessionId) {
+        log.trace("SessionServiceImpl.getSessionsById - id {}", sessionId);
+        return sessionRepository.findSessionById(sessionId);
+    }
+
+
+
+    /**
+     * Получение схемы зала по сессии
+     *
+     * @param authorization токен авторизации пользователя
+     * @param sessionId     id сессии
+     * @return схема зала
+     */
+    @Override
+    public HallSchemeResponse getSessionHallScheme(String authorization, Long sessionId) {
+
+        String userEmail = jwtTokenUtils.getUsernameFromToken(
+                authorization.substring(7)
+        );
+
+        Users user = userService.getUserOrganizationByEmail(userEmail);
+
+        if (user == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+
+        Organization organization = organizationService.getOrganizationByUser(user);
+
+        if (organization == null) {
+            throw new EntityNotFoundException("A broken token!");
+        }
+        Session session = getSessionById(sessionId);
+        Hall hall = session.getHall();
+        String schemeText = hall.getScheme();
+        HallSchemeResponse scheme = null;
+        try {
+            scheme = convertUtils.convertToJSONSchemeCreate(schemeText);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        SchemeFloor[] updatedFloors = new SchemeFloor[scheme.schemeFloors().length];
+        for (int i = 0; i < scheme.schemeFloors().length; i++) {
+            SchemeFloor floor = scheme.schemeFloors()[i];
+            SchemeRow[] updatedRows = new SchemeRow[floor.schemeRows().length];
+            for (int j = 0; j < floor.schemeRows().length; j++) {
+                SchemeRow row = floor.schemeRows()[j];
+                SchemeSeat[] updatedSeats = new SchemeSeat[row.schemeSeats().length];
+                for (int k = 0; k < row.schemeSeats().length; k++) {
+                    SchemeSeat seat = row.schemeSeats()[k];
+                    boolean isOccupied = ticketRepository.getFirstBySessionAndRowAndSeat(sessionId, Integer.parseInt(row.rowNumber()), Integer.parseInt(seat.number())) != null;
+                    updatedSeats[k] = seat.withOccupied(isOccupied);
+                }
+                updatedRows[j] = row.withSchemeSeats(updatedSeats);
+            }
+            updatedFloors[i] = floor.withSchemeRows(updatedRows);
+        }
+
+        return new HallSchemeResponse(
+                updatedFloors
+        );
     }
 }

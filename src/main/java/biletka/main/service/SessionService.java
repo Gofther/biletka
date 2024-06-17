@@ -1,6 +1,7 @@
 package biletka.main.service;
 
 import biletka.main.dto.request.SessionCreateRequest;
+import biletka.main.dto.response.HallSchemeResponse;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.City;
 import biletka.main.entity.Event;
@@ -56,4 +57,19 @@ public interface SessionService {
      * @return количество сеансов мероприятия
      */
     Integer getTotalByEventAndPlaces(Event event, Set<Place> placeSet);
+
+    /**
+     * Метод получения сеансов мероприятия id
+     * @param sessionId id сеанса
+     * @return массив сеансов
+     */
+    Session getSessionById(Long sessionId);
+
+    /**
+     * Получение схемы зала по сессии
+     * @param authorization токен авторизации пользователя
+     * @param sessionId id сессии
+     * @return схема зала
+     */
+    HallSchemeResponse getSessionHallScheme(String authorization, Long sessionId);
 }

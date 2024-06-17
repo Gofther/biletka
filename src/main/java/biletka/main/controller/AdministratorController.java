@@ -50,7 +50,7 @@ public class AdministratorController {
     public ResponseEntity<MessageCreateResponse> postHallScheme(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
                                                                 @Parameter(description = "id зала")  @RequestParam Long hallId,
                                                                 @Parameter(description = "svg файл зала")@RequestParam MultipartFile file,
-                                                                @Parameter(description = "схема зала")@RequestParam @JsonProperty("scheme") String scheme) throws IOException {
+                                                                @Parameter(description = "схема зала")@RequestParam String scheme) throws IOException {
         log.trace("AdministratorController.postHallScheme / - authorization {}, hallId {}, file {}, scheme {}", authorization, hallId, file, scheme );
         MessageCreateResponse messageCreateResponse = administratorService.postHallScheme(authorization, hallId,file,scheme);
 

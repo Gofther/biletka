@@ -1,5 +1,6 @@
 package biletka.main.service.Impl;
 
+import biletka.main.Utils.ConvertUtils;
 import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.Utils.PasswordEncoder;
@@ -40,6 +41,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     private final HallService hallService;
     private final JwtTokenUtils jwtTokenUtils;
     private final FileUtils fileUtils;
+    private final ConvertUtils convertUtils;
 
     /**
      * Метод аутентификации администратор
