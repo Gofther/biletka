@@ -105,11 +105,11 @@ public class AdministratorServiceImpl implements AdministratorService {
         Hall hall = hallService.getHallById(hallId);
         hall.setScheme(scheme);
         hallRepository.save(hall);
-
-        fileUtils.fileUploadHall(file,file.getOriginalFilename());
+        String filename = String.format("%d-%s-%d.svg", hall.getId(), hall.getHallName(), hall.getHallNumber());
+        fileUtils.fileUploadHall(file,filename);
 
         return new MessageCreateResponse(
-                "File '" + file.getOriginalFilename() + "'and scheme has been saved for hall " + hallId
+                "File '" + filename + "'and scheme has been saved for hall " + hallId
         );
     }
     @Override

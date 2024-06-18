@@ -1,16 +1,28 @@
 package biletka.main.Utils;
 
 import biletka.main.dto.universal.PublicEventImage;
+import biletka.main.dto.universal.PublicHallFile;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -101,6 +113,22 @@ public class FileUtils {
         FileOutputStream fileOut = new FileOutputStream(convertFile);
         fileOut.write(file.getBytes());
         fileOut.close();
+    }
+
+    public PublicHallFile getFileHall(String filename) throws IOException{
+        StringBuilder textContent = new StringBuilder();
+        File svgFile = null;
+            svgFile = new File(directoryHall + filename);
+        try (BufferedReader br = new BufferedReader(new FileReader(svgFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                textContent.append(line).append("\n");
+            }
+        }
+        return new PublicHallFile(
+                textContent.toString().trim(),
+                svgFile.getName()
+        );
     }
 
 }

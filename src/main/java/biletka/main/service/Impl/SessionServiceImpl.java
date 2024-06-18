@@ -1,6 +1,7 @@
 package biletka.main.service.Impl;
 
 import biletka.main.Utils.ConvertUtils;
+import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.SessionCreateRequest;
 import biletka.main.dto.response.HallScheme.SchemeFloor;
@@ -8,6 +9,7 @@ import biletka.main.dto.response.HallScheme.SchemeRow;
 import biletka.main.dto.response.HallScheme.SchemeSeat;
 import biletka.main.dto.response.HallSchemeResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.universal.PublicHallFile;
 import biletka.main.entity.*;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
@@ -20,7 +22,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -41,6 +46,7 @@ public class SessionServiceImpl implements SessionService {
     private final ConvertUtils convertUtils;
     private final UserService userService;
     private final OrganizationService organizationService;
+    private final FileUtils fileUtils;
     @Lazy
     private final EventService eventService;
     private final HallService hallService;
@@ -223,7 +229,7 @@ public class SessionServiceImpl implements SessionService {
      * @return схема зала
      */
     @Override
-    public HallSchemeResponse getSessionHallScheme(String authorization, Long sessionId) {
+    public HallSchemeResponse getSessionHallScheme(String authorization, Long sessionId) throws IOException{
 
         String userEmail = jwtTokenUtils.getUsernameFromToken(
                 authorization.substring(7)
@@ -249,6 +255,8 @@ public class SessionServiceImpl implements SessionService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        String filename = String.format("%d-%s-%d.svg", hall.getId(), hall.getHallName(), hall.getHallNumber());
+        PublicHallFile file = fileUtils.getFileHall(filename);
 
         SchemeFloor[] updatedFloors = new SchemeFloor[scheme.schemeFloors().length];
         for (int i = 0; i < scheme.schemeFloors().length; i++) {
@@ -268,7 +276,8 @@ public class SessionServiceImpl implements SessionService {
         }
 
         return new HallSchemeResponse(
-                updatedFloors
+                updatedFloors,
+                file
         );
     }
 }

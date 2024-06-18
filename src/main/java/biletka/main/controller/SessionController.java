@@ -14,6 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -48,7 +52,7 @@ public class SessionController {
     )
     @GetMapping("/scheme")
     public ResponseEntity<HallSchemeResponse> getSessionHallScheme(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
-                                                                   @Parameter(description = "id сессии") @RequestParam Long id) {
+                                                                   @Parameter(description = "id сессии") @RequestParam Long id) throws IOException{
         log.trace("SessionController.getSessionHallScheme /scheme - authorization {}, sessionId {}",authorization,id);
         HallSchemeResponse hallScheme = sessionService.getSessionHallScheme(authorization,id);
         return ResponseEntity.ok(hallScheme);
