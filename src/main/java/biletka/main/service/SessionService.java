@@ -74,5 +74,5 @@ public interface SessionService {
      * @param sessionId id сессии
      * @return схема зала
      */
-    HallSchemeResponse getSessionHallScheme(String authorization, Long sessionId) throws IOException;
+    HallSchemeResponse getSessionHallScheme( Long sessionId) throws IOException;
 }

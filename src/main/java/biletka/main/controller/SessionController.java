@@ -51,10 +51,9 @@ public class SessionController {
             description = "Позволяет вывести схему зала по сеансу"
     )
     @GetMapping("/scheme")
-    public ResponseEntity<HallSchemeResponse> getSessionHallScheme(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
-                                                                   @Parameter(description = "id сессии") @RequestParam Long id) throws IOException{
-        log.trace("SessionController.getSessionHallScheme /scheme - authorization {}, sessionId {}",authorization,id);
-        HallSchemeResponse hallScheme = sessionService.getSessionHallScheme(authorization,id);
+    public ResponseEntity<HallSchemeResponse> getSessionHallScheme(@Parameter(description = "id сессии") @RequestParam Long id) throws IOException{
+        log.trace("SessionController.getSessionHallScheme /scheme - sessionId {}",id);
+        HallSchemeResponse hallScheme = sessionService.getSessionHallScheme(id);
         return ResponseEntity.ok(hallScheme);
     }
 }

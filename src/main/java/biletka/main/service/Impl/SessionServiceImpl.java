@@ -229,23 +229,8 @@ public class SessionServiceImpl implements SessionService {
      * @return схема зала
      */
     @Override
-    public HallSchemeResponse getSessionHallScheme(String authorization, Long sessionId) throws IOException{
+    public HallSchemeResponse getSessionHallScheme(Long sessionId) throws IOException{
 
-        String userEmail = jwtTokenUtils.getUsernameFromToken(
-                authorization.substring(7)
-        );
-
-        Users user = userService.getUserOrganizationByEmail(userEmail);
-
-        if (user == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
-
-        Organization organization = organizationService.getOrganizationByUser(user);
-
-        if (organization == null) {
-            throw new EntityNotFoundException("A broken token!");
-        }
         Session session = getSessionById(sessionId);
         Hall hall = session.getHall();
         String schemeText = hall.getScheme();
