@@ -27,6 +27,13 @@ public class Ticket {
     @Column(name = "is_extinguished")
     private Boolean isExtinguished;
 
+    @Column(name = "is_bought")
+    private Boolean isBought;
+
+    @Column(name = "is_refunded")
+    private Boolean isRefunded;
+
+
     @Column(name = "price")
     private Double price;
 
@@ -50,12 +57,14 @@ public class Ticket {
     public Ticket() {
     }
 
-    public Ticket(Integer rowNumber, Integer seatNumber, String activationCode, Boolean isReserved, Boolean isExtinguished, Double price, String email, String fullName, String phone, Cheque cheque, Session session) {
+    public Ticket(Integer rowNumber, Integer seatNumber, String activationCode, Boolean isReserved, Boolean isExtinguished,Boolean isBought,Boolean isRefunded, Double price, String email, String fullName, String phone, Cheque cheque, Session session) {
         this.rowNumber = rowNumber;
         this.seatNumber = seatNumber;
         this.activationCode = activationCode;
         this.isReserved = isReserved;
         this.isExtinguished = isExtinguished;
+        this.isBought = isBought;
+        this.isRefunded = isRefunded;
         this.price = price;
         this.email = email;
         this.fullName = fullName;
