@@ -4,6 +4,7 @@ import biletka.main.Utils.FileUtils;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.response.TotalSession.EventsByPlace;
 import biletka.main.dto.universal.*;
 import biletka.main.entity.*;
 import biletka.main.entity.event_item.EventAdditionalInformation;
@@ -42,6 +43,7 @@ public class EventServiceImpl implements EventService {
     private final OrganizationService organizationService;
     private final CityService cityService;
     private final ClientService clientService;
+    private final GenreService genreService;
     @Lazy
     private final SessionService sessionService;
     private final RatingService ratingService;
@@ -58,6 +60,9 @@ public class EventServiceImpl implements EventService {
         log.trace("EventServiceImpl.createEvent - authorization {}, file {}, eventCreateRequest {}", authorization, file.getOriginalFilename(), eventCreateRequest);
         /** Проверка на типа файла */
         String typeFile = fileUtils.getFileExtension(file.getOriginalFilename());
+        ArrayList<String> pattern = new ArrayList<>();
+        pattern.add("png");
+        pattern.add("jpg");
 
         fileUtils.validationFile(
                 typeFile,
@@ -107,7 +112,6 @@ public class EventServiceImpl implements EventService {
         );
 
         eventRepository.saveAndFlush(eventNew);
-        System.out.println(organization.getId());
         /** Добавление мероприятия к организации */
         //organizationService.addEventAdmin(organization, eventNew);
 
@@ -139,6 +143,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public PublicEventImage getImageEvent(String id, String symbolicName) throws EntityNotFoundException, IOException {
         log.trace("EventServiceImpl.getImageEvent - id {}, symbolicName {}", id, symbolicName);
+        System.out.println(symbolicName);
         Event event = eventRepository.findFirstByIdAndSymbolicName(Long.valueOf(id), symbolicName);
 
         if (event == null) {
@@ -299,6 +304,8 @@ public class EventServiceImpl implements EventService {
 
         String[] eventStringName = eventName.split("-", 2);
 
+        System.out.println(eventStringName[0]);
+        System.out.println(eventStringName[1]);
         if (!Pattern.compile("^\\d+$").matcher(eventStringName[0]).matches() &&
                 !Pattern.compile("^[A-Za-z0-9._%+@-]+$").matcher(eventStringName[1]).matches()
         ) {
@@ -434,4 +441,218 @@ public class EventServiceImpl implements EventService {
         );
         eventRepository.save(event);
     }
+
+    /**
+     * Метод получения кртакой информации о мероприятиях подходящих под указанный возраст
+     * @param cityName название города
+     * @param age возраст клиента
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
+    @Override
+    public MassivePublicEvent getEventsByCityAndAgeLimit(String cityName, int age, String authorization, Integer offset, Date date) {
+        log.trace("EventServiceImpl.cityName - cityName {}, age {}, offset {}, date {}", cityName, age, offset, date);
+        City city = cityService.getCityByNameEng(cityName);
+
+        Set<Event> favoriteSet = new HashSet<>();
+        ArrayList<PublicEvent> publicEvents= new ArrayList<>();
+
+        /**  Проверка на пользователя */
+        if (authorization != null) {
+            String userEmail = jwtTokenUtils.getUsernameFromToken(
+                    authorization.substring(7)
+            );
+            Users user = userService.getUserByEmail(userEmail);
+
+            if (user == null) {
+                throw new EntityNotFoundException("A broken token!");
+            }
+
+            Client client = clientService.getClientByUser(user);
+            favoriteSet.addAll(client.getEventSet());
+
+        }
+
+        Set<Event> events = sessionService.getMassiveEventByCityAndAgeLimit(city, age, offset, date);
+
+        events.forEach(event -> {
+            Set<String> genres = new HashSet<>();
+
+            event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+            publicEvents.add(
+                    new PublicEvent(
+                            event.getId(),
+                            event.getEventBasicInformation().getName_rus(),
+                            event.getEventBasicInformation().getSymbolicName(),
+                            event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                            genres.toArray(String[]::new),
+                            event.getEventBasicInformation().getImg(),
+                            event.getEventBasicInformation().getTypeEventId().getType(),
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
+                    )
+            );
+        });
+
+        return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
+    }
+
+    /**
+     * Метод получения кртакой информации о мероприятиях подходящих под указанный тип
+     * @param cityName название города
+     * @param type тип мероприятия
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
+    @Override
+    public MassivePublicEvent getEventsByCityAndType(String cityName, String type, String authorization, Integer offset, Date date) {
+        log.trace("EventServiceImpl.cityName - cityName {}, type {}, offset {}, date {}", cityName, type, offset, date);
+        Set<Event> eventSet = new HashSet<>();
+        Set<Event> favoriteSet = new HashSet<>();
+        ArrayList<PublicEvent> publicEvents= new ArrayList<>();
+
+        /**  Проверка на пользователя */
+        if (authorization != null) {
+            String userEmail = jwtTokenUtils.getUsernameFromToken(
+                    authorization.substring(7)
+            );
+            Users user = userService.getUserByEmail(userEmail);
+
+            if (user == null) {
+                throw new EntityNotFoundException("A broken token!");
+            }
+
+            Client client = clientService.getClientByUser(user);
+            favoriteSet.addAll(client.getEventSet());
+
+        }
+
+        String[] citys = cityName.split(", ");
+        String[] types = type.split(", ");
+
+        // Преобразование в Set
+        Set<City> citySet = new HashSet<>();
+        for(String c: citys) {
+            City city = cityService.getCityByNameEng(c);
+            citySet.add(city);
+        }
+
+        Set<String> typeSet = new HashSet<>();
+        for(String t: types) {
+            typeSet.add(t);
+        }
+
+        citySet.forEach(c -> {
+            typeSet.forEach(t -> {
+                eventSet.addAll(sessionService.getMassiveEventByCityAndType(c, t, offset, date));
+            });
+        });
+
+        eventSet.forEach(event -> {
+            Set<String> genres = new HashSet<>();
+
+            event.getEventBasicInformation().getGenres().forEach(genre -> genres.add(genre.getName()));
+
+            publicEvents.add(
+                    new PublicEvent(
+                            event.getId(),
+                            event.getEventBasicInformation().getName_rus(),
+                            event.getEventBasicInformation().getSymbolicName(),
+                            event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                            genres.toArray(String[]::new),
+                            event.getEventBasicInformation().getImg(),
+                            event.getEventBasicInformation().getTypeEventId().getType(),
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
+                    )
+            );
+        });
+
+        return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
+    }
+
+
+    /**
+     * Метод получения мероприятия по городу и жанру
+     * @param cityName название города
+     * @param Genre тип мероприятия
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
+    @Override
+    public MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date) {
+        log.trace("EventServiceImpl.cityName - cityName {}, genre {}, offset {}, date {}", cityName, Genre, offset, date);
+
+        Set<Event> favoriteSet = new HashSet<>();
+        ArrayList<PublicEvent> publicEvents= new ArrayList<>();
+        Set<Event> eventSet = new HashSet<>();
+
+        //  Проверка на пользователя
+        if (authorization != null) {
+            String userEmail = jwtTokenUtils.getUsernameFromToken(
+                    authorization.substring(7)
+            );
+            Users user = userService.getUserByEmail(userEmail);
+
+            if (user == null) {
+                throw new EntityNotFoundException("A broken token!");
+            }
+
+            Client client = clientService.getClientByUser(user);
+            favoriteSet.addAll(client.getEventSet());
+
+        }
+
+        String[] citys = cityName.split(", ");
+        String[] genres = Genre.split(", ");
+
+        // Преобразование в Set
+        Set<City> citySet = new HashSet<>();
+        for(String c: citys) {
+            City city = cityService.getCityByNameEng(c);
+            citySet.add(city);
+        }
+        Set<Genre> genreSet = new HashSet<>();
+        for(String g: genres) {
+            Genre genre = genreService.getGenreOfName(g);
+            genreSet.add(genre);
+        }
+
+        citySet.forEach(c -> {
+            genreSet.forEach(g -> {
+                eventSet.addAll(sessionService.getMassiveEventByCityAndGenre(c, g, offset, date));
+            });
+        });
+
+        eventSet.forEach(event -> {
+            Set<String> Genres = new HashSet<>();
+
+            event.getEventBasicInformation().getGenres().forEach(genre -> Genres.add(genre.getName()));
+
+            publicEvents.add(
+                    new PublicEvent(
+                            event.getId(),
+                            event.getEventBasicInformation().getName_rus(),
+                            event.getEventBasicInformation().getSymbolicName(),
+                            event.getEventBasicInformation().getAgeRatingId().getLimitation(),
+                            Genres.toArray(String[]::new),
+                            event.getEventBasicInformation().getImg(),
+                            event.getEventBasicInformation().getTypeEventId().getType(),
+                            authorization == null ? null : favoriteSet.contains(event),
+                            event.getEventWebWidget().getDescription()
+                    )
+            );
+        });
+
+        return new MassivePublicEvent(publicEvents.toArray(PublicEvent[]::new));
+    }
+
+
 }

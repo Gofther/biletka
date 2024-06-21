@@ -76,7 +76,6 @@ public class Organization {
     @Column(name = "status")
     private StatusUserEnum status;
 
-
     @ManyToMany
     @JoinTable(
             name = "event_organization",

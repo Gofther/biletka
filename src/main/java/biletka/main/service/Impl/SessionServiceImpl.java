@@ -9,7 +9,12 @@ import biletka.main.dto.response.HallScheme.SchemeRow;
 import biletka.main.dto.response.HallScheme.SchemeSeat;
 import biletka.main.dto.response.HallSchemeResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+
 import biletka.main.dto.universal.PublicHallFile;
+
+import biletka.main.dto.response.TotalSession.EventsByPlace;
+import biletka.main.dto.response.TotalSession.SessionResponse;
+
 import biletka.main.entity.*;
 import biletka.main.exception.ErrorMessage;
 import biletka.main.exception.InvalidDataException;
@@ -69,6 +74,7 @@ public class SessionServiceImpl implements SessionService {
         );
 
         Users user = userService.getUserOrganizationByEmail(userEmail);
+
         if (user == null) {
             throw new EntityNotFoundException("A broken token!");
         }
@@ -87,7 +93,7 @@ public class SessionServiceImpl implements SessionService {
             errorMessages.add(new ErrorMessage("Event error", "The event does not exist!"));
             throw new InvalidDataException(errorMessages);
         }
-        System.out.println(1);
+
         /** Проврека зала на существование */
         Hall hall = hallService.getHallById(sessionCreateRequest.hallId());
 
@@ -96,7 +102,6 @@ public class SessionServiceImpl implements SessionService {
             errorMessages.add(new ErrorMessage("Hall error", "The hall does not exist!"));
             throw new InvalidDataException(errorMessages);
         }
-        System.out.println(2);
 
         /** Проврека времени */
         LocalDateTime start = sessionCreateRequest.startTime();
@@ -108,23 +113,19 @@ public class SessionServiceImpl implements SessionService {
             errorMessages.add(new ErrorMessage("Start time error", "The date and time of the start of the event must be in the future!"));
             throw new InvalidDataException(errorMessages);
         }
-        System.out.println(3);
 
         /** Получения типа сеанса */
         TypeOfMovie typeOfMovie = typeOfMovieService.getTypeByName(sessionCreateRequest.typeOfMovie());
 
-        System.out.println(4);
         /** Проврерка на существование сеанса */
         Session[] sessions = sessionRepository.findSessionsByInfo(Timestamp.valueOf(sessionCreateRequest.startTime()), Timestamp.valueOf(finish), hall.getId());
 
-        System.out.println(5);
         if (sessions.length != 0) {
             List<ErrorMessage> errorMessages = new ArrayList<>();
             errorMessages.add(new ErrorMessage("Session error", "It is impossible to create a session, because the hall does not exist, or it is occupied!"));
             throw new InvalidDataException(errorMessages);
         }
 
-        System.out.println(6);
         /** Сохранение сеанса */
         Session session = new Session(
                 0,
@@ -141,7 +142,6 @@ public class SessionServiceImpl implements SessionService {
 
         sessionRepository.saveAndFlush(session);
 
-        System.out.println(8);
         return new MessageCreateResponse(
                 "The session '" + event.getEventBasicInformation().getName() +"' in the hall '" + hall.getHallName() + "' has been successfully created!"
         );
@@ -188,6 +188,91 @@ public class SessionServiceImpl implements SessionService {
                 city,
                 Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay()),
                 Timestamp.valueOf(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atTime(LocalTime.MAX)));
+    }
+
+    /**
+     * Метод получения уникальных мероприятий по возрасту
+     * @param city город
+     * @param age возраст
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+     @Override
+    public Set<Event> getMassiveEventByCityAndAgeLimit(City city, int age, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityLimit - city {}, age {}, offset {}", city, age, offset);
+        return sessionRepository.findAllEventByCityAndAge(city, age, offset, new Timestamp(date.getTime()));
+    }
+
+    /**
+     * Метод получения уникальных мероприятий по городу и типу
+     * @param city город
+     * @param type тип мероприятия
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    @Override
+    public Set<Event> getMassiveEventByCityAndType(City city, String type, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityAndGenre - city {}, type {}, offset {}", city, type, offset);
+        return sessionRepository.findAllEventByCityAndType(city, type, offset, new Timestamp(date.getTime()));
+    }
+
+
+    /**
+     * Метод получения мероприятий по
+     * @param city город
+     * @param genre жанр
+     * @param offset отступ
+     * @param date дата для выборки
+     * @return массив мероприятий
+     */
+    @Override
+    public Set<Event> getMassiveEventByCityAndGenre(City city, Genre genre, Integer offset, Date date) {
+        log.trace("SessionServiceImpl.getMassiveEventByCityAndGenre - city {}, genre {}, offset {}", city, genre, offset);
+        return sessionRepository.findAllEventByCityAndGenre(city, genre, offset, new Timestamp(date.getTime()));
+    }
+
+
+    /**
+     * Метод получения сеансов на площадке
+     * @param place площадка
+     * @return количество сеансов
+     */
+    @Override
+    public EventsByPlace[] getSessionByPlaceAndEvent(Place place) {
+        log.trace("SessionServiceImpl.getSessionByPlaceAndEvent - place {}", place);
+
+        ArrayList<EventsByPlace> eventsByPlaces = new ArrayList<>();
+
+        ArrayList<SessionResponse> sessionResponses = new ArrayList<>();
+
+        Set<Event> events = sessionRepository.findEventsByPlace(place);
+        events.forEach(event -> {
+            Set<Session> sessions = sessionRepository.findAllSessionByPlaceAndEvent(place, event);
+            sessions.forEach(session -> {
+                sessionResponses.add(
+                        new SessionResponse(
+                                session.getSales(),
+                                session.getOnSales(),
+                                session.getStartTime(),
+                                session.getFinishTime(),
+                                session.getNumberOfViews(),
+                                session.getPrice(),
+                                session.getStatus()
+                        )
+                );
+            });
+            eventsByPlaces.add(
+                    new EventsByPlace(
+                            event.getEventBasicInformation().getName(),
+                            event.getEventBasicInformation().getTypeEventId().getType(),
+                            sessionResponses.toArray(SessionResponse[]::new)
+                    )
+            );
+        });
+
+        return eventsByPlaces.toArray(EventsByPlace[]::new);
     }
 
     /**
