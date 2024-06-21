@@ -12,6 +12,22 @@ public class Cheque {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "url")
+    private String url;
+
+    @Enumerated
+    @Column(name = "status")
+    private Status status;
+
     public Cheque() {
+    }
+
+    public enum Status {
+        BUY,REF,CANCEL
+    }
+
+    public Cheque(String url, Status status){
+        this.url = url;
+        this.status = status;
     }
 }

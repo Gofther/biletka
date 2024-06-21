@@ -2,6 +2,7 @@ package biletka.main.Utils;
 
 import biletka.main.dto.request.EventCreateRequest;
 import biletka.main.dto.request.HallCreateRequest;
+import biletka.main.dto.response.HallSchemeResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,18 @@ public class ConvertUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(stringObject, HallCreateRequest.class);
     }
+
+    /**
+     * Метод конвертации строки запроса в JSON
+     * @param stringObject строка запроса
+     * @return JSON объект
+     */
+    public HallSchemeResponse convertToJSONSchemeCreate(String stringObject) throws JsonProcessingException {
+        log.trace("ConvertUtils.convertToJSONEventCreate - stringObject {}", stringObject);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(stringObject, HallSchemeResponse.class);
+    }
+
 
     /**
      * Метод преобразования строки в символичныую без лишних знаков

@@ -5,6 +5,7 @@ import biletka.main.dto.response.EventsOrganization;
 import biletka.main.dto.response.OrganizationResponse;
 import biletka.main.dto.response.TotalSession.TotalSession;
 import biletka.main.dto.response.MassivePlacesAndHalls;
+import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.response.PlacesOrganization;
 import biletka.main.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,17 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class OrganizationController {
     private final OrganizationService organizationService;
+    @Operation(
+            summary = "@Добавление мероприятий для организации",
+            description = "Позволяет добавить мероприятие по id для организации"
+    )
+    @PostMapping("/events")
+    public ResponseEntity<MessageCreateResponse> postEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization,
+                                                                       @Parameter(description = "id мероприятия") @RequestParam Long id) {
+        log.trace("OrganizationController.postEventOrganization - authorization {} , eventId {}", authorization, id);
+        MessageCreateResponse messageCreateResponse = organizationService.postEventOrganization(authorization, id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
+    }
 
     @Operation(//
             summary = "Получение организации",

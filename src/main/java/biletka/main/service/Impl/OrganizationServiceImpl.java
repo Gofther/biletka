@@ -7,11 +7,10 @@ import biletka.main.dto.response.TotalSession.PlacesByOrganization;
 import biletka.main.dto.response.TotalSession.TotalSession;
 import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
+import biletka.main.repository.EventRepository;
 import biletka.main.repository.OrganizationRepository;
-import biletka.main.service.HallService;
-import biletka.main.service.OrganizationService;
-import biletka.main.service.SessionService;
-import biletka.main.service.UserService;
+import biletka.main.service.*;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +31,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final SessionService sessionService;
     @Lazy
     private final UserService userService;
+    private final EventService eventService;
+    private final SessionService sessionService;
+
     private final HallService hallService;
 
     /**
@@ -58,11 +60,31 @@ public class OrganizationServiceImpl implements OrganizationService {
                 organizationRequest.positionSignatory(),
                 Integer.valueOf(organizationRequest.postalAddress()),
                 new Timestamp(new Date().getTime()),
-                StatusUserEnum.ACTIVE,
-                null
+                StatusUserEnum.ACTIVE
         );
 
         organizationRepository.saveAndFlush(organization);
+    }
+
+    /**
+     * Метод добавления мероприятия к организации
+     * @param eventId id мероприятия
+     * @param authorization токен авторизации
+     * @return успешное создание записи
+     */
+    public MessageCreateResponse postEventOrganization(String authorization, Long eventId) {
+        log.trace("OrganizationServiceImpl.postEventOrganization - eventId {}", eventId);
+        Organization organization = tokenVerification(authorization);
+        Event event = eventService.getEventById(eventId);
+        if (organization.getEventSet().contains(event)) {
+            throw new EntityExistsException("Event "+ eventId +" already added to organization");
+        }
+        organization.addEvent(event);
+        organizationRepository.save(organization);
+
+        return new MessageCreateResponse(
+                "Event with id '" + eventId + "' added to organization"
+        );
     }
 
     /**
@@ -107,22 +129,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationRepository.save(organization);
     }
 
-    /**
-     * Метод добавление мероприятия к организации
-     * @param event мероприятие
-     */
-    /*
-    @Override
-    public void addEventAdmin(Organization organization, Event event) {
-        log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
-        Set<Event> eventSet = organization.getAdminEventSet();
-        eventSet.add(event);
-
-        organization.addEvent(event);
-        organization.setAdminEventSet(eventSet);
-
-        organizationRepository.save(organization);
-    }
+//    /**
+//     * Метод добавление мероприятия к организации
+//     * @param event мероприятие
+//     */
+//    @Override
+//    public void addEventAdmin(Organization organization, Event event) {
+//        log.trace("OrganizationServiceImpl.addEventAdmin - organization {}, event {}", organization, event);
+//        Set<Event> eventSet = organization.getAdminEventSet();
+//        eventSet.add(event);
+//
+//        organization.addEvent(event);
+//        organization.setAdminEventSet(eventSet);
+//
+//        organizationRepository.save(organization);
+//    }
 
      */
 
