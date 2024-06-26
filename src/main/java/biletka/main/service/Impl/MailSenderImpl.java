@@ -1,6 +1,9 @@
 package biletka.main.service.Impl;
 
 import biletka.main.Utils.MessageCreator;
+import biletka.main.entity.Cheque;
+import biletka.main.entity.Ticket;
+import biletka.main.repository.ChequeRepository;
 import biletka.main.service.MailSender;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -22,6 +25,7 @@ public class MailSenderImpl implements MailSender {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
     private final MessageCreator messageCreator;
+    private final ChequeRepository chequeRepository;
     @Value(value = "${application.email.address}")
     private String organization;
     @Value(value = "${application.authorization.path}")
@@ -71,5 +75,31 @@ public class MailSenderImpl implements MailSender {
         mimeMessageHelper.setText(text);
 
         mailSender.send(mimeMessage);
+    }
+    @Async
+    public void sendTicket(Ticket ticket) throws MessagingException {
+        String subject = "Покупка билета";
+
+        String text = messageCreator.createTicketMessage(ticket);
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo(ticket.getEmail());
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(text);
+
+        try {
+            mailSender.send(mimeMessage);
+            Cheque cheque = ticket.getCheque();
+            cheque.setMail(true);
+            chequeRepository.save(cheque);
+
+            log.trace("MailSender.sendTicket / - Ticket with id {} bought and sent", ticket.getId());
+        } catch (Exception e) {
+            log.error("MailSender.sendTicket / - Failed to send ticket with id {}: {}", ticket.getId(), e.getMessage());
+            throw e;
+        }
     }
 }

@@ -19,6 +19,9 @@ public class Cheque {
     @Column(name = "status")
     private Status status;
 
+    @Column(name = "mail_sent")
+    boolean mail;
+
     public Cheque() {
     }
 
@@ -26,8 +29,9 @@ public class Cheque {
         BUY,REF,CANCEL
     }
 
-    public Cheque(String url, Status status){
+    public Cheque(String url, Status status, boolean mail){
         this.url = url;
         this.status = status;
+        this.mail = mail;
     }
 }

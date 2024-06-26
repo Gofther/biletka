@@ -3,6 +3,8 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.ActivationCode;
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.Utils.JwtTokenUtils;
+import biletka.main.controller.SchedulingController;
+import biletka.main.controller.TicketController;
 import biletka.main.dto.request.BuyTicketRequest;
 import biletka.main.dto.response.BuyTicketResponse;
 import biletka.main.dto.response.HallScheme.SchemeFloor;
@@ -17,9 +19,11 @@ import biletka.main.service.SessionService;
 import biletka.main.service.TicketService;
 import biletka.main.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,6 +39,8 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final ChequeRepository chequeRepository;
     private final ActivationCode activationCode;
+    @Lazy
+    private final SchedulingController schedulingController;
     /**
      * Покупка билета
      * @param authorization токен авторизации пользователя
@@ -42,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
      * @return сообщение о покупке билета
      */
     @Override
-    public BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest){
+    public BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest) throws MessagingException {
         if (authorization != null && !authorization.isEmpty()) {
             String userEmail = jwtTokenUtils.getUsernameFromToken(
                     authorization.substring(7)
@@ -72,7 +78,8 @@ public class TicketServiceImpl implements TicketService {
         }
         Cheque cheque = new Cheque(
                 "url",
-                null
+                null,
+                false
         );
         chequeRepository.saveAndFlush(cheque);
 

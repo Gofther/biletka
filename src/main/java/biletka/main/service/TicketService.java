@@ -3,6 +3,7 @@ package biletka.main.service;
 import biletka.main.dto.request.BuyTicketRequest;
 import biletka.main.dto.response.BuyTicketResponse;
 import biletka.main.dto.response.MessageCreateResponse;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,5 +17,5 @@ public interface TicketService {
      * @param buyTicketRequest информация о билете
      * @return сообщение о покупке билета
      */
-    BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest);
+    BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest) throws MessagingException;
 }
