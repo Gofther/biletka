@@ -1,6 +1,9 @@
 package biletka.main.controller;
 
+
 import biletka.main.dto.response.EventsOrganization;
+import biletka.main.dto.response.OrganizationResponse;
+import biletka.main.dto.response.TotalSession.TotalSession;
 import biletka.main.dto.response.MassivePlacesAndHalls;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.response.PlacesOrganization;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/organization")
 @RequiredArgsConstructor
-@Tag(name = "Контроллер ивентов", description = "Всё, что связано с ивентами")
+@Tag(name = "Контроллер организация", description = "Всё, что связано с организациями")
 @CrossOrigin
 public class OrganizationController {
     private final OrganizationService organizationService;
@@ -34,11 +37,21 @@ public class OrganizationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
     }
 
+    @Operation(//
+            summary = "Получение организации",
+            description = "Позволяет получить организацию по токену"
+    )
+    @GetMapping
+    public ResponseEntity<OrganizationResponse> getOrganization(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) {
+        System.out.println(organizationService.getOrganization(authorization));
+        return ResponseEntity.status(HttpStatus.OK).body(organizationService.getOrganization(authorization));
+    }
+
     @Operation(
             summary = "Вывод мероприятий организации",
             description = "Позволяет вывести мероприятии у организации и общее их количество"
     )
-    @GetMapping("/events")
+    @GetMapping("/events")//
     public ResponseEntity<EventsOrganization> getEventOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getEventOrganization /event - authorization {}", authorization);
         EventsOrganization eventsOrganization = organizationService.getEventsOrganization(authorization);
@@ -46,10 +59,20 @@ public class OrganizationController {
     }
 
     @Operation(
+            summary = "Вывод количества сеансов на день",
+            description = "Вывод количества сеансов на день по площадкам"
+    )
+    @GetMapping("/session_sum")
+    public ResponseEntity<TotalSession> getTotalSessionByOrganization(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) {
+        log.trace("OrganizationController.getTotalSessionByOrganization / - authorization {}", authorization);
+        return ResponseEntity.status(HttpStatus.OK).body(organizationService.getSessionsByOrganization(authorization));
+    }
+
+    @Operation(
             summary = "Вывод площадок организации",
             description = "Позволяет вывести площадки у организации и количество залов"
     )
-    @GetMapping("/places")
+    @GetMapping("/places")//
     public ResponseEntity<PlacesOrganization> getPlaceOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getPlaceOrganization /place - authorization {}", authorization);
         PlacesOrganization placesOrganization = organizationService.getPlacesOrganization(authorization);
@@ -60,7 +83,7 @@ public class OrganizationController {
             summary = "Вывод залов по площадкам организации",
             description = "Позволяет вывести залы по площадкам организации"
     )
-    @GetMapping("/halls")
+    @GetMapping("/halls")//
     public ResponseEntity<MassivePlacesAndHalls> getHallOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
         log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
         MassivePlacesAndHalls massivePlacesAndHalls = organizationService.getPlacesAndSession(authorization);

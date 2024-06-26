@@ -27,7 +27,7 @@ import java.io.IOException;
 public class SessionController {
     private final SessionService sessionService;
 
-    @Operation(
+    @Operation(//
             summary = "Создание сеанса",
             description = "Позволяет создать сеанс меоприятия"
     )

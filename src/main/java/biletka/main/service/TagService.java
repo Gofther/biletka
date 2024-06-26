@@ -19,5 +19,10 @@ public interface TagService {
      */
     Tag createTag(String name);
 
+    /**
+     * Метод Создания нового тага и сохранения в бд
+     * @param name - имя актёра
+     * @return Созданный актёр
+     */
     Tag postNewTag(String name);
 }

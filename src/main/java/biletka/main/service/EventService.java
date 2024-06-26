@@ -68,6 +68,38 @@ public interface EventService {
     PublicFullInfoEvent getFullInfoEvent(String authorization, String cityName, String eventName, Date date);
 
     /**
+     * Метод получения кртакой информации о мероприятиях подходящих под указанный возраст
+     * @param cityName название города
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
+    MassivePublicEvent getEventsByCityAndAgeLimit(String cityName, int age, String authorization, Integer offset, Date date);
+
+    /**
+     * Метод получения кртакой информации о мероприятиях подходящих под указанный тип
+     * @param cityName название города
+     * @param type тип мероприятия
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
+    MassivePublicEvent getEventsByCityAndType(String cityName, String type, String authorization, Integer offset, Date date);
+
+    /**
+     * Метод получения мероприятия по городу и жанру
+     * @param cityName название города
+     * @param Genre тип мероприятия
+     * @param authorization токен авторизации
+     * @param offset отсчет мероприятий
+     * @param date дата для выборки
+     * @return массив краткой информации
+     */
+    MassivePublicEvent getEventsByCityAndGenre(String cityName, String Genre, String authorization, Integer offset, Date date);
+
+    /**
      * Метод получения мероприятия по id и символьному названию
      * @param eventSymbolic id и символьное название
      * @return мероприятие
