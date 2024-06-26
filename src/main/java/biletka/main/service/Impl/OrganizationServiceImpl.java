@@ -32,7 +32,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Lazy
     private final UserService userService;
     private final EventService eventService;
-    private final SessionService sessionService;
 
     private final HallService hallService;
 
@@ -145,7 +144,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 //        organizationRepository.save(organization);
 //    }
 
-     */
+
 
     /**
      * Метод получения мероприятий организации
