@@ -605,10 +605,34 @@ ResponseBody
 
 <details>
 <summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">POST</span> https://localhost:8443/dGlja2V0QWRtaW4=/hall
+</summary>
+<p>Description: Сохранение схемы зала</p>
+<p>Authorization - TRUE</p>
+
+---
+RequestParams
+```
+Long hallId,
+MultipartFile file,
+String scheme
+```
+ResponseBody
+```
+{
+    "message": String
+}
+```
+</details>
+
+---
+<details>
+<summary style="font-size: 17px">
 <span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">POST</span> https://localhost:8443/dGlja2V0QWRtaW4=
 </summary>
 <p>Description: Регистрация администратора</p>
 <p>Authorization - TRUE</p>
+
 
 ---
 RequestBody
@@ -892,7 +916,7 @@ ResponseBody
 ---
 <details>
 <summary style="font-size: 17px">
-<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">GET</span> https://localhost:8443/organization/halls
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">GET</span> https://localhost:8443/organization/events
 </summary>
 <p>Description: Вывод залов по площадкам организации</p>
 <p>Authorization - TRUE</p>
@@ -932,6 +956,27 @@ ResponseBody
 </details>
 
 ---
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">POST</span> https://localhost:8443/organization/halls
+</summary>
+<p>Description: Добавление мероприятий для организации</p>
+<p>Authorization - TRUE</p>
+
+---
+RequestParams
+```
+Long id
+```
+ResponseBody
+```
+{
+    "message" : String
+}
+```
+</details>
+
+---
 ## Session
 
 <details>
@@ -958,4 +1003,90 @@ ResponseBody
     "message": String
 }
 ```
+</details>
+
+---
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">GET</span> https://localhost:8443/session/scheme
+</summary>
+<p>Description: Позволяет вывести схему зала по id сеанса</p>
+<p>Authorization - FALSE</p>
+
+---
+RequestParams
+```
+Long id
+```
+ResponseBody
+```
+{
+    "scheme_floors": [
+        {
+            "floor_number": Integer,
+            "scheme_rows": [
+                {
+                    "row_number": String,
+                    "scheme_seats": [
+                        {
+                            "occupied": boolean,
+                            "number": String,
+                            "group": String,
+                            "position": String
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "file": {
+        "content": String,
+        "name": String
+    }
+}
+```
+</details>
+
+---
+## Ticket
+
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: green; color: white; padding: 5px 10px; border-radius: 5px">POST</span> https://localhost:8443/ticket/buy
+</summary>
+<p>Description: Покупка билетов</p>
+<p>Authorization - OPTIONAL</p>
+
+---
+RequestBody
+```
+{
+    "email": String, // формат: example@example.com
+    "full_name": String, // формат: Имя Фамилия Отчество
+    "phone": String, // формат: 79876543210
+    "session_id": Long,
+    "seat_number": Integer,
+    "row_number": Integer
+}
+```
+ResponseBody
+```
+{
+    "message": String,
+    "url": String
+}
+```
+</details>
+
+---
+
+## Scheduling
+
+<details>
+<summary style="font-size: 17px">
+<span  style="font-weight: 600; background-color: blue; color: white; padding: 5px 10px; border-radius: 5px">SCHEDULED</span>Метод: checkStatusTicket()
+</summary>
+<p>Description: Проверка статуса билета</p>
+
+---
 </details>
