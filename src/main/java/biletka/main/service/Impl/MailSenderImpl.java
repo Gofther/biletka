@@ -1,15 +1,22 @@
 package biletka.main.service.Impl;
 
 import biletka.main.Utils.MessageCreator;
+import biletka.main.dto.response.TicketResponse;
 import biletka.main.entity.Cheque;
+import biletka.main.entity.Event;
+import biletka.main.entity.Session;
 import biletka.main.entity.Ticket;
 import biletka.main.repository.ChequeRepository;
+import biletka.main.repository.EventRepository;
 import biletka.main.service.MailSender;
+import biletka.main.service.TicketService;
+import com.google.zxing.WriterException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -17,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.io.IOException;
+import java.util.Calendar;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +36,8 @@ public class MailSenderImpl implements MailSender {
     private final TemplateEngine templateEngine;
     private final MessageCreator messageCreator;
     private final ChequeRepository chequeRepository;
+    @Lazy
+    private final TicketService ticketService;
     @Value(value = "${application.email.address}")
     private String organization;
     @Value(value = "${application.authorization.path}")
@@ -77,18 +89,20 @@ public class MailSenderImpl implements MailSender {
         mailSender.send(mimeMessage);
     }
     @Async
-    public void sendTicket(Ticket ticket) throws MessagingException {
+    public void sendTicket(Ticket ticket) throws MessagingException, IOException, WriterException {
+        TicketResponse ticketResponse = ticketService.getTicketResponse(ticket);
         String subject = "Покупка билета";
+        Context context = new Context();
+        context.setVariable("ticket", ticketResponse);
 
-        String text = messageCreator.createTicketMessage(ticket);
+        String htmlContent = templateEngine.process("ticket", context);
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         mimeMessageHelper.setFrom(username);
         mimeMessageHelper.setTo(ticket.getEmail());
         mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setText(text);
+        mimeMessageHelper.setText(htmlContent, true);
 
         try {
             mailSender.send(mimeMessage);
