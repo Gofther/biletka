@@ -1,5 +1,6 @@
 package biletka.main.controller;
 
+import biletka.main.Utils.QRGenerator;
 import biletka.main.dto.request.BuyTicketRequest;
 import biletka.main.dto.response.BuyTicketResponse;
 import biletka.main.dto.response.MessageCreateResponse;
@@ -8,6 +9,7 @@ import biletka.main.entity.Ticket;
 import biletka.main.repository.TicketRepository;
 import biletka.main.service.MailSender;
 import biletka.main.service.TicketService;
+import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +22,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
@@ -30,7 +33,7 @@ import java.util.Objects;
 public class TicketController {
     private final TicketService ticketService;
     private final TicketRepository ticketRepository;
-    private final MailSender mailSender;
+    private final QRGenerator generator;
     @Operation(
             summary = "Покупка билетов",
             description = "Позволяет купить билет"
@@ -42,5 +45,18 @@ public class TicketController {
         log.trace("TicketController.buyTicket - authorization {} , buyTicketRequest {}", authorization, buyTicketRequest);
         BuyTicketResponse buyTicketResponse = ticketService.buyTicket(authorization,buyTicketRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(buyTicketResponse);
+    }
+
+    @Operation(
+            summary = "Получение QR-кода для билета",
+            description = "Позволяет получить QR-код для билета"
+    )
+    @GetMapping(value = "/{activationCode}/qr", produces = "image/png")
+    public ResponseEntity<byte[]> getTicketQRCode(@PathVariable String activationCode) throws IOException, WriterException {
+        log.trace("TicketController.getTicketQRCode /ticket/{}/qr", activationCode);
+        byte[] qrCode = generator.getQRCodeImage(activationCode);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Content-Type", "image/png")
+                .body(qrCode);
     }
 }
