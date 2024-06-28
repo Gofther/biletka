@@ -1,12 +1,8 @@
 package biletka.main.service;
 
 import biletka.main.dto.request.OrganizationRegistrationRequest;
-import biletka.main.dto.response.EventsOrganization;
-import biletka.main.dto.response.MassivePlacesAndHalls;
-import biletka.main.dto.response.MessageCreateResponse;
-import biletka.main.dto.response.PlacesOrganization;
+import biletka.main.dto.response.*;
 
-import biletka.main.dto.response.OrganizationResponse;
 import biletka.main.dto.response.TotalSession.TotalSession;
 import biletka.main.entity.Event;
 import biletka.main.entity.Organization;
@@ -90,4 +86,11 @@ public interface OrganizationService {
      * @return массив залов
      */
     MassivePlacesAndHalls getPlacesAndSession(String authorization);
+
+    /**
+     * Метод получения статистики продаж за месяц
+     * @param authorization токен авторизации
+     * @return статистика продаж и возвратов
+     */
+    SalesResponse getMonthlySalesOrganization(String authorization);
 }

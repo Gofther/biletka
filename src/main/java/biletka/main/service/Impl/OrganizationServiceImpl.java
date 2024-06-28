@@ -9,18 +9,25 @@ import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
 import biletka.main.repository.EventRepository;
 import biletka.main.repository.OrganizationRepository;
+import biletka.main.repository.SessionRepository;
+import biletka.main.repository.TicketRepository;
 import biletka.main.service.*;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import java.util.Calendar;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -32,6 +39,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Lazy
     private final UserService userService;
     private final EventService eventService;
+    private final SessionRepository sessionRepository;
+    private final TicketRepository ticketRepository;
 
     private final HallService hallService;
 
@@ -365,4 +374,63 @@ public class OrganizationServiceImpl implements OrganizationService {
         return new TotalSession(places.toArray(PlacesByOrganization[]::new));
     }
 
+    /**
+     * Метод получения статистики продаж за месяц
+     * @param authorization токен авторизации
+     * @return статистика продаж и возвратов
+     */
+    public SalesResponse getMonthlySalesOrganization(String authorization) {
+        Organization organization = tokenVerification(authorization);
+
+        Calendar calendar = Calendar.getInstance();
+        Timestamp finishDay = new Timestamp(calendar.getTimeInMillis());
+        calendar.add(Calendar.MONTH, -1);
+        Timestamp startDay = new Timestamp(calendar.getTimeInMillis());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String timePeriod = sdf.format(startDay) + " -- " + sdf.format(finishDay);
+
+        Integer sales = 0;
+        Integer onSales = 0;
+        Integer refunded = 0;
+        Double salesPercent = 0.0;
+        Double refundedPercent = 0.0;
+
+        Set<Event> events = organization.getEventSet();
+        ArrayList<Session> sessions = new ArrayList<>();
+        for (Event event : events) {
+            ArrayList<Session> eventSessions = sessionRepository.findAllSessionByEventAndDate(event, startDay, finishDay);
+            sessions.addAll(eventSessions);
+        }
+        for (Session session : sessions) {
+            if(session.getOnSales() == 0){
+                continue;
+            }
+            sales += session.getSales();
+            onSales += session.getOnSales();
+            ArrayList<Ticket> tickets = ticketRepository.getAllBySession(session.getId());
+            for(Ticket ticket : tickets) {
+                if(ticket.getIsRefunded()){
+                    refunded += 1;
+                }
+            }
+        }
+        if(onSales != 0) {
+            salesPercent = roundToHundredths(((double) sales / onSales) * 100.0);
+            refundedPercent = roundToHundredths(((double) refunded / onSales) * 100.0);
+        }
+        return new SalesResponse(
+                timePeriod,
+                onSales,
+                sales,
+                salesPercent,
+                refunded,
+                refundedPercent
+        );
+    }
+    private static double roundToHundredths(double value) {
+        BigDecimal bigDecimal = BigDecimal.valueOf(value);
+        BigDecimal roundedBigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+        return roundedBigDecimal.doubleValue();
+    }
 }

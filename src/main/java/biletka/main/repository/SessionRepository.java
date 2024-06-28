@@ -82,4 +82,11 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "ORDER BY s.id")
     Session findSessionById(Long id);
 
+    @Query("SELECT s FROM Session s " +
+            "WHERE s.event = :event " +
+            "AND s.startTime BETWEEN :startDay AND :finishDay " +
+            "ORDER BY s.event.id ")
+    ArrayList<Session> findAllSessionByEventAndDate(Event event, Timestamp startDay, Timestamp finishDay);
+
+
 }

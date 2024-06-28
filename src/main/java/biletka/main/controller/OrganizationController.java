@@ -1,12 +1,8 @@
 package biletka.main.controller;
 
 
-import biletka.main.dto.response.EventsOrganization;
-import biletka.main.dto.response.OrganizationResponse;
+import biletka.main.dto.response.*;
 import biletka.main.dto.response.TotalSession.TotalSession;
-import biletka.main.dto.response.MassivePlacesAndHalls;
-import biletka.main.dto.response.MessageCreateResponse;
-import biletka.main.dto.response.PlacesOrganization;
 import biletka.main.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -88,5 +84,16 @@ public class OrganizationController {
         log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
         MassivePlacesAndHalls massivePlacesAndHalls = organizationService.getPlacesAndSession(authorization);
         return ResponseEntity.ok(massivePlacesAndHalls);
+    }
+
+    @Operation(
+            summary = "Вывод статистики продаж за месяц",
+            description = "Позволяет вывести общее количество билетов, количество и процент проданных билетов, количество и процент возвратов с текущей даты за месяц"
+    )
+    @GetMapping("/sales/month")//
+    public ResponseEntity<SalesResponse> getMonthlySalesOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getHallOrganization /place - authorization {}", authorization);
+        SalesResponse salesResponse = organizationService.getMonthlySalesOrganization(authorization);
+        return ResponseEntity.ok(salesResponse);
     }
 }
