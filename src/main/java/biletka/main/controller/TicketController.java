@@ -59,4 +59,17 @@ public class TicketController {
                 .header("Content-Type", "image/png")
                 .body(qrCode);
     }
+
+    @Operation(
+            summary = "Активация билета",
+            description = "Позволяет использовать и погасить билет"
+    )
+    @PutMapping("/activate")
+    public ResponseEntity<MessageCreateResponse> activateTicket(
+            @RequestParam Long ticketId,
+            @RequestParam String activationCode) {
+        log.trace("TicketController.activateTicket - ticketId {} , activationCode {}", ticketId, activationCode);
+        MessageCreateResponse messageCreateResponse = ticketService.activateTicket(ticketId,activationCode);
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
+    }
 }

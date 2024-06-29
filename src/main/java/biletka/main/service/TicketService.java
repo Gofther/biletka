@@ -37,4 +37,12 @@ public interface TicketService {
      * @return данные о билете для клиента
      */
     ClientTicketResponse getClientTicketResponse (Ticket ticket);
+
+    /**
+     * Активация(использование) и гашение билета
+     * @param ticketId id билета
+     * @param activationCode код активации билета
+     * @return сообщение об активации билета
+     */
+    MessageCreateResponse activateTicket (Long ticketId , String activationCode);
 }

@@ -33,6 +33,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -202,5 +203,23 @@ public class TicketServiceImpl implements TicketService {
                 session.getHall().getHallName(),
                 date,
                 time);
+    }
+    /**
+     * Активация(использование) и гашение билета
+     * @param ticketId id билета
+     * @param activationCode код активации билета
+     * @return сообщение об активации билета
+     */
+    @Override
+    public MessageCreateResponse activateTicket (Long ticketId , String activationCode) {
+        log.trace("TicketServiceImpl.activateTicket - ticketId {}, activationCode {} ",ticketId,activationCode );
+        Ticket ticket = ticketRepository.findTicketById(ticketId);
+        Cheque cheque = ticket.getCheque();
+        if(ticket.getIsBought() && !ticket.getIsExtinguished() && cheque.getStatus() == Cheque.Status.BUY && Objects.equals(activationCode, ticket.getActivationCode())){
+            ticket.setIsExtinguished(true);
+            ticketRepository.save(ticket);
+            return new MessageCreateResponse("Ticket with id " + ticketId + " and activation code " + activationCode + " successfully activated");
+        }
+        return new MessageCreateResponse("Ticket activation failed");
     }
 }
