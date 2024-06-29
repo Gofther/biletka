@@ -7,13 +7,10 @@ import biletka.main.Utils.QRGenerator;
 import biletka.main.controller.SchedulingController;
 import biletka.main.controller.TicketController;
 import biletka.main.dto.request.BuyTicketRequest;
-import biletka.main.dto.response.BuyTicketResponse;
+import biletka.main.dto.response.*;
 import biletka.main.dto.response.HallScheme.SchemeFloor;
 import biletka.main.dto.response.HallScheme.SchemeRow;
 import biletka.main.dto.response.HallScheme.SchemeSeat;
-import biletka.main.dto.response.HallSchemeResponse;
-import biletka.main.dto.response.MessageCreateResponse;
-import biletka.main.dto.response.TicketResponse;
 import biletka.main.entity.*;
 import biletka.main.repository.ChequeRepository;
 import biletka.main.repository.ClientRepository;
@@ -147,8 +144,8 @@ public class TicketServiceImpl implements TicketService {
      * @param ticket билет
      * @return данные о билете для отправки на почту
      */
+    @Override
     public TicketResponse getTicketResponse(Ticket ticket) throws IOException, WriterException {
-        String subject = "Покупка билета";
         Session session = ticket.getSession();
         Event event = session.getEvent();
         byte[] code =  generator.getQRCodeImage(ticket.getActivationCode());
@@ -175,5 +172,32 @@ public class TicketServiceImpl implements TicketService {
                 ticket.getPhone(),
                 ticket.getFullName(),
                 qrCodeBase64);
+    }
+
+    /**
+     * Получение данных о билете для клиента
+     * @param ticket билет
+     * @return данные о билете для клиента
+     */
+    @Override
+    public ClientTicketResponse getClientTicketResponse (Ticket ticket){
+        Session session = ticket.getSession();
+        Event event = session.getEvent();
+
+        Instant startTimeInstant = Instant.ofEpochMilli(session.getStartTime().getTime());
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String date = dateFormatter.format(startTimeInstant.atZone(ZoneId.systemDefault()));
+        String time = timeFormatter.format(startTimeInstant.atZone(ZoneId.systemDefault()));
+
+        return new ClientTicketResponse(
+                event.getEventBasicInformation().getName_rus(),
+                session.getHall().getPlace().getCity().getCityName(),
+                session.getHall().getPlace().getAddress(),
+                session.getHall().getPlace().getPlaceName(),
+                session.getHall().getHallName(),
+                date,
+                time);
     }
 }

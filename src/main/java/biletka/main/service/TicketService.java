@@ -2,6 +2,7 @@ package biletka.main.service;
 
 import biletka.main.dto.request.BuyTicketRequest;
 import biletka.main.dto.response.BuyTicketResponse;
+import biletka.main.dto.response.ClientTicketResponse;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.response.TicketResponse;
 import biletka.main.entity.Ticket;
@@ -29,4 +30,11 @@ public interface TicketService {
      * @return данные о билете для отправки на почту
      */
     TicketResponse getTicketResponse(Ticket ticket) throws IOException, WriterException;
+
+    /**
+     * Получение данных о билете для клиента
+     * @param ticket билет
+     * @return данные о билете для клиента
+     */
+    ClientTicketResponse getClientTicketResponse (Ticket ticket);
 }
