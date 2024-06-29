@@ -24,10 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.Calendar;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -379,7 +376,9 @@ public class OrganizationServiceImpl implements OrganizationService {
      * @param authorization токен авторизации
      * @return статистика продаж и возвратов
      */
+    @Override
     public SalesResponse getMonthlySalesOrganization(String authorization) {
+        log.trace("OrganizationServiceImpl.getMonthlySalesOrganization - authorization {}", authorization);
         Organization organization = tokenVerification(authorization);
 
         Calendar calendar = Calendar.getInstance();
@@ -428,6 +427,61 @@ public class OrganizationServiceImpl implements OrganizationService {
                 refundedPercent
         );
     }
+    /**
+     * Метод получения статистики продаж за месяц
+     * @param authorization токен авторизации
+     * @return статистика продаж и возвратов
+     */
+    @Override
+    public YearlySalesResponse getYearlySalesOrganization(String authorization) {
+        log.trace("OrganizationServiceImpl.getYearlySalesOrganization - authorization {}", authorization);
+        Organization organization = tokenVerification(authorization);
+
+        List<MonthlySalesResponse> monthlySales = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        for (int month = Calendar.JANUARY; month <= Calendar.DECEMBER; month++) {
+            calendar.set(currentYear, month, 1, 0, 0, 0);
+            Timestamp startDay = new Timestamp(calendar.getTimeInMillis());
+
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            Timestamp finishDay = new Timestamp(calendar.getTimeInMillis());
+
+            int sales = 0;
+            int onSales = 0;
+
+            Set<Event> events = organization.getEventSet();
+            ArrayList<Session> sessions = new ArrayList<>();
+
+            for (Event event : events) {
+                ArrayList<Session> eventSessions = sessionRepository.findAllSessionByEventAndDate(event, startDay, finishDay);
+                sessions.addAll(eventSessions);
+            }
+
+            for (Session session : sessions) {
+                if (session.getOnSales() == 0) {
+                    continue;
+                }
+                sales += session.getSales();
+                onSales += session.getOnSales();
+            }
+
+            double salesPercent = onSales != 0 ? roundToHundredths(((double) sales / onSales) * 100.0) : 0.0;
+
+            String monthName = new SimpleDateFormat("MMMM").format(startDay);
+            monthlySales.add(new MonthlySalesResponse(
+                    monthName,
+                    onSales,
+                    sales,
+                    salesPercent
+            ));
+        }
+
+        return new YearlySalesResponse(currentYear, monthlySales.toArray(new MonthlySalesResponse[0]));
+    }
+
+
     private static double roundToHundredths(double value) {
         BigDecimal bigDecimal = BigDecimal.valueOf(value);
         BigDecimal roundedBigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);

@@ -57,6 +57,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest) throws MessagingException {
+        log.trace("TicketServiceImpl.buyTicket - authorization {}, buyTicketRequest {}", authorization, buyTicketRequest);
         if (authorization != null && !authorization.isEmpty()) {
             String userEmail = jwtTokenUtils.getUsernameFromToken(
                     authorization.substring(7)
@@ -117,7 +118,7 @@ public class TicketServiceImpl implements TicketService {
             client.addTicket(ticket);
             clientRepository.save(client);
         }
-
+        log.trace("TicketServiceImpl.buyTicket - Ticket reserved successfully for {}", buyTicketRequest.email());
         return new BuyTicketResponse(
                 "Ticket reserved successfully",
                 "URL"
@@ -146,6 +147,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public TicketResponse getTicketResponse(Ticket ticket) throws IOException, WriterException {
+        log.trace("TicketServiceImpl.getTicketResponse - ticketId {}", ticket.getId());
         Session session = ticket.getSession();
         Event event = session.getEvent();
         byte[] code =  generator.getQRCodeImage(ticket.getActivationCode());
@@ -181,6 +183,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public ClientTicketResponse getClientTicketResponse (Ticket ticket){
+        log.trace("TicketServiceImpl.getClientTicketResponse - ticketId {}", ticket.getId());
         Session session = ticket.getSession();
         Event event = session.getEvent();
 

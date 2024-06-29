@@ -69,7 +69,7 @@ public class ClientController {
     )
     @GetMapping("/tickets")
     public ResponseEntity<MassiveClientTicketResponse> getTickets(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) throws IOException, WriterException {
-        log.trace("ClientController.getFavorite - authorization {}", authorization);
+        log.trace("ClientController.getTickets - authorization {}", authorization);
         MassiveClientTicketResponse massiveTicketResponse = clientService.getTickets(authorization);
         return ResponseEntity.ok(massiveTicketResponse);
     }

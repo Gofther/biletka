@@ -93,4 +93,11 @@ public interface OrganizationService {
      * @return статистика продаж и возвратов
      */
     SalesResponse getMonthlySalesOrganization(String authorization);
+
+    /**
+     * Метод получения статистики продаж за месяц
+     * @param authorization токен авторизации
+     * @return статистика продаж и возвратов
+     */
+    YearlySalesResponse getYearlySalesOrganization(String authorization);
 }
