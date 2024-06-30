@@ -107,4 +107,15 @@ public class OrganizationController {
         YearlySalesResponse yearlySalesResponse = organizationService.getYearlySalesOrganization(authorization);
         return ResponseEntity.ok(yearlySalesResponse);
     }
+
+    @Operation(
+            summary = "Вывод статистики продаж за месяц",
+            description = "Позволяет вывести общее количество билетов, количество и процент проданных билетов, количество и процент возвратов с текущей даты за месяц"
+    )
+    @GetMapping("/sessions/month")
+    public ResponseEntity<MonthlySessionsResponse> getMonthlySessionsOrganization(@Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization") String authorization) {
+        log.trace("OrganizationController.getMonthlySessionsOrganization /place - authorization {}", authorization);
+        MonthlySessionsResponse monthlySessionsResponse = organizationService.getMonthlySessionsOrganization(authorization);
+        return ResponseEntity.ok(monthlySessionsResponse);
+    }
 }

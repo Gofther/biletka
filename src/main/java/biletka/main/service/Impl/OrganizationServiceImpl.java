@@ -481,10 +481,60 @@ public class OrganizationServiceImpl implements OrganizationService {
         return new YearlySalesResponse(currentYear, monthlySales.toArray(new MonthlySalesResponse[0]));
     }
 
+    /**
+     * Метод получения количества сессий за месяц по площадкам
+     * @param authorization токен авторизации
+     * @return количество сессий по площадкам
+     */
+    @Override
+    public MonthlySessionsResponse getMonthlySessionsOrganization(String authorization) {
+        log.trace("OrganizationServiceImpl.getMonthlySessionsOrganization - authorization {}", authorization);
+        Organization organization = tokenVerification(authorization);
+
+        Calendar calendar = Calendar.getInstance();
+        Timestamp finishDay = new Timestamp(calendar.getTimeInMillis());
+        calendar.add(Calendar.MONTH, -1);
+        Timestamp startDay = new Timestamp(calendar.getTimeInMillis());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String timePeriod = sdf.format(startDay) + " -- " + sdf.format(finishDay);
+
+        int allSessionsAmount = 0;
+        ArrayList<PlacesSessionsResponse> placesSessions = new ArrayList<>();
+
+        Set<Place> placeSet = organization.getPlaceSet();
+
+        for (Place place : placeSet) {
+            int sessionsCount = sessionRepository.countSessionsByPlaceAndDate(place, startDay, finishDay);
+            allSessionsAmount += sessionsCount;
+            placesSessions.add(new PlacesSessionsResponse(
+                    place.getPlaceName(),
+                    sessionsCount,
+                    0.0
+            ));
+        }
+
+        for (int i = 0; i < placesSessions.size(); i++) {
+            PlacesSessionsResponse placeSession = placesSessions.get(i);
+            double percent = (allSessionsAmount == 0) ? 0.0 : ((double) placeSession.sessionsAmount() / allSessionsAmount) * 100.0;
+            placesSessions.set(i, new PlacesSessionsResponse(
+                    placeSession.place(),
+                    placeSession.sessionsAmount(),
+                    roundToHundredths(percent)
+            ));
+        }
+
+        return new MonthlySessionsResponse(
+                timePeriod,
+                allSessionsAmount,
+                placesSessions.toArray(new PlacesSessionsResponse[0])
+        );
+    }
 
     private static double roundToHundredths(double value) {
         BigDecimal bigDecimal = BigDecimal.valueOf(value);
         BigDecimal roundedBigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
         return roundedBigDecimal.doubleValue();
     }
+
 }

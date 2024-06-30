@@ -88,5 +88,9 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             "ORDER BY s.event.id ")
     ArrayList<Session> findAllSessionByEventAndDate(Event event, Timestamp startDay, Timestamp finishDay);
 
+    @Query("SELECT COUNT(s) FROM Session s " +
+            "WHERE s.hall.place = :place " +
+            "AND s.startTime BETWEEN :startDay AND :finishDay ")
+    Integer countSessionsByPlaceAndDate(Place place, Timestamp startDay, Timestamp finishDay);
 
 }

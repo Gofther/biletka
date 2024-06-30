@@ -100,4 +100,11 @@ public interface OrganizationService {
      * @return статистика продаж и возвратов
      */
     YearlySalesResponse getYearlySalesOrganization(String authorization);
+
+    /**
+     * Метод получения количества сессий за месяц по площадкам
+     * @param authorization токен авторизации
+     * @return количество сессий по площадкам
+     */
+    MonthlySessionsResponse getMonthlySessionsOrganization(String authorization);
 }
