@@ -3,12 +3,15 @@ package biletka.main.service;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.request.RatingClientRequest;
 import biletka.main.dto.response.FavoriteResponse;
+import biletka.main.dto.response.MassiveClientTicketResponse;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.entity.Client;
 import biletka.main.entity.Users;
+import com.google.zxing.WriterException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.ParseException;
 
 @Service
@@ -49,4 +52,11 @@ public interface ClientService {
      * @return успешное изменение
      */
     MessageCreateResponse putRatingEvent(String authorization, RatingClientRequest ratingClientRequest);
+
+    /**
+     * Метод получения билетов клиента
+     * @param authorization токен авторизации
+     * @return список билетов
+     */
+    MassiveClientTicketResponse getTickets(String authorization) throws IOException, WriterException;
 }

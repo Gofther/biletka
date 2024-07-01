@@ -2,9 +2,11 @@ package biletka.main.controller;
 
 import biletka.main.dto.request.RatingClientRequest;
 import biletka.main.dto.response.FavoriteResponse;
+import biletka.main.dto.response.MassiveClientTicketResponse;
 import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.service.ClientService;
+import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -57,5 +61,16 @@ public class ClientController {
         log.trace("ClientController.putRatingEvent - authorization {}, ratingClientRequest {}", authorization, ratingClientRequest);
         MessageCreateResponse messageCreateResponse = clientService.putRatingEvent(authorization, ratingClientRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(messageCreateResponse);
+    }
+
+    @Operation(
+            summary = "Получение массива билетов",
+            description = "Позовляет получить массив билетов пользователя"
+    )
+    @GetMapping("/tickets")
+    public ResponseEntity<MassiveClientTicketResponse> getTickets(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization) throws IOException, WriterException {
+        log.trace("ClientController.getTickets - authorization {}", authorization);
+        MassiveClientTicketResponse massiveTicketResponse = clientService.getTickets(authorization);
+        return ResponseEntity.ok(massiveTicketResponse);
     }
 }

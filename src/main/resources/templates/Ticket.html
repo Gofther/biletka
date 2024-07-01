@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ваш билет</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            border: 3px solid #000000;
+            padding: 20px;
+        }
+        .header {
+            background-color: #ffd700;
+            padding: 10px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #000000;
+            font-size: 24px;
+        }
+        .header h2 {
+            margin: 0;
+            color: #000000;
+            font-size: 20px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .info td {
+            font-size: 16px;
+            line-height: 1.5;
+            padding-bottom: 10px;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+        }
+        .footer {
+            background-color: #ffd700;
+            padding: 10px;
+            text-align: center;
+            color: #000000;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+            .content {
+                padding: 10px;
+            }
+            .footer {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="center">
+            <table role="presentation" class="container" width="480" cellpadding="0" cellspacing="0" style="max-width: 480px;">
+                <tr>
+                    <td class="header" style="background-color: #ffd700; padding: 10px; text-align: center;">
+                        <h1 style="margin: 0; color: #000000; font-size: 24px;">Билет</h1>
+                        <h2 style="margin: 0; color: #000000; font-size: 20px;" th:text="${ticket.eventName}">Название мероприятия</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content" style="padding: 20px;">
+                        <table role="presentation" class="info" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td><strong>Город:</strong></td>
+                                <td th:text="${ticket.city}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Адрес:</strong></td>
+                                <td th:text="${ticket.address}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Площадка:</strong></td>
+                                <td th:text="${ticket.place}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Зал:</strong></td>
+                                <td th:text="${ticket.hall}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ряд:</strong></td>
+                                <td th:text="${ticket.row}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Место:</strong></td>
+                                <td th:text="${ticket.seat}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Дата:</strong></td>
+                                <td th:text="${ticket.date}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Время:</strong></td>
+                                <td th:text="${ticket.time}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Электронная почта:</strong></td>
+                                <td th:text="${ticket.email}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Телефон:</strong></td>
+                                <td th:text="${ticket.phone}"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>ФИО:</strong></td>
+                                <td th:text="${ticket.fullName}"></td>
+                            </tr>
+                        </table>
+                        <div class="qr-code" style="text-align: center; margin-top: 20px;">
+                            <img th:src="'data:image/png;base64,' + ${ticket.qrCode}" alt="QR Code">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer" style="background-color: #ffd700; padding: 10px; text-align: center; color: #000000;">
+                        <p style="margin: 0;">Спасибо за покупку!</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

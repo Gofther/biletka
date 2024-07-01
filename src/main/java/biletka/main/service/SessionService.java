@@ -78,7 +78,7 @@ public interface SessionService {
      * @return схема зала
      */
     HallSchemeResponse getSessionHallScheme( Long sessionId) throws IOException;
-
+/**
      * Метод получения уникальных мероприятий по возрасту
      * @param city город
      * @param age возраст

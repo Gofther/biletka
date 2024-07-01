@@ -3,25 +3,37 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.ActivationCode;
 import biletka.main.Utils.ConvertUtils;
 import biletka.main.Utils.JwtTokenUtils;
+import biletka.main.Utils.QRGenerator;
+import biletka.main.controller.SchedulingController;
+import biletka.main.controller.TicketController;
 import biletka.main.dto.request.BuyTicketRequest;
-import biletka.main.dto.response.BuyTicketResponse;
+import biletka.main.dto.response.*;
 import biletka.main.dto.response.HallScheme.SchemeFloor;
 import biletka.main.dto.response.HallScheme.SchemeRow;
 import biletka.main.dto.response.HallScheme.SchemeSeat;
-import biletka.main.dto.response.HallSchemeResponse;
-import biletka.main.dto.response.MessageCreateResponse;
 import biletka.main.entity.*;
 import biletka.main.repository.ChequeRepository;
+import biletka.main.repository.ClientRepository;
 import biletka.main.repository.TicketRepository;
 import biletka.main.service.SessionService;
 import biletka.main.service.TicketService;
 import biletka.main.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,6 +47,9 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final ChequeRepository chequeRepository;
     private final ActivationCode activationCode;
+    private final ClientRepository clientRepository;
+    @Lazy
+    private final QRGenerator generator;
     /**
      * Покупка билета
      * @param authorization токен авторизации пользователя
@@ -42,7 +57,8 @@ public class TicketServiceImpl implements TicketService {
      * @return сообщение о покупке билета
      */
     @Override
-    public BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest){
+    public BuyTicketResponse buyTicket(String authorization, BuyTicketRequest buyTicketRequest) throws MessagingException {
+        log.trace("TicketServiceImpl.buyTicket - authorization {}, buyTicketRequest {}", authorization, buyTicketRequest);
         if (authorization != null && !authorization.isEmpty()) {
             String userEmail = jwtTokenUtils.getUsernameFromToken(
                     authorization.substring(7)
@@ -72,7 +88,8 @@ public class TicketServiceImpl implements TicketService {
         }
         Cheque cheque = new Cheque(
                 "url",
-                null
+                null,
+                false
         );
         chequeRepository.saveAndFlush(cheque);
 
@@ -93,6 +110,16 @@ public class TicketServiceImpl implements TicketService {
         );
         ticketRepository.saveAndFlush(ticket);
 
+        if (authorization != null && !authorization.isEmpty()) {
+            String userEmail = jwtTokenUtils.getUsernameFromToken(
+                    authorization.substring(7)
+            );
+            Users user = userService.getUserByEmail(userEmail);
+            Client client = clientRepository.findFirstByUser(user);
+            client.addTicket(ticket);
+            clientRepository.save(client);
+        }
+        log.trace("TicketServiceImpl.buyTicket - Ticket reserved successfully for {}", buyTicketRequest.email());
         return new BuyTicketResponse(
                 "Ticket reserved successfully",
                 "URL"
@@ -112,5 +139,87 @@ public class TicketServiceImpl implements TicketService {
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Получение данных о билете
+     * @param ticket билет
+     * @return данные о билете для отправки на почту
+     */
+    @Override
+    public TicketResponse getTicketResponse(Ticket ticket) throws IOException, WriterException {
+        log.trace("TicketServiceImpl.getTicketResponse - ticketId {}", ticket.getId());
+        Session session = ticket.getSession();
+        Event event = session.getEvent();
+        byte[] code =  generator.getQRCodeImage(ticket.getActivationCode());
+        String qrCodeBase64 = Base64.getEncoder().encodeToString(code);
+
+        Instant startTimeInstant = Instant.ofEpochMilli(session.getStartTime().getTime());
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String date = dateFormatter.format(startTimeInstant.atZone(ZoneId.systemDefault()));
+        String time = timeFormatter.format(startTimeInstant.atZone(ZoneId.systemDefault()));
+
+        return new TicketResponse(
+                event.getEventBasicInformation().getName_rus(),
+                session.getHall().getPlace().getCity().getCityName(),
+                session.getHall().getPlace().getAddress(),
+                session.getHall().getPlace().getPlaceName(),
+                session.getHall().getHallName(),
+                ticket.getRowNumber(),
+                ticket.getSeatNumber(),
+                date,
+                time,
+                ticket.getEmail(),
+                ticket.getPhone(),
+                ticket.getFullName(),
+                qrCodeBase64);
+    }
+
+    /**
+     * Получение данных о билете для клиента
+     * @param ticket билет
+     * @return данные о билете для клиента
+     */
+    @Override
+    public ClientTicketResponse getClientTicketResponse (Ticket ticket){
+        log.trace("TicketServiceImpl.getClientTicketResponse - ticketId {}", ticket.getId());
+        Session session = ticket.getSession();
+        Event event = session.getEvent();
+
+        Instant startTimeInstant = Instant.ofEpochMilli(session.getStartTime().getTime());
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        String date = dateFormatter.format(startTimeInstant.atZone(ZoneId.systemDefault()));
+        String time = timeFormatter.format(startTimeInstant.atZone(ZoneId.systemDefault()));
+
+        return new ClientTicketResponse(
+                event.getEventBasicInformation().getName_rus(),
+                session.getHall().getPlace().getCity().getCityName(),
+                session.getHall().getPlace().getAddress(),
+                session.getHall().getPlace().getPlaceName(),
+                session.getHall().getHallName(),
+                date,
+                time);
+    }
+    /**
+     * Активация(использование) и гашение билета
+     * @param ticketId id билета
+     * @param activationCode код активации билета
+     * @return сообщение об активации билета
+     */
+    @Override
+    public MessageCreateResponse activateTicket (Long ticketId , String activationCode) {
+        log.trace("TicketServiceImpl.activateTicket - ticketId {}, activationCode {} ",ticketId,activationCode );
+        Ticket ticket = ticketRepository.findTicketById(ticketId);
+        Cheque cheque = ticket.getCheque();
+        if(ticket.getIsBought() && !ticket.getIsExtinguished() && cheque.getStatus() == Cheque.Status.BUY && Objects.equals(activationCode, ticket.getActivationCode())){
+            ticket.setIsExtinguished(true);
+            ticketRepository.save(ticket);
+            return new MessageCreateResponse("Ticket with id " + ticketId + " and activation code " + activationCode + " successfully activated");
+        }
+        return new MessageCreateResponse("Ticket activation failed");
     }
 }

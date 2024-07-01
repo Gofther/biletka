@@ -3,25 +3,21 @@ package biletka.main.service.Impl;
 import biletka.main.Utils.JwtTokenUtils;
 import biletka.main.dto.request.ClientRegistrationRequest;
 import biletka.main.dto.request.RatingClientRequest;
-import biletka.main.dto.response.FavoriteResponse;
-import biletka.main.dto.response.MessageCreateResponse;
+import biletka.main.dto.response.*;
 import biletka.main.dto.universal.MassivePublicEvent;
 import biletka.main.dto.universal.PublicEvent;
 import biletka.main.entity.*;
 import biletka.main.enums.StatusUserEnum;
-import biletka.main.exception.ErrorMessage;
-import biletka.main.exception.InvalidDataException;
 import biletka.main.repository.ClientRepository;
-import biletka.main.service.ClientService;
-import biletka.main.service.EventService;
-import biletka.main.service.RatingService;
-import biletka.main.service.UserService;
+import biletka.main.service.*;
+import com.google.zxing.WriterException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.*;
@@ -37,6 +33,7 @@ public class ClientServiceImpl implements ClientService {
     private final UserService userService;
     private final EventService eventService;
     private final RatingService ratingService;
+    private final TicketService ticketService;
 
     /**
      * Метод добавления нового пользователя в бд
@@ -186,4 +183,22 @@ public class ClientServiceImpl implements ClientService {
         return client;
     }
 
+
+    /**
+     * Метод получения билетов клиента
+     * @param authorization токен авторизации
+     * @return список билетов
+     */
+    @Override
+    public MassiveClientTicketResponse getTickets(String authorization) throws IOException, WriterException {
+        log.trace("ClientServiceImpl.getTickets - authorization {}", authorization);
+        Client client = tokenVerification(authorization);
+        Set<Ticket> tickets = client.getTicketSet();
+        ArrayList<ClientTicketResponse> ticketResponses = new ArrayList<>();
+        for(Ticket ticket : tickets) {
+            ClientTicketResponse clientTicketResponse = ticketService.getClientTicketResponse(ticket);
+            ticketResponses.add(clientTicketResponse);
+        }
+        return new MassiveClientTicketResponse(ticketResponses.toArray(new ClientTicketResponse[0]));
+    }
 }
