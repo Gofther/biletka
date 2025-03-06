@@ -3,6 +3,8 @@ package biletka.main.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @Entity
 @Table(name = "cheque")
@@ -22,6 +24,9 @@ public class Cheque {
     @Column(name = "mail_sent")
     boolean mail;
 
+    @Column(name = "date")
+    LocalDate date;
+
     public Cheque() {
     }
 
@@ -29,9 +34,10 @@ public class Cheque {
         BUY,REF,CANCEL
     }
 
-    public Cheque(String url, Status status, boolean mail){
+    public Cheque(String url, Status status, boolean mail, LocalDate date){
         this.url = url;
         this.status = status;
         this.mail = mail;
+        this.date = date;
     }
 }

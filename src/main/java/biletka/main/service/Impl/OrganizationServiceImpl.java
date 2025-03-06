@@ -162,7 +162,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         log.trace("OrganizationServiceImpl.getEventsOrganization - authorization {}", authorization);
 
         Organization organization = tokenVerification(authorization);
-
         ArrayList<EventOrganization> eventsOrganization = new ArrayList<>();
 
         organization.getEventSet().forEach(event -> {

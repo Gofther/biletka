@@ -1,0 +1,74 @@
+<changelist name="Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]" date="1716135732025" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 19.05.2024 19:22 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/service/Impl/EventServiceImpl.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/service/Impl/EventServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/EventServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/entity/Client.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/entity/Client.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/Client.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/service/Impl/TagServiceImpl.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/service/Impl/TagServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/TagServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/entity/Event.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/entity/Event.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/Event.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/service/EventService.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/service/EventService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/EventService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/service/ActorService.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/service/ActorService.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/ActorService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/entity/event_item/EventAdditionalInformation.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/entity/event_item/EventAdditionalInformation.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/EventAdditionalInformation.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/controller/EventController.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/controller/EventController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/EventController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/entity/event_item/EventBasicInformation.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/entity/event_item/EventBasicInformation.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/EventBasicInformation.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/config/SecurityConfig.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/config/SecurityConfig.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/SecurityConfig.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/service/Impl/ActorServiceImpl.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/service/Impl/ActorServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/ActorServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/entity/Organization.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/entity/Organization.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/Organization.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/tmp/compileJava/previous-compilation-data.bin" />
+    <option name="AFTER_PATH" value="build/tmp/compileJava/previous-compilation-data.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/previous-compilation-data.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/biletka/main/service/Impl/UserServiceImpl.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/biletka/main/service/Impl/UserServiceImpl.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_05_2024_19_22_[Changes]/UserServiceImpl.class" />
+  </binary>
+</changelist>

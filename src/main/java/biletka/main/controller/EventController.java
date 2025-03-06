@@ -45,7 +45,7 @@ public class EventController {
             summary = "Создание мероприятия",
             description = "Позволяет создать мероприятие"
     )
-    @PostMapping//
+    @PostMapping
     public ResponseEntity<MessageCreateResponse> postEventCreate(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
                                              @RequestPart("file") MultipartFile file,
                                              @RequestPart("event_create_request") String eventCreateRequest) throws IOException {
@@ -60,7 +60,7 @@ public class EventController {
             summary = "Вывод 10 мероприятий",
             description = "Вывод 10 мероприятий по городу"
     )
-    @GetMapping("/{cityName}")//
+    @GetMapping("/{cityName}")
     public ResponseEntity<MassivePublicEvent> getEventLimit(@Parameter(description = "название города") @PathVariable String cityName,
                                                             @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                                             @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,
@@ -74,7 +74,7 @@ public class EventController {
             summary = "Вывод 10 анонсов",
             description = "Вывод 10 мероприятий по городу и будущим сеансам, которых не было"
     )
-    @GetMapping("/{cityName}/announcement")//
+    @GetMapping("/{cityName}/announcement")
     public ResponseEntity<MassivePublicEvent> getAnnouncementLimit(@Parameter(description = "название города") @PathVariable String cityName,
                                                   @Parameter(description = "токен пользователя") @RequestHeader(value = "Authorization", required = false) String authorization,
                                                   @Parameter(description = "отсчет мероприятий") @RequestParam Integer offset,

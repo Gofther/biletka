@@ -6,6 +6,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Service
@@ -15,4 +16,8 @@ public interface MailSender {
     void  sendHall(MultipartFile file, Long hall_id)  throws MessagingException;
 
     void sendTicket(Ticket ticket) throws MessagingException, IOException, WriterException;
+
+    void sendFile(String attachment, String email, String message) throws MessagingException, FileNotFoundException;
+
+
 }

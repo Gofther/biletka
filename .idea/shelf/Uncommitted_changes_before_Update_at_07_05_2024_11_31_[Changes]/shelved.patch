@@ -1,0 +1,243 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"97724297-196e-45eb-b48a-391cc00a3145\" name=\"Changes\" comment=\"Добавлена оставшиеся таблицы для бд\">\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/file-system.probe\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/file-system.probe\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build.gradle\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/build.gradle\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/MainApplication.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/Utils/JwtTokenUtils$1.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/Utils/JwtTokenUtils.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/Utils/PasswordEncoder.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/config/JwtRequestFilter.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/config/SecurityConfig$1.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/config/SecurityConfig.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Actor.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Age_rating.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Event_basic_information.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Genre.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Tag.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Type_event.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Users.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/enums/RoleEnum.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/ActorRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/Age_ratingRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/Event_basic_informationRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/GenreRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/TagRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/Type_eventRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/UserRepository.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/ActorService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Age_ratingService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Event_basic_informationService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/GenreService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/ActorServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/Age_ratingServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/Event_basic_informationServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/GenreServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/TagServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/Type_eventServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/UserServiceImpl.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/TagService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Type_eventService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/biletka/main/service/UserService.class\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/resources/main/application.properties\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ActorService.class.uniqueId11\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ActorServiceImpl.class.uniqueId0\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Age_ratingService.class.uniqueId10\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Age_ratingServiceImpl.class.uniqueId9\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Event_basic_informationService.class.uniqueId3\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Event_basic_informationServiceImpl.class.uniqueId8\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GenreService.class.uniqueId7\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GenreServiceImpl.class.uniqueId4\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/TagService.class.uniqueId6\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/TagServiceImpl.class.uniqueId2\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Type_eventService.class.uniqueId1\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Type_eventServiceImpl.class.uniqueId5\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Age_rating.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/AgeRating.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Event.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Event.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Event_basic_information.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/event_item/EventBasicInformation.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Log.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Log.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Users.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/Users.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/event_item/EventAdditionalInformation.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/entity/event_item/EventAdditionalInformation.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/repository/Age_ratingRepository.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/repository/Age_ratingRepository.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/repository/Event_basic_informationRepository.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/repository/Event_basic_informationRepository.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Age_ratingService.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Age_ratingService.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Event_basic_informationService.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Event_basic_informationService.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Age_ratingServiceImpl.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Age_ratingServiceImpl.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Event_basic_informationServiceImpl.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Event_basic_informationServiceImpl.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n    <projectState path=\"$PROJECT_DIR$/biletka\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand />\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"ROOT_SYNC\" value=\"DONT_SYNC\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2fmS7N6ev1FBzeCCk5o4bIHTjY9\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Gradle.Build biletka.executor\": \"Run\",\r\n    \"Gradle.biletka [:MainApplication.main()].executor\": \"Run\",\r\n    \"RequestMappingsPanelOrder0\": \"0\",\r\n    \"RequestMappingsPanelOrder1\": \"1\",\r\n    \"RequestMappingsPanelWidth0\": \"75\",\r\n    \"RequestMappingsPanelWidth1\": \"75\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"Spring Boot.MainApplication.executor\": \"Run\",\r\n    \"git-widget-placeholder\": \"vadim\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"last_opened_file_path\": \"D:/work/biletka\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"project.structure.last.edited\": \"Modules\",\r\n    \"project.structure.proportion\": \"0.0\",\r\n    \"project.structure.side.proportion\": \"0.0\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"DatabaseDriversLRU\": [\r\n      \"postgresql\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"MainApplication\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"biletka.main.MainApplication\" />\r\n      <module name=\"main.main\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"biletka.main.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.MainApplication\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"97724297-196e-45eb-b48a-391cc00a3145\" name=\"Changes\" comment=\"\" />\r\n      <created>1714404592339</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1714404592339</updated>\r\n      <workItem from=\"1714404593292\" duration=\"1921000\" />\r\n      <workItem from=\"1714474019313\" duration=\"9613000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Добавил сервисы и методы получения по id и имени поля\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1714592105157</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1714592105157</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Добавил сервисы и методы получения по id и имени поля\" />\r\n    <MESSAGE value=\"Добавлена оставшиеся таблицы для бд\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Добавлена оставшиеся таблицы для бд\" />\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,81 +4,8 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="97724297-196e-45eb-b48a-391cc00a3145" name="Changes" comment="Добавлена оставшиеся таблицы для бд">
+-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/checksums/checksums.lock" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.bin" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/executionHistory/executionHistory.lock" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.bin" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/fileHashes.lock" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.7/fileHashes/resourceHashesCache.bin" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
++    <list default="true" id="97724297-196e-45eb-b48a-391cc00a3145" name="Changes" comment="Добавил метод создания EventBasicInformation">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/MainApplication.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/Utils/JwtTokenUtils$1.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/Utils/JwtTokenUtils.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/Utils/PasswordEncoder.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/config/JwtRequestFilter.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/config/SecurityConfig$1.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/config/SecurityConfig.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Actor.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Age_rating.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Event_basic_information.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Genre.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Tag.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Type_event.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/entity/Users.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/enums/RoleEnum.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/ActorRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/Age_ratingRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/Event_basic_informationRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/GenreRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/TagRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/Type_eventRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/repository/UserRepository.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/ActorService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Age_ratingService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Event_basic_informationService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/GenreService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/ActorServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/Age_ratingServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/Event_basic_informationServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/GenreServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/TagServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/Type_eventServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Impl/UserServiceImpl.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/TagService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/Type_eventService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/biletka/main/service/UserService.class" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/resources/main/application.properties" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ActorService.class.uniqueId11" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/ActorServiceImpl.class.uniqueId0" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Age_ratingService.class.uniqueId10" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Age_ratingServiceImpl.class.uniqueId9" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Event_basic_informationService.class.uniqueId3" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Event_basic_informationServiceImpl.class.uniqueId8" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GenreService.class.uniqueId7" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/GenreServiceImpl.class.uniqueId4" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/TagService.class.uniqueId6" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/TagServiceImpl.class.uniqueId2" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Type_eventService.class.uniqueId1" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/Type_eventServiceImpl.class.uniqueId5" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Age_rating.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/AgeRating.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Event.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Event_basic_information.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/event_item/EventBasicInformation.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Log.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Users.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/event_item/EventAdditionalInformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/event_item/EventAdditionalInformation.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/repository/Age_ratingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/repository/Age_ratingRepository.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/repository/Event_basic_informationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/repository/Event_basic_informationRepository.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Age_ratingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Age_ratingService.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Event_basic_informationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Event_basic_informationService.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Age_ratingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Age_ratingServiceImpl.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Event_basic_informationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/Event_basic_informationServiceImpl.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -98,7 +25,12 @@
+       <state>
+         <projects_view>
+           <tree_state>
+-            <expand />
++            <expand>
++              <path>
++                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
++                <item name="main" type="f1a62948:ProjectNode" />
++              </path>
++            </expand>
+             <select />
+           </tree_state>
+         </projects_view>
+@@ -110,6 +42,7 @@
+       <list>
+         <option value="Interface" />
+         <option value="Class" />
++        <option value="Record" />
+       </list>
+     </option>
+   </component>
+@@ -117,6 +50,18 @@
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+     <option name="ROOT_SYNC" value="DONT_SYNC" />
+   </component>
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;Gofther&quot;
++  }
++}</component>
++  <component name="GithubPullRequestsUISettings">{
++  &quot;selectedUrlAndAccountId&quot;: {
++    &quot;url&quot;: &quot;https://github.com/VadimMor/biletka.git&quot;,
++    &quot;accountId&quot;: &quot;d3a9e257-7ed2-4865-8e7f-aa6192c401f9&quot;
++  }
++}</component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+   </component>
+@@ -131,37 +76,37 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Gradle.Build biletka.executor": "Run",
+-    "Gradle.biletka [:MainApplication.main()].executor": "Run",
+-    "RequestMappingsPanelOrder0": "0",
+-    "RequestMappingsPanelOrder1": "1",
+-    "RequestMappingsPanelWidth0": "75",
+-    "RequestMappingsPanelWidth1": "75",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "Spring Boot.MainApplication.executor": "Run",
+-    "git-widget-placeholder": "vadim",
+-    "ignore.virus.scanning.warn.message": "true",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "D:/work/biletka",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "project.structure.last.edited": "Modules",
+-    "project.structure.proportion": "0.0",
+-    "project.structure.side.proportion": "0.0",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Gradle.Build biletka.executor&quot;: &quot;Run&quot;,
++    &quot;Gradle.biletka [:MainApplication.main()].executor&quot;: &quot;Run&quot;,
++    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
++    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
++    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
++    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;Spring Boot.MainApplication.executor&quot;: &quot;Run&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;Prokhor&quot;,
++    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;D:/work/biletka&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   },
+-  "keyToStringList": {
+-    "DatabaseDriversLRU": [
+-      "postgresql"
++  &quot;keyToStringList&quot;: {
++    &quot;DatabaseDriversLRU&quot;: [
++      &quot;postgresql&quot;
+     ]
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager">
+     <configuration name="MainApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="biletka.main.MainApplication" />
+@@ -201,7 +146,31 @@
+       <option name="project" value="LOCAL" />
+       <updated>1714592105157</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="Добавил методы создания новых элементов в сервисах дл сущностей, созданных мной ранее">
++      <option name="closed" value="true" />
++      <created>1714742398372</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1714742398372</updated>
++    </task>
++    <task id="LOCAL-00003" summary="Добавил методы создания новых элементов в сервисах дл сущностей, созданных мной ранее">
++      <option name="closed" value="true" />
++      <created>1714745067884</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1714745067884</updated>
++    </task>
++    <task id="LOCAL-00004" summary="Добавил метод создания EventBasicInformation">
++      <option name="closed" value="true" />
++      <created>1714753894089</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1714753894089</updated>
++    </task>
++    <option name="localTasksCounter" value="5" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -209,7 +178,8 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Добавил сервисы и методы получения по id и имени поля" />
+-    <MESSAGE value="Добавлена оставшиеся таблицы для бд" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Добавлена оставшиеся таблицы для бд" />
++    <MESSAGE value="Добавил методы создания новых элементов в сервисах дл сущностей, созданных мной ранее" />
++    <MESSAGE value="Добавил метод создания EventBasicInformation" />
++    <option name="LAST_COMMIT_MESSAGE" value="Добавил метод создания EventBasicInformation" />
+   </component>
+ </project>
+\ No newline at end of file

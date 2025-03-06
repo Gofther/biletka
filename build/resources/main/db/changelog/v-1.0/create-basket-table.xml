@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet id="create-basket-table" author="VadimMor">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.basket
+            (
+            client_id bigserial NOT NULL,
+            ticket_id bigserial NOT NULL,
+            CONSTRAINT basket_pkey PRIMARY KEY (client_id, ticket_id),
+            CONSTRAINT fknavidd3qv77q4ysg54b3ceffr FOREIGN KEY (client_id)
+            REFERENCES public.client (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+            CONSTRAINT fkolgudtrdjul4nicor3fet3hu0 FOREIGN KEY (ticket_id)
+            REFERENCES public.ticket (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            )
+        </sql>
+    </changeSet>
+</databaseChangeLog>

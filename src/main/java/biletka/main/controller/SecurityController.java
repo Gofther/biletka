@@ -41,7 +41,7 @@ public class SecurityController {
             description = "Ползволяется пройти аутентификацию и получить jwt"
     )
     @Hidden
-    @PostMapping("/auth")//
+    @PostMapping("/auth")
     public ResponseEntity<AuthResponse> createAuthToken(@Parameter(description = "Форма авторизации") @Valid @RequestBody AuthForm authForm) {
         log.trace("SecurityController.createAuthToken /auth - authForm {}", authForm);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authForm.email(), authForm.password()));
@@ -54,7 +54,7 @@ public class SecurityController {
             summary = "Регистрация обычного пользователя",
             description = "Позволяет сохранить нового пользователя в базе данных"
     )
-    @PostMapping//
+    @PostMapping
     public ResponseEntity<ClientRegistrationResponse> postClientRegistration(@Parameter(description = "Данные для регистрации нового пользователя") @Valid @RequestBody ClientRegistrationRequest clientRegistrationRequest) throws ParseException, MessagingException {
         log.trace("SecurityController.postClientRegistration / - clientRegistrationRequest {}", clientRegistrationRequest);
         ClientRegistrationResponse clientRegistrationResponse = userService.postNewUser(clientRegistrationRequest);
@@ -62,7 +62,7 @@ public class SecurityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientRegistrationResponse);
     }
 
-    @Operation(//
+    @Operation(
             summary = "Регистрация организации",
             description = "Позволяет сохранить новую организацию в базе данных"
     )
@@ -76,7 +76,7 @@ public class SecurityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(messageCreateResponse);
     }
 
-    @Operation(//
+    @Operation(
             summary = "Активация аккаунта",
             description = "Позволяет изменить данные пользователя, чтобы он был активирован"
     )

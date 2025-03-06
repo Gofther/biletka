@@ -37,7 +37,7 @@ public class PlaceController {
             summary = "Создание площадки",
             description = "Позволяет создать площадку организации"
     )
-    @PostMapping//
+    @PostMapping
     public ResponseEntity<MessageCreateResponse> postPlaceCreate(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
                                                                  @Parameter(description = "данные для создания площадки") @Valid @RequestBody PlaceCreateRequest placeCreateRequest) {
         log.trace("PlaceController.postPlaceCreate / - authorization {}, placeCreateRequest {}", authorization, placeCreateRequest);
@@ -50,7 +50,7 @@ public class PlaceController {
             summary = "Создание зала",
             description = "Позволяет создать зал площадки организации"
     )
-    @PostMapping("/hall")//
+    @PostMapping("/hall")
     public ResponseEntity<MessageCreateResponse> postHallCreate(@Parameter(description = "токен пользователя") @RequestHeader("Authorization") String authorization,
                                                                 @RequestPart("file") MultipartFile file,
                                                                 @RequestPart("hall_create_request") String hallCreateRequest) throws JsonProcessingException, MessagingException {
@@ -65,7 +65,7 @@ public class PlaceController {
             summary = "Вывод всех городов",
             description = "Позволяет вывести все города из бд"
     )
-    @GetMapping("/city")//
+    @GetMapping("/city")
     public ResponseEntity<MassiveCityResponse> getAllCity() {
         log.trace("PlaceController.getAllCity /city");
         MassiveCityResponse cities = cityService.getAllCity();

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="97724297-196e-45eb-b48a-391cc00a3145" name="Changes" comment="Сделал README">
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/AdministratorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/AdministratorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/OrganizationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/OrganizationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/PlaceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/PlaceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/SchedulingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/SchedulingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/SecurityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/SecurityController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/controller/SessionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/controller/SessionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Cheque.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Cheque.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/entity/Ticket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/repository/OrganizationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/repository/OrganizationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/repository/SessionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/repository/SessionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/repository/TicketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/repository/TicketRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/MailSenderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/MailSenderImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/OrganizationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/OrganizationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/TicketServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/Impl/TicketServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/biletka/main/service/MailSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/biletka/main/service/MailSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="main" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+        <option value="Record" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Gofther&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/VadimMor/biletka.git&quot;,
+    &quot;accountId&quot;: &quot;d3a9e257-7ed2-4865-8e7f-aa6192c401f9&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2g8EpZnBWIYsCimPxWUvtwfnRKO" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.biletka [:MainApplication.main()].executor": "Run",
+    "Notification.DisplayName-DoNotAsk-Vcs Important Messages": "VCS important messages",
+    "Notification.DoNotAsk-Vcs Important Messages": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "Prokhor",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/work/PracticeProject",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.60114944"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="biletka.main" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="GetEventOfId" />
+      <command value="EventServiceImpl" />
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="biletka.main.MainApplication" />
+      <module name="main.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="97724297-196e-45eb-b48a-391cc00a3145" name="Changes" comment="Добавил метод создания EventBasicInformation" />
+      <created>1715070992877</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1715070992877</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Добавил методы получения мероприятий по id и названию, метод получения организации по токену">
+      <option name="closed" value="true" />
+      <created>1715355900174</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1715355900174</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Добавил методы получения мероприятий по id и названию, метод получения организации по токену">
+      <option name="closed" value="true" />
+      <created>1715356026810</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1715356026810</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Добавил методы получения мероприятий по возрасту и по типу">
+      <option name="closed" value="true" />
+      <created>1715871649419</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1715871649419</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Добавил методы получения мероприятий по жанру">
+      <option name="closed" value="true" />
+      <created>1716136527542</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1716136527542</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Добавил метод получения количества сеансов по площадкам">
+      <option name="closed" value="true" />
+      <created>1716197207153</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1716197207153</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Добавил метод получения количества сеансов по площадкам">
+      <option name="closed" value="true" />
+      <created>1716481629470</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1716481629470</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Изменил методы получения мероприятия по жанрам и типам">
+      <option name="closed" value="true" />
+      <created>1716721373873</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1716721373873</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Обновление ветки из main(LiquidBase)">
+      <option name="closed" value="true" />
+      <created>1717489426218</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1717489426218</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Сделал README">
+      <option name="closed" value="true" />
+      <created>1717958790816</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1717958790816</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Prokhor" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Добавил методы получения мероприятий по id и названию, метод получения организации по токену" />
+    <MESSAGE value="Добавил методы получения мероприятий по возрасту и по типу" />
+    <MESSAGE value="Добавил методы получения мероприятий по жанру" />
+    <MESSAGE value="Добавил метод получения количества сеансов по площадкам" />
+    <MESSAGE value="Изменил методы получения мероприятия по жанрам и типам" />
+    <MESSAGE value="Обновление ветки из main(LiquidBase)" />
+    <MESSAGE value="Сделал README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Сделал README" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

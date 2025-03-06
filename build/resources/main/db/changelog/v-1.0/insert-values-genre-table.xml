@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="insert-values-genre-table" author="VadimMor">
+        <sql>
+            SELECT * FROM genre;
+            INSERT INTO genre (genre_name)
+            VALUES
+            ('Комедия'),
+            ('Мультфильм'),
+            ('Ужасы'),
+            ('Фантастика'),
+            ('Триллер'),
+            ('Боевик'),
+            ('Мелодрама'),
+            ('Детектив'),
+            ('Приключения'),
+            ('Фентези'),
+            ('Военный'),
+            ('Семейный'),
+            ('Военный'),
+            ('Аниме'),
+            ('Исторический'),
+            ('Драма'),
+            ('Документальный'),
+            ('Детский'),
+            ('Криминал'),
+            ('Мистерия'),
+            ('Монодрама'),
+            ('Соти'),
+            ('Трагедия'),
+            ('Трагикомедия'),
+            ('Фарс'),
+            ('Феерия'),
+            ('Флиаки');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -17,14 +17,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -113,6 +116,27 @@ public class MailSenderImpl implements MailSender {
             log.trace("MailSender.sendTicket / - Ticket with id {} bought and sent", ticket.getId());
         } catch (Exception e) {
             log.error("MailSender.sendTicket / - Failed to send ticket with id {}: {}", ticket.getId(), e.getMessage());
+            throw e;
+        }
+    }
+    @Async
+    public void sendFile(String attachment, String email, String message) throws MessagingException, FileNotFoundException
+    {
+        String subject = "Информация о билетах за день";
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        mimeMessageHelper.setFrom(username);
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(message);
+        FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
+        mimeMessageHelper.addAttachment("Информация о билетах за день", file);
+        try {
+            mailSender.send(mimeMessage);
+            System.out.println("sent file");
+            log.trace("MailSender.sendFile / - file sent");
+        }catch (Exception e) {
+            log.error("MailSender.sendFile / - Failed to send file");
             throw e;
         }
     }

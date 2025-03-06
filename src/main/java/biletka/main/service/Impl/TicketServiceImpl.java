@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -89,7 +90,8 @@ public class TicketServiceImpl implements TicketService {
         Cheque cheque = new Cheque(
                 "url",
                 null,
-                false
+                false,
+                LocalDate.now()
         );
         chequeRepository.saveAndFlush(cheque);
 

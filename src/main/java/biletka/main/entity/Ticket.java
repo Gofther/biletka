@@ -33,7 +33,6 @@ public class Ticket {
     @Column(name = "is_refunded")
     private Boolean isRefunded;
 
-
     @Column(name = "price")
     private Double price;
 

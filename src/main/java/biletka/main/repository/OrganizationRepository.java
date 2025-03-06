@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Set;
+
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
     Organization findFirstByFullNameOrganization(String fullNameOrganization);
@@ -32,4 +35,5 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     Organization findFirstByFullInfo(String inn, String kbk, String kpp, String ogrn, String oktmo, String email, String fullNameOrganization);
 
     Organization findFirstByUser(Users user);
+
 }
